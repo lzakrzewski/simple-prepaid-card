@@ -1,0 +1,100 @@
+{
+    "name": "lzakrzewski/simple-prepaid-card",
+    "license": "MIT",
+    "type": "project",
+    "description": "Simplified model of a prepaid card the card holds a balance in GBP and users can make transactions in GBP",
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        },
+        "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "tests\\": "tests"
+        }
+    },
+    "authors": [
+        {
+            "name": "lzakrzewski",
+            "email": "contact@lzakrzewski.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "beberlei/assert": "~2.6",
+        "ramsey/uuid": "~3.5",
+        "moneyphp/money": "~3.0",
+        "incenteev/composer-parameter-handler": "^2.0",
+
+        "symfony/symfony": "~3.2",
+        "symfony/monolog-bundle": "~2.9",
+
+        "sensio/framework-extra-bundle": "^3.0.2",
+        "sensio/distribution-bundle": "^5.0",
+
+        "simple-bus/message-bus": "^2.2",
+        "simple-bus/symfony-bridge": "^4.1",
+
+        "doctrine/orm": "~2.5",
+        "doctrine/doctrine-bundle": "~1.5"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^1.12",
+
+        "phpunit/phpunit": "~5.0",
+        "phpspec/phpspec": "^3.1",
+        "behat/behat": "^3.2",
+        "behat/symfony2-extension": "~2.1"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "scripts": {
+        "static-analysis": "bin/php-cs-fixer fix --config-file=.php_cs",
+        "static-analysis-ci": "bin/php-cs-fixer fix --dry-run --config-file=.php_cs",
+        "integration": "bin/phpunit",
+        "spec": "bin/phpspec run",
+        "behat": "bin/behat --out=std",
+        "test": [
+            "@static-analysis",
+            "@spec",
+            "@integration",
+            "@behat"
+        ],
+        "test-ci": [
+            "@static-analysis-ci",
+            "@spec",
+            "@integration",
+            "@behat"
+        ],
+        "symfony-scripts": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+        ],
+        "post-install-cmd": [
+            "@symfony-scripts"
+        ],
+        "post-update-cmd": [
+            "@symfony-scripts"
+        ]
+    },
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-bin-dir": "bin",
+        "symfony-var-dir": "var",
+        "symfony-web-dir": "web",
+        "symfony-tests-dir": "tests",
+        "symfony-assets-install": "relative",
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml"
+        },
+        "branch-alias": {
+            "dev-master": "3.3-dev"
+        }
+    }
+}

@@ -1,0 +1,11 @@
+.idea
+app/config/parameters.yml
+vendor
+var/*
+!var/SymfonyRequirements.php
+!var/cache
+var/cache/*
+!var/cache/.gitkeep
+!var/logs
+var/logs/*
+!var/logs/.gitkeep

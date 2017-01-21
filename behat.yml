@@ -1,0 +1,14 @@
+default:
+    autoload:
+        - "%paths.base%"
+    suites:
+        default:
+            filters:
+                tags: "~@incomplete"
+            contexts:
+                - tests\contexts\CoffeeShopContext:
+
+    extensions:
+        Behat\Symfony2Extension:
+            kernel:
+                class: "AppKernel"
