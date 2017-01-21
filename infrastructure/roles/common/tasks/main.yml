@@ -1,0 +1,21 @@
+---
+  - name: Ensure OS is supported
+    fail:
+      msg: "Only Ubuntu or Debian is supported."
+    when: ansible_distribution != 'Debian' and ansible_distribution != 'Ubuntu'
+
+  - name: Install packages on Ubuntu
+    include: validate_os_ubuntu.yml
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install packages on Debian
+    include: validate_os_debian.yml
+    when: ansible_distribution == "Debian"
+
+  - name: Ensure fresh APT cache
+    apt:
+      update_cache: yes
+
+  - name: Install wget
+    apt: name=wget state=present
+    become_user: yes

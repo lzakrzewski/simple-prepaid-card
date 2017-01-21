@@ -1,0 +1,6 @@
+---
+- include: directories.yml
+- include: application.yml
+- include: composer.yml
+- include: permissions.yml
+- include: web_server.yml

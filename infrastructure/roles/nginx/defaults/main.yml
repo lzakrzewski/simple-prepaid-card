@@ -1,0 +1,8 @@
+---
+worker_processes: "{{ ansible_processor_cores }}"
+worker_connections: 4096
+
+nginx_user: www-data
+nginx_group: www-data
+
+nginx_conf_dir: /etc/nginx

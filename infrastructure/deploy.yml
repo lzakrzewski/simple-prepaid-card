@@ -1,0 +1,9 @@
+---
+- hosts: all
+  roles:
+    - common
+    - php
+    - php-fpm
+    - nginx
+    - composer
+    - deploy

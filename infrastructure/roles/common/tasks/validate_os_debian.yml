@@ -1,0 +1,5 @@
+---
+  - name: Ensure OS version is supported
+    fail:
+      msg: "Only Debian 8 or higer."
+    when: ansible_distribution_version < '8'

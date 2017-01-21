@@ -1,0 +1,17 @@
+---
+- name: Ensure release directory
+  file:
+    path: "{{ release_dir }}"
+    state: directory
+    mode: 0755
+
+- name: Clean release directory
+  file:
+    state: absent
+    path: "{{ release_dir }}/"
+
+- name: Ensure release directory
+  file:
+    path: "{{ release_dir }}"
+    state: directory
+    mode: 0755

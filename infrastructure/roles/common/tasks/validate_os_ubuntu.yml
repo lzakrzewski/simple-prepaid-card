@@ -1,0 +1,5 @@
+---
+  - name: Ensure OS version is supported
+    fail:
+      msg: "Only Ubuntu 14.04 or higer."
+    when: ansible_distribution_version < '14.04'

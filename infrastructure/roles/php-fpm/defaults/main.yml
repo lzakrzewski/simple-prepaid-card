@@ -1,0 +1,13 @@
+fpm_socket_dir: "/var/run/php"
+
+fpm_pools:
+  -
+    name: "{{ app_name }}-1"
+    listen: "{{ fpm_socket_dir }}/php-fpm-{{ app_name }}-1.socket"
+
+pm: static
+pm_max_children: "{{ ((ansible_memfree_mb * 0.8)/300) | int + 1 }}"
+pm_start_servers: 4
+pm_min_spare_servers: 4
+pm_max_spare_servers: 8
+pm_process_idle_timeout: 10s

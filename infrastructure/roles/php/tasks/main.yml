@@ -1,0 +1,21 @@
+---
+  - name: Install packages on Ubuntu
+    include: php_package_ubuntu.yml
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install packages on Debian
+    include: php_package_debian.yml
+    when: ansible_distribution == "Debian"
+
+  - name: Ensure APT cache
+    apt:
+      update_cache: yes
+
+  - name: Install PHP and extensions
+    apt: name={{ item }} state=present
+    become_user: yes
+    with_items:
+      - php7.0
+      - php7.0-zip
+      - php7.0-mbstring
+      - php7.0-xml

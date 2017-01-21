@@ -1,0 +1,7 @@
+---
+- name: Install composer
+  shell: composer {{ item }}
+  args:
+    chdir: "{{ release_dir }}"
+  with_items:
+      - install -n --no-dev --prefer-dist --optimize-autoloader

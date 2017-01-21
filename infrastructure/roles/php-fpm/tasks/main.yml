@@ -1,0 +1,22 @@
+---
+  - name: Install PHP-FPM
+    apt: name=php7.0-fpm state=present
+    become_user: yes
+
+  - name: PHP-FPM configuraton
+    template:
+      src: "php-fpm.conf"
+      dest: "/etc/php/7.0/fpm/php-fpm.conf"
+
+  - name: PHP-FPM pool configuraton
+    template:
+      src: "pool.conf"
+      dest: "/etc/php/7.0/fpm/pool.d/{{ item.name }}.conf"
+    vars:
+      pool_name: "{{ item.name }}"
+      listen: "{{ item.listen }}"
+    with_items: "{{ fpm_pools }}"
+    notify:
+      - start php-fpm
+
+  - meta: flush_handlers

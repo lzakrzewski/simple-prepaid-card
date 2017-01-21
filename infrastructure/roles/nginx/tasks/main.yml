@@ -1,0 +1,30 @@
+---
+  - name: Uninstall apache packages
+    apt: >
+      pkg=apache2*
+      state=absent
+      purge=yes
+      force=yes
+    become_user: yes
+
+  - name: Installs nginx web server
+    apt: pkg=nginx state=installed update_cache=true
+
+  - name: Clean sites-available directory
+    file:
+      state: absent
+      path: "/etc/nginx/sites-available/"
+
+  - name: Nginx site configuration
+    template:
+      src: "default.conf"
+      dest: "/etc/nginx/conf.d/default.conf"
+
+  - name: Nginx server configuration
+    template:
+      src: "nginx.conf"
+      dest: "/etc/nginx/nginx.conf"
+    notify:
+      - start nginx
+
+  - meta: flush_handlers

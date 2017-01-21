@@ -1,0 +1,10 @@
+---
+- name: Ensure PHP packages repository
+  apt_repository:
+    repo: "deb http://packages.dotdeb.org {{ ansible_distribution_release }} all"
+    state: present
+
+- name: Ensure PHP packages repository key
+  apt_key:
+    url: https://www.dotdeb.org/dotdeb.gpg
+    state: present
