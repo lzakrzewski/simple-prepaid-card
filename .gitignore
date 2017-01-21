@@ -1,5 +1,6 @@
 .idea
 app/config/parameters.yml
+infrastructure/build
 vendor
 var/*
 !var/SymfonyRequirements.php
@@ -9,3 +10,6 @@ var/cache/*
 !var/logs
 var/logs/*
 !var/logs/.gitkeep
+!/var/sessions
+/var/sessions/*
+!var/sessions/.gitkeep
