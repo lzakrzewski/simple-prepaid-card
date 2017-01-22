@@ -1,0 +1,7 @@
+services:
+    simple-prepaid-card.credit-card.repository.credit-card: "@simple-prepaid-card.credit-card.repository.credit-card.doctrine_orm"
+
+    simple-prepaid-card.credit-card.repository.credit-card.doctrine_orm:
+        class: SimplePrepaidCard\CreditCard\Infrastructure\DoctrineORMCreditCardRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments: [SimplePrepaidCard\CreditCard\Model\CreditCard]
