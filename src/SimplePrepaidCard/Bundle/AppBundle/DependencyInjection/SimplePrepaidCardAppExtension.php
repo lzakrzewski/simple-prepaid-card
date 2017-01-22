@@ -16,6 +16,7 @@ class SimplePrepaidCardAppExtension extends Extension
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/CreditCard'));
         $loader->load('repositories.yml');
+        $loader->load('command_handlers.yml');
     }
 
     /** {@inheritdoc} */

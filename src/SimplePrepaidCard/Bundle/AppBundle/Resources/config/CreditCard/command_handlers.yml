@@ -1,0 +1,7 @@
+services:
+    simple_prepaid_card.credit_card.command_handler.create_credit_card:
+        class: SimplePrepaidCard\CreditCard\Application\Command\CreateCreditCardHandler
+        arguments:
+            - "@simple_prepaid_card.credit_card.repository.credit_card"
+        tags:
+            - { name: command_handler, handles: SimplePrepaidCard\CreditCard\Application\Command\CreateCreditCard }

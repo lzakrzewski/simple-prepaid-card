@@ -1,0 +1,17 @@
+services:
+    simple_prepaid_card.command_bus.recorded_events:
+        class: tests\testServices\ContainsRecordedEventsMiddleware
+        tags:
+            - { name: event_bus_middleware }
+
+    test_setup:
+        class: tests\testServices\TestSetup
+        arguments:
+            - "@lzakrzewski.doctrine_database_backup"
+            - "@simple_prepaid_card.command_bus.recorded_events"
+
+    lzakrzewski.doctrine_database_backup:
+        class: Lzakrzewski\DoctrineDatabaseBackup\DoctrineDatabaseBackup
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+            - false

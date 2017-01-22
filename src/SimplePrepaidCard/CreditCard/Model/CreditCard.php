@@ -8,13 +8,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Money\Money;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use SimpleBus\Message\Recorder\ContainsRecordedMessages;
+use SimpleBus\Message\Recorder\PrivateMessageRecorderCapabilities;
 
 /**
  * @ORM\Entity(repositoryClass="SimplePrepaidCard\CreditCard\Infrastructure\DoctrineORMCreditCardRepository")
  * @ORM\Table
  */
-final class CreditCard
+final class CreditCard implements ContainsRecordedMessages
 {
+    use PrivateMessageRecorderCapabilities;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -65,8 +69,21 @@ final class CreditCard
         $this->holderId     = $holderId->toString();
         $this->holderName   = $holderName;
 
-        $this->balance          = (int) Money::GBP(0)->getAmount();
-        $this->availableBalance = (int) Money::GBP(0)->getAmount();
+        $balance = Money::GBP(0);
+
+        $this->balance          = (int) $balance->getAmount();
+        $this->availableBalance = (int) $balance->getAmount();
+
+        $this->record(
+            new CreditCardWasCreated(
+                $creditCardId,
+                $holderId,
+                $this->holderName,
+                $balance,
+                $balance,
+                new \DateTime()
+            )
+        );
     }
 
     public static function create(UuidInterface $creditCardId, UuidInterface $holderId, string $holderName): self

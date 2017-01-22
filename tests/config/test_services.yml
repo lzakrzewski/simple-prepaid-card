@@ -1,6 +1,0 @@
-services:
-    lzakrzewski.doctrine_database_backup:
-        class: Lzakrzewski\DoctrineDatabaseBackup\DoctrineDatabaseBackup
-        arguments:
-            - "@doctrine.orm.default_entity_manager"
-            - false

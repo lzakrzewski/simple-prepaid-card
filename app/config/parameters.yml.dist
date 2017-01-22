@@ -1,3 +1,3 @@
 parameters:
-    database_path: "%kernel.root_dir%/../var/db/simple-prepaid-card.db"
+    database_path: "%kernel.root_dir%/../var/db/simple_prepaid_card.db"
     secret: ThisTokenIsNotSoSecretChangeIt

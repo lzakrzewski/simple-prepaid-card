@@ -10,13 +10,15 @@ interface CreditCardRepository
 {
     /**
      * @param CreditCard $creditCard
+     *
+     * @throws CreditCardAlreadyExist
      */
     public function add(CreditCard $creditCard);
 
     /**
      * @param UuidInterface $creditCardId
      *
-     * @throws
+     * @throws CreditCardDoesNotExist
      *
      * @return CreditCard
      */

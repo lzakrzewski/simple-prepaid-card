@@ -6,10 +6,10 @@ namespace SimplePrepaidCard\CreditCard\Model;
 
 use Ramsey\Uuid\UuidInterface;
 
-final class CreditCardDoesNotExist extends \DomainException
+final class CreditCardAlreadyExist extends \DomainException
 {
     public static function with(UuidInterface $creditCardId)
     {
-        return new self(sprintf('Credit card with id %s does not exist.', $creditCardId));
+        return new self(sprintf('Credit card with id %s already exist.', $creditCardId));
     }
 }

@@ -35,6 +35,7 @@
 
         "simple-bus/message-bus": "^2.2",
         "simple-bus/symfony-bridge": "^4.1",
+        "simple-bus/doctrine-orm-bridge": "~4.0",
 
         "doctrine/orm": "~2.5",
         "doctrine/doctrine-bundle": "~1.5"

@@ -6,7 +6,9 @@ default:
             filters:
                 tags: "~@incomplete"
             contexts:
+                - tests\contexts\CommonContext:
                 - tests\contexts\CoffeeShopContext:
+                - tests\contexts\CreditCardContext:
 
     extensions:
         Behat\Symfony2Extension:

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace tests\integration\SimplePrepaidCard;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\SchemaTool;
 use tests\builders\Builder;
 
 abstract class DatabaseTestCase extends IntegrationTestCase
@@ -14,24 +13,7 @@ abstract class DatabaseTestCase extends IntegrationTestCase
     {
         parent::setUp();
 
-        $backup = $this->container()->get('lzakrzewski.doctrine_database_backup');
-
-        $backup->restore(function () {
-            $this->setupDatabase();
-        });
-    }
-
-    private function setupDatabase()
-    {
-        $em     = $this->entityManager();
-        $params = $this->entityManager()->getConnection()->getParams();
-
-        if (file_exists($params['path'])) {
-            return;
-        }
-
-        $schemaTool = new SchemaTool($em);
-        $schemaTool->createSchema($em->getMetadataFactory()->getAllMetadata());
+        $this->container()->get('test_setup')->setup();
     }
 
     protected function buildPersisted(Builder $builder)
