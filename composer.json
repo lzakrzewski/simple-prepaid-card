@@ -45,7 +45,9 @@
         "phpunit/phpunit": "~5.0",
         "phpspec/phpspec": "^3.1",
         "behat/behat": "^3.2",
-        "behat/symfony2-extension": "~2.1"
+        "behat/symfony2-extension": "~2.1",
+
+        "lzakrzewski/doctrine-database-backup": "~1.2"
     },
     "config": {
         "bin-dir": "bin"
@@ -53,6 +55,7 @@
     "scripts": {
         "static-analysis": "bin/php-cs-fixer fix --config-file=.php_cs",
         "static-analysis-ci": "bin/php-cs-fixer fix --dry-run --config-file=.php_cs",
+        "setup-database-test": "(bin/console do:da:dr --force --env=test || true) && bin/console do:da:cr --env=test && bin/console do:sch:cr --env=test",
         "integration": "bin/phpunit",
         "spec": "bin/phpspec run",
         "behat": "bin/behat --out=std",

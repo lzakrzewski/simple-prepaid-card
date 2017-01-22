@@ -13,3 +13,6 @@ var/logs/*
 !/var/sessions
 /var/sessions/*
 !var/sessions/.gitkeep
+!/var/db
+/var/db/*
+!var/db/.gitkeep

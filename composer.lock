@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f390adefe78d257df5469cbc9957e877",
-    "content-hash": "6e7a606c875aeac0c112402da6c5526b",
+    "hash": "9bf2440454dc74921a4b0e9b172e661b",
+    "content-hash": "9e70523663a5193899c05f826a9937b3",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -2463,6 +2463,49 @@
             ],
             "description": "A tool to automatically fix PHP code style",
             "time": "2016-12-01 00:05:05"
+        },
+        {
+            "name": "lzakrzewski/doctrine-database-backup",
+            "version": "1.2.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lzakrzewski/DoctrineDatabaseBackup.git",
+                "reference": "6e59649001b19d08fc610057a260d8dd09814c8b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lzakrzewski/DoctrineDatabaseBackup/zipball/6e59649001b19d08fc610057a260d8dd09814c8b",
+                "reference": "6e59649001b19d08fc610057a260d8dd09814c8b",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/orm": "~2.3",
+                "php": ">=5.4",
+                "symfony/process": "~2.3|~3.0"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "~1",
+                "phpunit/phpunit": "~4.8",
+                "satooshi/php-coveralls": "~1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Lzakrzewski\\DoctrineDatabaseBackup\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "lzakrzewski",
+                    "email": "contact@lzakrzewski.com"
+                }
+            ],
+            "description": "Doctrine Database Backup",
+            "time": "2016-10-24 16:24:28"
         },
         {
             "name": "myclabs/deep-copy",
