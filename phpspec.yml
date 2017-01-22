@@ -1,0 +1,3 @@
+suites:
+    src:
+        spec_prefix: tests\specs
