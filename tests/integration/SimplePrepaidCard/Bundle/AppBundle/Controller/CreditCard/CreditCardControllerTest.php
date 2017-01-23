@@ -34,4 +34,32 @@ class CreditCardControllerTest extends WebTestCase
 
         $this->assertResponseStatusCode(Response::HTTP_OK);
     }
+
+    /** @test */
+    public function it_can_load_funds()
+    {
+        $this->request(
+            'GET',
+            '/load-funds',
+            [
+                'amount' => '100',
+            ]
+        );
+
+        $this->assertResponseStatusCode(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function it_can_not_load_funds_with_invalid_request()
+    {
+        $this->request(
+            'GET',
+            '/load-funds',
+            [
+                'amount' => '-100',
+            ]
+        );
+
+        $this->assertResponseStatusCode(Response::HTTP_OK);
+    }
 }

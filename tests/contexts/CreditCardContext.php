@@ -9,9 +9,12 @@ use Money\Money;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use SimplePrepaidCard\CreditCard\Application\Command\CreateCreditCard;
+use SimplePrepaidCard\CreditCard\Application\Command\LoadFunds;
 use SimplePrepaidCard\CreditCard\Model\CreditCardAlreadyExist;
+use SimplePrepaidCard\CreditCard\Model\CreditCardDoesNotExist;
 use SimplePrepaidCard\CreditCard\Model\CreditCardRepository;
 use SimplePrepaidCard\CreditCard\Model\CreditCardWasCreated;
+use SimplePrepaidCard\CreditCard\Model\FundsWereLoaded;
 use tests\builders\CreditCard\CreditCardBuilder;
 
 class CreditCardContext extends DefaultContext
@@ -35,6 +38,18 @@ class CreditCardContext extends DefaultContext
     }
 
     /**
+     * @Given I have a credit card with id :creditCardId with balance :balance GBP
+     */
+    public function iHaveACreditCardWithIdWithBalanceGbp(UuidInterface $creditCardId, Money $balance)
+    {
+        $this->buildPersisted(
+            CreditCardBuilder::create()
+                ->withCreditCardId($creditCardId)
+                ->withBalance($balance)
+        );
+    }
+
+    /**
      * @When I create a credit card with id :creditCardId and holder name :holderName
      */
     public function iCreateACreditCardWithIdAndHolderName(UuidInterface $creditCardId, string $holderName)
@@ -43,11 +58,27 @@ class CreditCardContext extends DefaultContext
     }
 
     /**
+     * @When I load :amount GBP onto a credit card with id :creditCardId
+     */
+    public function iLoadGbpOntoACreditCardWithId(Money $amount, UuidInterface $creditCardId)
+    {
+        $this->handle(new LoadFunds($creditCardId, (int) $amount->getAmount()));
+    }
+
+    /**
      * @Then I should be notified that a credit card was created
      */
     public function iShouldBeNotifiedThatACreditCardWasCreated()
     {
         $this->expectEvent(CreditCardWasCreated::class);
+    }
+
+    /**
+     * @Then I should be notified that funds were loaded
+     */
+    public function iShouldBeNotifiedThatFundsWereLoaded()
+    {
+        $this->expectEvent(FundsWereLoaded::class);
     }
 
     /**
@@ -75,6 +106,14 @@ class CreditCardContext extends DefaultContext
     }
 
     /**
+     * @Then I should be notified that credit card does not exist
+     */
+    public function iShouldBeNotifiedThatCreditCardDoesNotExist()
+    {
+        $this->expectException(CreditCardDoesNotExist::class);
+    }
+
+    /**
      * @Transform :creditCardId
      */
     public function creditCardId(string $creditCardId): UuidInterface
@@ -84,18 +123,12 @@ class CreditCardContext extends DefaultContext
 
     /**
      * @Transform :balance
-     */
-    public function balance(string $balance): Money
-    {
-        return Money::GBP((int) $balance);
-    }
-
-    /**
      * @Transform :availableBalance
+     * @Transform :amount
      */
-    public function availableBalance(string $availableBalance): Money
+    public function money(string $money): Money
     {
-        return Money::GBP((int) $availableBalance);
+        return Money::GBP((int) $money);
     }
 
     private function creditCards(): CreditCardRepository

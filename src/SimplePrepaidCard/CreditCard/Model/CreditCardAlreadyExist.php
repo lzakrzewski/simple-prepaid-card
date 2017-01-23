@@ -8,7 +8,7 @@ use Ramsey\Uuid\UuidInterface;
 
 final class CreditCardAlreadyExist extends \DomainException
 {
-    public static function with(UuidInterface $creditCardId)
+    public static function with(UuidInterface $creditCardId): self
     {
         return new self(sprintf('Credit card with id %s already exist.', $creditCardId));
     }

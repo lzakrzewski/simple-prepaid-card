@@ -5,3 +5,10 @@ services:
             - "@simple_prepaid_card.credit_card.repository.credit_card"
         tags:
             - { name: command_handler, handles: SimplePrepaidCard\CreditCard\Application\Command\CreateCreditCard }
+
+    simple_prepaid_card.credit_card.command_handler.load_funds:
+        class: SimplePrepaidCard\CreditCard\Application\Command\LoadFundsHandler
+        arguments:
+            - "@simple_prepaid_card.credit_card.repository.credit_card"
+        tags:
+            - { name: command_handler, handles: SimplePrepaidCard\CreditCard\Application\Command\LoadFunds }

@@ -105,4 +105,36 @@ final class CreditCard implements ContainsRecordedMessages
     {
         return Money::GBP($this->availableBalance);
     }
+
+    public function loadFunds(Money $amount)
+    {
+        $this->guardAgainstNegativeFunds($amount);
+
+        $this->availableBalance = (int) $this
+            ->availableBalance()
+            ->add($amount)
+            ->getAmount();
+
+        $this->balance = (int) $this
+            ->balance()
+            ->add($amount)
+            ->getAmount();
+
+        $this->record(
+            new FundsWereLoaded(
+                $this->creditCardId(),
+                $amount,
+                $this->balance(),
+                $this->availableBalance(),
+                new \DateTime()
+            )
+        );
+    }
+
+    private function guardAgainstNegativeFunds(Money $amount)
+    {
+        if ($amount->isNegative()) {
+            throw CannotLoadNegativeFunds::with($this->creditCardId());
+        }
+    }
 }

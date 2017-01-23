@@ -49,7 +49,11 @@ class CreditCardBuilder implements Builder
 
     public function build(): CreditCard
     {
-        return CreditCard::create($this->creditCardId, $this->holderId, $this->holderName);
+        $creditCard = CreditCard::create($this->creditCardId, $this->holderId, $this->holderName);
+        $creditCard->loadFunds($this->balance);
+        $creditCard->eraseMessages();
+
+        return $creditCard;
     }
 
     public function withCreditCardId(UuidInterface $creditCardId): self
