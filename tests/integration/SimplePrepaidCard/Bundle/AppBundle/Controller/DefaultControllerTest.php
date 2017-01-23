@@ -1,18 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tests\integration\SimplePrepaidCard\Bundle\AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultControllerTest extends WebTestCase
 {
     public function testIndex()
     {
-        $client = static::createClient();
+        $this->request('GET', '/');
 
-        $crawler = $client->request('GET', '/');
-
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertContains('Welcome to Symfony', $crawler->filter('#container h1')->text());
+        $this->assertResponseStatusCode(Response::HTTP_OK);
     }
 }
