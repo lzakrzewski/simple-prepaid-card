@@ -8,12 +8,15 @@ use Assert\Assertion;
 use Money\Money;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use SimplePrepaidCard\CreditCard\Application\Command\BlockFunds;
 use SimplePrepaidCard\CreditCard\Application\Command\CreateCreditCard;
 use SimplePrepaidCard\CreditCard\Application\Command\LoadFunds;
+use SimplePrepaidCard\CreditCard\Model\CannotBlockMoreThanAvailableFunds;
 use SimplePrepaidCard\CreditCard\Model\CreditCardAlreadyExist;
 use SimplePrepaidCard\CreditCard\Model\CreditCardDoesNotExist;
 use SimplePrepaidCard\CreditCard\Model\CreditCardRepository;
 use SimplePrepaidCard\CreditCard\Model\CreditCardWasCreated;
+use SimplePrepaidCard\CreditCard\Model\FundsWereBlocked;
 use SimplePrepaidCard\CreditCard\Model\FundsWereLoaded;
 use tests\builders\CreditCard\CreditCardBuilder;
 
@@ -50,6 +53,19 @@ class CreditCardContext extends DefaultContext
     }
 
     /**
+     * @Given I have a credit card with id :creditCardId with balance :balance GBP and available balance :availableBalance GBP
+     */
+    public function iHaveACreditCardWithIdWithBalanceGbpAndAvailableBalanceGbp(UuidInterface $creditCardId, Money $balance, Money $availableBalance)
+    {
+        $this->buildPersisted(
+            CreditCardBuilder::create()
+                ->withCreditCardId($creditCardId)
+                ->withBalance($balance)
+                ->withAvailableBalance($availableBalance)
+        );
+    }
+
+    /**
      * @When I create a credit card with id :creditCardId and holder name :holderName
      */
     public function iCreateACreditCardWithIdAndHolderName(UuidInterface $creditCardId, string $holderName)
@@ -63,6 +79,14 @@ class CreditCardContext extends DefaultContext
     public function iLoadGbpOntoACreditCardWithId(Money $amount, UuidInterface $creditCardId)
     {
         $this->handle(new LoadFunds($creditCardId, (int) $amount->getAmount()));
+    }
+
+    /**
+     * @When I block :amount GBP on a credit card with id :creditCardId
+     */
+    public function iBlockGbpOnACreditCardWithId(Money $amount, UuidInterface $creditCardId)
+    {
+        $this->handle(new BlockFunds($creditCardId, (int) $amount->getAmount()));
     }
 
     /**
@@ -82,17 +106,25 @@ class CreditCardContext extends DefaultContext
     }
 
     /**
-     * @Then balance of a credit card with id :creditCardId should be :balance
+     * @Then I should be notified that funds were blocked
      */
-    public function balanceOfACreditCardWithIdShouldBe(UuidInterface $creditCardId, Money $balance)
+    public function iShouldBeNotifiedThatFundsWereBlocked()
+    {
+        $this->expectEvent(FundsWereBlocked::class);
+    }
+
+    /**
+     * @Then balance of a credit card with id :creditCardId should be :balance GBP
+     */
+    public function balanceOfACreditCardWithIdShouldBeGbp(UuidInterface $creditCardId, Money $balance)
     {
         Assertion::eq($this->creditCards()->get($creditCardId)->balance(), $balance);
     }
 
     /**
-     * @Then available balance of a credit card with id :creditCardId should be :availableBalance
+     * @Then available balance of a credit card with id :creditCardId should be :availableBalance GBP
      */
-    public function availableBalanceOfACreditCardWithIdShouldBe(UuidInterface $creditCardId, Money $availableBalance)
+    public function availableBalanceOfACreditCardWithIdShouldBeGbp(UuidInterface $creditCardId, Money $availableBalance)
     {
         Assertion::eq($this->creditCards()->get($creditCardId)->availableBalance(), $availableBalance);
     }
@@ -111,6 +143,14 @@ class CreditCardContext extends DefaultContext
     public function iShouldBeNotifiedThatCreditCardDoesNotExist()
     {
         $this->expectException(CreditCardDoesNotExist::class);
+    }
+
+    /**
+     * @Then I should be notified that I can not block more than available funds
+     */
+    public function iShouldBeNotifiedThatICanNotBlockMoreThanAvailableFunds()
+    {
+        $this->expectException(CannotBlockMoreThanAvailableFunds::class);
     }
 
     /**

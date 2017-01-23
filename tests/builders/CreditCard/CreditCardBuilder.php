@@ -51,6 +51,13 @@ class CreditCardBuilder implements Builder
     {
         $creditCard = CreditCard::create($this->creditCardId, $this->holderId, $this->holderName);
         $creditCard->loadFunds($this->balance);
+
+        $amountToBlock = $this->balance->subtract($this->availableBalance);
+
+        if ($amountToBlock->isPositive()) {
+            $creditCard->blockFunds($amountToBlock);
+        }
+
         $creditCard->eraseMessages();
 
         return $creditCard;

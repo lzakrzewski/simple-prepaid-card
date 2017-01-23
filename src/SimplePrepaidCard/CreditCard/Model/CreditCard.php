@@ -11,6 +11,7 @@ use Ramsey\Uuid\UuidInterface;
 use SimpleBus\Message\Recorder\ContainsRecordedMessages;
 use SimpleBus\Message\Recorder\PrivateMessageRecorderCapabilities;
 
+//Todo: move to yml
 /**
  * @ORM\Entity(repositoryClass="SimplePrepaidCard\CreditCard\Infrastructure\DoctrineORMCreditCardRepository")
  * @ORM\Table
@@ -131,10 +132,38 @@ final class CreditCard implements ContainsRecordedMessages
         );
     }
 
+    public function blockFunds(Money $amount)
+    {
+        $this->guardAgainstNegativeFunds($amount);
+        $this->guardAgainstNegativeBalance($amount);
+
+        $this->availableBalance = (int) $this
+            ->availableBalance()
+            ->subtract($amount)
+            ->getAmount();
+
+        $this->record(
+            new FundsWereBlocked(
+                $this->creditCardId(),
+                $amount,
+                $this->balance(),
+                $this->availableBalance(),
+                new \DateTime()
+            )
+        );
+    }
+
     private function guardAgainstNegativeFunds(Money $amount)
     {
         if ($amount->isNegative()) {
             throw CannotLoadNegativeFunds::with($this->creditCardId());
+        }
+    }
+
+    private function guardAgainstNegativeBalance(Money $amount)
+    {
+        if ($this->availableBalance()->subtract($amount)->isNegative()) {
+            throw CannotBlockMoreThanAvailableFunds::with($this->creditCardId());
         }
     }
 }
