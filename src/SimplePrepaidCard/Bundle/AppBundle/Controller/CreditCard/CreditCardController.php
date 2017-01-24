@@ -8,9 +8,14 @@ use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as Config;
 use SimplePrepaidCard\Bundle\AppBundle\Form\CreditCardType;
 use SimplePrepaidCard\Bundle\AppBundle\Form\FundsType;
+use SimplePrepaidCard\Bundle\AppBundle\Form\SaveType;
+use SimplePrepaidCard\CreditCard\Application\Command\BlockFunds;
+use SimplePrepaidCard\CreditCard\Application\Command\ChargeFunds;
 use SimplePrepaidCard\CreditCard\Application\Command\CreateCreditCard;
 use SimplePrepaidCard\CreditCard\Application\Command\LoadFunds;
+use SimplePrepaidCard\CreditCard\Application\Command\UnblockFunds;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
 //Todo: Flashbag magic
@@ -47,12 +52,16 @@ class CreditCardController extends Controller
         $form = $this->createForm(FundsType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('command_bus')->handle(
-                new LoadFunds(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'), $form->getData()['amount'])
-            );
+        try {
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->get('command_bus')->handle(
+                    new LoadFunds(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'), (int) $form->getData()['amount'])
+                );
 
-            return $this->redirectToRoute('homepage');
+                return $this->redirectToRoute('homepage');
+            }
+        } catch (\Exception $exception) {
+            $form->get('amount')->addError(new FormError($exception->getMessage()));
         }
 
         return $this->render('@App/credit-card/load-funds.html.twig', [
@@ -69,12 +78,16 @@ class CreditCardController extends Controller
         $form = $this->createForm(FundsType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('command_bus')->handle(
-                new LoadFunds(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'), $form->getData()['amount'])
-            );
+        try {
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->get('command_bus')->handle(
+                    new BlockFunds(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'), (int) $form->getData()['amount'])
+                );
 
-            return $this->redirectToRoute('homepage');
+                return $this->redirectToRoute('homepage');
+            }
+        } catch (\Exception $exception) {
+            $form->get('amount')->addError(new FormError($exception->getMessage()));
         }
 
         return $this->render('@App/credit-card/block-funds.html.twig', [
@@ -88,12 +101,12 @@ class CreditCardController extends Controller
      */
     public function unblockFundsAction(Request $request)
     {
-        $form = $this->createForm(FundsType::class);
+        $form = $this->createForm(SaveType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->get('command_bus')->handle(
-                new LoadFunds(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'), $form->getData()['amount'])
+                new UnblockFunds(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'))
             );
 
             return $this->redirectToRoute('homepage');
@@ -113,12 +126,16 @@ class CreditCardController extends Controller
         $form = $this->createForm(FundsType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('command_bus')->handle(
-                new LoadFunds(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'), $form->getData()['amount'])
-            );
+        try {
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->get('command_bus')->handle(
+                    new ChargeFunds(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'), (int) $form->getData()['amount'])
+                );
 
-            return $this->redirectToRoute('homepage');
+                return $this->redirectToRoute('homepage');
+            }
+        } catch (\Exception $exception) {
+            $form->get('amount')->addError(new FormError($exception->getMessage()));
         }
 
         return $this->render('@App/credit-card/charge-funds.html.twig', [
