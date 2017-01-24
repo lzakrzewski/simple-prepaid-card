@@ -114,4 +114,27 @@ class CreditCardSpec extends ObjectBehavior
 
         $this->shouldThrow(\InvalidArgumentException::class)->duringBlockFunds(Money::USD(55));
     }
+
+    public function it_can_unblock_funds()
+    {
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->loadFunds(Money::GBP(100));
+        $this->blockFunds(Money::GBP(77));
+
+        $this->unblock();
+
+        $this->availableBalance()->shouldBeLike(Money::GBP(100));
+        $this->balance()->shouldBeLike(Money::GBP(100));
+    }
+
+    public function it_can_unblock_funds_when_funds_are_not_blocked()
+    {
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->loadFunds(Money::GBP(100));
+
+        $this->unblock();
+
+        $this->availableBalance()->shouldBeLike(Money::GBP(100));
+        $this->balance()->shouldBeLike(Money::GBP(100));
+    }
 }

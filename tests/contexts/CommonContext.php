@@ -11,4 +11,12 @@ class CommonContext extends DefaultContext
     {
         $this->getContainer()->get('test_setup')->setup();
     }
+
+    /**
+     * @Then /^I should not be notified that (.*)$/
+     */
+    public function noEvents()
+    {
+        $this->expectsNoEvents();
+    }
 }

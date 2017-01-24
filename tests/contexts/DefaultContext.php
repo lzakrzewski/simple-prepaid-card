@@ -46,12 +46,17 @@ class DefaultContext implements KernelAwareContext, SnippetAcceptingContext
     protected function expectEvent(string $eventClass)
     {
         $events = $this->filterByClassName(
-            $this->eventBus()->recordedEvents(),
+            $this->events()->recordedEvents(),
             $eventClass
         );
 
         Assertion::greaterThan(count($events), 0, sprintf('Expected at least one event of class %s', $eventClass));
         Assertion::allIsInstanceOf($events, $eventClass);
+    }
+
+    protected function expectsNoEvents()
+    {
+        Assertion::count($this->events()->recordedEvents(), 0, 'Expected no recorded events');
     }
 
     protected function expectException(string $exceptionClass)
@@ -72,7 +77,7 @@ class DefaultContext implements KernelAwareContext, SnippetAcceptingContext
         });
     }
 
-    private function eventBus(): ContainsRecordedEventsMiddleware
+    private function events(): ContainsRecordedEventsMiddleware
     {
         return $this->getContainer()->get('simple_prepaid_card.command_bus.recorded_events');
     }

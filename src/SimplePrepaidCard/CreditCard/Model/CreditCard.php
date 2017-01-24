@@ -153,6 +153,24 @@ final class CreditCard implements ContainsRecordedMessages
         );
     }
 
+    public function unblock()
+    {
+        if ($this->availableBalance()->greaterThanOrEqual($this->balance())) {
+            return;
+        }
+
+        $this->availableBalance = (int) $this->balance()->getAmount();
+
+        $this->record(
+            new FundsWereUnblocked(
+                $this->creditCardId(),
+                $this->balance(),
+                $this->availableBalance(),
+                new \DateTime()
+            )
+        );
+    }
+
     private function guardAgainstNegativeFunds(Money $amount)
     {
         if ($amount->isNegative()) {

@@ -9,8 +9,10 @@ use Money\Money;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use SimplePrepaidCard\CreditCard\Application\Command\BlockFunds;
+use SimplePrepaidCard\CreditCard\Application\Command\ChargeFunds;
 use SimplePrepaidCard\CreditCard\Application\Command\CreateCreditCard;
 use SimplePrepaidCard\CreditCard\Application\Command\LoadFunds;
+use SimplePrepaidCard\CreditCard\Application\Command\UnblockFunds;
 use SimplePrepaidCard\CreditCard\Model\CannotBlockMoreThanAvailableFunds;
 use SimplePrepaidCard\CreditCard\Model\CreditCardAlreadyExist;
 use SimplePrepaidCard\CreditCard\Model\CreditCardDoesNotExist;
@@ -18,6 +20,7 @@ use SimplePrepaidCard\CreditCard\Model\CreditCardRepository;
 use SimplePrepaidCard\CreditCard\Model\CreditCardWasCreated;
 use SimplePrepaidCard\CreditCard\Model\FundsWereBlocked;
 use SimplePrepaidCard\CreditCard\Model\FundsWereLoaded;
+use SimplePrepaidCard\CreditCard\Model\FundsWereUnblocked;
 use tests\builders\CreditCard\CreditCardBuilder;
 
 class CreditCardContext extends DefaultContext
@@ -90,6 +93,22 @@ class CreditCardContext extends DefaultContext
     }
 
     /**
+     * @When I unblock funds on a credit card with id :creditCardId
+     */
+    public function iUnblockFundsOnACreditCardWithId(UuidInterface $creditCardId)
+    {
+        $this->handle(new UnblockFunds($creditCardId));
+    }
+
+    /**
+     * @When I charge :creditCardId GBP from a credit card with id :arg2
+     */
+    public function iChargeGbpFromACreditCardWithId(UuidInterface $creditCardId, Money $amount)
+    {
+        $this->handle(new ChargeFunds($creditCardId, (int) $amount->getAmount()));
+    }
+
+    /**
      * @Then I should be notified that a credit card was created
      */
     public function iShouldBeNotifiedThatACreditCardWasCreated()
@@ -111,6 +130,22 @@ class CreditCardContext extends DefaultContext
     public function iShouldBeNotifiedThatFundsWereBlocked()
     {
         $this->expectEvent(FundsWereBlocked::class);
+    }
+
+    /**
+     * @Then I should be notified that funds were unblocked
+     */
+    public function iShouldBeNotifiedThatFundsWereUnblocked()
+    {
+        $this->expectEvent(FundsWereUnblocked::class);
+    }
+
+    /**
+     * @Then I should be notified that funds were charged
+     */
+    public function iShouldBeNotifiedThatFundsWereCharged()
+    {
+        $this->expectEvent(FundsWereCharged::class);
     }
 
     /**
@@ -151,6 +186,14 @@ class CreditCardContext extends DefaultContext
     public function iShouldBeNotifiedThatICanNotBlockMoreThanAvailableFunds()
     {
         $this->expectException(CannotBlockMoreThanAvailableFunds::class);
+    }
+
+    /**
+     * @Then I should be notified that I can not charge too much funds
+     */
+    public function iShouldBeNotifiedThatICanNotChargeTooMuchFunds()
+    {
+        throw new PendingException();
     }
 
     /**
