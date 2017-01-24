@@ -15,6 +15,7 @@ use SimplePrepaidCard\CreditCard\Application\Command\LoadFunds;
 use SimplePrepaidCard\CreditCard\Application\Command\UnblockFunds;
 use SimplePrepaidCard\CreditCard\Model\CannotBlockMoreThanAvailableFunds;
 use SimplePrepaidCard\CreditCard\Model\CannotChargeMoreFundsThanBlocked;
+use SimplePrepaidCard\CreditCard\Model\CannotUseNegativeFunds;
 use SimplePrepaidCard\CreditCard\Model\CreditCardAlreadyExist;
 use SimplePrepaidCard\CreditCard\Model\CreditCardDoesNotExist;
 use SimplePrepaidCard\CreditCard\Model\CreditCardRepository;
@@ -196,6 +197,14 @@ class CreditCardContext extends DefaultContext
     public function iShouldBeNotifiedThatICanNotChargeMoreFundsThanBlocked()
     {
         $this->expectException(CannotChargeMoreFundsThanBlocked::class);
+    }
+
+    /**
+     * @Then I should be notified that I can not use negative funds
+     */
+    public function iShouldBeNotifiedThatICanNotUseNegativeFunds()
+    {
+        $this->expectException(CannotUseNegativeFunds::class);
     }
 
     /**

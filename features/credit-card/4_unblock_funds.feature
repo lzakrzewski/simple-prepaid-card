@@ -18,3 +18,4 @@ Feature: Unblock funds on a credit card
     Given I don't have a credit card
      When I unblock funds on a credit card with id "e6eb2b4c-94ce-46eb-b01c-67ed491dad26"
      Then I should be notified that credit card does not exist
+      And I should not be notified that funds were unblocked

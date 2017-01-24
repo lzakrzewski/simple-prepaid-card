@@ -195,7 +195,7 @@ final class CreditCard implements ContainsRecordedMessages
     private function guardAgainstNegativeFunds(Money $amount)
     {
         if ($amount->isNegative()) {
-            throw CannotLoadNegativeFunds::with($this->creditCardId());
+            throw CannotUseNegativeFunds::with($this->creditCardId());
         }
     }
 

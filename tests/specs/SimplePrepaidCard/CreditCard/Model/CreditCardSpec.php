@@ -9,7 +9,7 @@ use PhpSpec\ObjectBehavior;
 use Ramsey\Uuid\Uuid;
 use SimplePrepaidCard\CreditCard\Model\CannotBlockMoreThanAvailableFunds;
 use SimplePrepaidCard\CreditCard\Model\CannotChargeMoreFundsThanBlocked;
-use SimplePrepaidCard\CreditCard\Model\CannotLoadNegativeFunds;
+use SimplePrepaidCard\CreditCard\Model\CannotUseNegativeFunds;
 use SimplePrepaidCard\CreditCard\Model\CreditCard;
 
 /** @mixin CreditCard */
@@ -61,7 +61,7 @@ class CreditCardSpec extends ObjectBehavior
     {
         $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
 
-        $this->shouldThrow(CannotLoadNegativeFunds::class)->duringLoadFunds(Money::GBP(-55));
+        $this->shouldThrow(CannotUseNegativeFunds::class)->duringLoadFunds(Money::GBP(-55));
     }
 
     public function it_can_not_load_funds_with_invalid_currency()
@@ -106,7 +106,7 @@ class CreditCardSpec extends ObjectBehavior
     {
         $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
 
-        $this->shouldThrow(CannotLoadNegativeFunds::class)->duringBlockFunds(Money::GBP(-55));
+        $this->shouldThrow(CannotUseNegativeFunds::class)->duringBlockFunds(Money::GBP(-55));
     }
 
     public function it_can_not_block_funds_with_invalid_currency()
@@ -170,7 +170,7 @@ class CreditCardSpec extends ObjectBehavior
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(100));
 
-        $this->shouldThrow(CannotLoadNegativeFunds::class)->duringChargeFunds(Money::GBP(-55));
+        $this->shouldThrow(CannotUseNegativeFunds::class)->duringChargeFunds(Money::GBP(-55));
     }
 
     public function it_can_charge_not_funds_with_different_currency()
