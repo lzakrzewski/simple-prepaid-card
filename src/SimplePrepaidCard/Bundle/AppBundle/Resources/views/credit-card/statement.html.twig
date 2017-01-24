@@ -1,0 +1,20 @@
+{% extends '@App/base.html.twig' %}
+
+{% block body %}
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>AvailableBalance</th>
+            <th>Balance</th>
+        </tr>
+        {% for view in statement %}
+            <tr>
+                <td>{{ view.date }}</td>
+                <td>{{ view.date }}</td>
+                <td>{{ view.availableBalance }}</td>
+                <td>{{ view.balance }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

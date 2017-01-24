@@ -20,8 +20,15 @@ abstract class DatabaseTestCase extends IntegrationTestCase
     {
         $object = $builder->build();
 
+        $this->persist($object);
+    }
+
+    protected function persist($object)
+    {
         $this->entityManager()->persist($object);
         $this->entityManager()->flush();
+
+        return $object;
     }
 
     protected function flushAndClear()

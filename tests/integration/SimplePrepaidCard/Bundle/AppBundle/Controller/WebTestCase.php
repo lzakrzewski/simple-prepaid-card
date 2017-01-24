@@ -56,6 +56,11 @@ class WebTestCase extends DatabaseTestCase
         $this->assertEquals($expected, $this->client->getResponse()->getStatusCode());
     }
 
+    protected function responseContent(): string
+    {
+        return (string) $this->client->getResponse();
+    }
+
     protected function setUp()
     {
         parent::setUp();
@@ -73,10 +78,5 @@ class WebTestCase extends DatabaseTestCase
     private function formCollector(): FormDataCollector
     {
         return $this->client->getProfile()->getCollector('form');
-    }
-
-    private function responseContent(): string
-    {
-        return (string) $this->client->getResponse();
     }
 }

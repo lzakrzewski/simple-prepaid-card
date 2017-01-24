@@ -1,0 +1,8 @@
+services:
+    simple_prepaid_card.credit_card.query.statement: "@simple_prepaid_card.credit_card.query.statement.doctrine_orm"
+
+    simple_prepaid_card.credit_card.query.statement.doctrine_orm:
+        class: SimplePrepaidCard\CreditCard\Infrastructure\DoctrineORMStatementQuery
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
+

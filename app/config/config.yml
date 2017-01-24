@@ -51,7 +51,11 @@ doctrine:
         auto_mapping: false
         naming_strategy: doctrine.orm.naming_strategy.underscore
         mappings:
-            wedding:
+            credit_card:
                 type: annotation
                 dir: "%kernel.root_dir%/../src/SimplePrepaidCard/CreditCard/Model"
                 prefix: SimplePrepaidCard\CreditCard\Model
+            statement:
+                type: annotation
+                dir: "%kernel.root_dir%/../src/SimplePrepaidCard/CreditCard/Application/Query"
+                prefix: SimplePrepaidCard\CreditCard\Application\Query
