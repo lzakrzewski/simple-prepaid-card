@@ -52,4 +52,9 @@ final class FundsWereBlocked
     {
         return $this->availableBalance;
     }
+
+    public function at(): \DateTime
+    {
+        return $this->at;
+    }
 }

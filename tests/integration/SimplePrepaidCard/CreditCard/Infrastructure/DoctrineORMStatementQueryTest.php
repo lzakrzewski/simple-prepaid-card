@@ -19,11 +19,18 @@ class DoctrineORMStatementQueryTest extends DatabaseTestCase
     {
         $creditCardId = Uuid::uuid4();
 
-        $view3 = $this->persist(new StatementView($creditCardId, new \DateTime('2017-01-01'), 'Funds loaded', 100, 100, 100));
-        $view2 = $this->persist(new StatementView($creditCardId, new \DateTime('2017-01-02'), 'Funds loaded', 100, 200, 200));
-        $view1 = $this->persist(new StatementView($creditCardId, new \DateTime('2017-01-03'), 'Funds charged', 100, 100, 100));
+        $this->persist(new StatementView(1, $creditCardId, new \DateTime('2017-01-01'), 'Funds were loaded', 100, 100, 100));
+        $this->persist(new StatementView(2, $creditCardId, new \DateTime('2017-01-02'), 'Funds were loaded', 100, 200, 200));
+        $this->persist(new StatementView(3, $creditCardId, new \DateTime('2017-01-03'), 'Funds were charged', 100, 100, 100));
 
-        $this->assertEquals([$view1, $view2, $view3], $this->query->get($creditCardId));
+        $this->assertEquals(
+            [
+                new StatementView(3, $creditCardId, new \DateTime('2017-01-03'), 'Funds were charged', 100, 100, 100),
+                new StatementView(2, $creditCardId, new \DateTime('2017-01-02'), 'Funds were loaded', 100, 200, 200),
+                new StatementView(1, $creditCardId, new \DateTime('2017-01-01'), 'Funds were loaded', 100, 100, 100),
+            ],
+            $this->query->get($creditCardId)
+        );
     }
 
     /** @test * */
@@ -32,10 +39,15 @@ class DoctrineORMStatementQueryTest extends DatabaseTestCase
         $creditCardId        = Uuid::uuid4();
         $anotherCreditCardId = Uuid::uuid4();
 
-        $view = $this->persist(new StatementView($creditCardId, new \DateTime('2017-01-01'), 'Funds loaded', 100, 100, 100));
-        $this->persist(new StatementView($anotherCreditCardId, new \DateTime('2017-01-02'), 'Funds loaded', 100, 200, 200));
+        $this->persist(new StatementView(1, $creditCardId, new \DateTime('2017-01-01'), 'Funds were loaded', 100, 100, 100));
+        $this->persist(new StatementView(2, $anotherCreditCardId, new \DateTime('2017-01-02'), 'Funds were loaded', 100, 200, 200));
 
-        $this->assertEquals([$view], $this->query->get($creditCardId));
+        $this->assertEquals(
+            [
+                new StatementView(1, $creditCardId, new \DateTime('2017-01-01'), 'Funds were loaded', 100, 100, 100),
+            ],
+            $this->query->get($creditCardId)
+        );
     }
 
     /** @test * */

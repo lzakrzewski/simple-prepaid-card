@@ -6,3 +6,10 @@ services:
         arguments:
             - '@doctrine.orm.default_entity_manager'
 
+    simple_prepaid_card.credit_card.projector.statement.doctrine_orm:
+        class: SimplePrepaidCard\CreditCard\Infrastructure\DoctrineORMStatementProjector
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
+        tags:
+            - { name: event_subscriber, subscribes_to: SimplePrepaidCard\CreditCard\Model\FundsWereCharged, method: applyThatFundsWereCharged }
+            - { name: event_subscriber, subscribes_to: SimplePrepaidCard\CreditCard\Model\FundsWereLoaded, method: applyThatFundsWereLoaded }
