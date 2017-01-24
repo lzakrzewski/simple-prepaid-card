@@ -153,7 +153,7 @@ final class CreditCard implements ContainsRecordedMessages
         );
     }
 
-    public function unblock()
+    public function unblockFunds()
     {
         if ($this->availableBalance()->greaterThanOrEqual($this->balance())) {
             return;
@@ -171,7 +171,7 @@ final class CreditCard implements ContainsRecordedMessages
         );
     }
 
-    public function charge(Money $amount)
+    public function chargeFunds(Money $amount)
     {
         $this->guardAgainstNegativeFunds($amount);
         $this->guardAgainstChargeMoreFundsThanBlocked($amount);

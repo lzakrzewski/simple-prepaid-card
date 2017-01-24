@@ -122,7 +122,7 @@ class CreditCardSpec extends ObjectBehavior
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(77));
 
-        $this->unblock();
+        $this->unblockFunds();
 
         $this->availableBalance()->shouldBeLike(Money::GBP(100));
         $this->balance()->shouldBeLike(Money::GBP(100));
@@ -133,7 +133,7 @@ class CreditCardSpec extends ObjectBehavior
         $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
         $this->loadFunds(Money::GBP(100));
 
-        $this->unblock();
+        $this->unblockFunds();
 
         $this->availableBalance()->shouldBeLike(Money::GBP(100));
         $this->balance()->shouldBeLike(Money::GBP(100));
@@ -145,7 +145,7 @@ class CreditCardSpec extends ObjectBehavior
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(100));
 
-        $this->charge(Money::GBP(100));
+        $this->chargeFunds(Money::GBP(100));
 
         $this->availableBalance()->shouldBeLike(Money::GBP(0));
         $this->balance()->shouldBeLike(Money::GBP(0));
@@ -157,8 +157,8 @@ class CreditCardSpec extends ObjectBehavior
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(90));
 
-        $this->charge(Money::GBP(10));
-        $this->charge(Money::GBP(40));
+        $this->chargeFunds(Money::GBP(10));
+        $this->chargeFunds(Money::GBP(40));
 
         $this->availableBalance()->shouldBeLike(Money::GBP(10));
         $this->balance()->shouldBeLike(Money::GBP(50));
@@ -170,16 +170,16 @@ class CreditCardSpec extends ObjectBehavior
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(100));
 
-        $this->shouldThrow(CannotLoadNegativeFunds::class)->duringCharge(Money::GBP(-55));
+        $this->shouldThrow(CannotLoadNegativeFunds::class)->duringChargeFunds(Money::GBP(-55));
     }
 
-    public function it_can_not_funds_with_different_currency()
+    public function it_can_charge_not_funds_with_different_currency()
     {
         $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(100));
 
-        $this->shouldThrow(\InvalidArgumentException::class)->duringCharge(Money::USD(55));
+        $this->shouldThrow(\InvalidArgumentException::class)->duringChargeFunds(Money::USD(55));
     }
 
     public function it_can_not_charge_more_funds_than_blocked()
@@ -188,7 +188,7 @@ class CreditCardSpec extends ObjectBehavior
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(99));
 
-        $this->shouldThrow(CannotChargeMoreFundsThanBlocked::class)->duringCharge(Money::GBP(100));
+        $this->shouldThrow(CannotChargeMoreFundsThanBlocked::class)->duringChargeFunds(Money::GBP(100));
     }
 
     public function it_can_not_charge_where_funds_were_not_blocked()
@@ -196,6 +196,6 @@ class CreditCardSpec extends ObjectBehavior
         $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
         $this->loadFunds(Money::GBP(100));
 
-        $this->shouldThrow(CannotChargeMoreFundsThanBlocked::class)->duringCharge(Money::GBP(100));
+        $this->shouldThrow(CannotChargeMoreFundsThanBlocked::class)->duringChargeFunds(Money::GBP(100));
     }
 }

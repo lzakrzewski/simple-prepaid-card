@@ -19,6 +19,6 @@ final class UnblockFundsHandler
     public function handle(UnblockFunds $command)
     {
         $creditCard = $this->creditCards->get($command->creditCardId);
-        $creditCard->unblock();
+        $creditCard->unblockFunds();
     }
 }
