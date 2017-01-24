@@ -8,6 +8,7 @@ use Money\Money;
 use PhpSpec\ObjectBehavior;
 use Ramsey\Uuid\Uuid;
 use SimplePrepaidCard\CreditCard\Model\CannotBlockMoreThanAvailableFunds;
+use SimplePrepaidCard\CreditCard\Model\CannotChargeMoreFundsThanBlocked;
 use SimplePrepaidCard\CreditCard\Model\CannotLoadNegativeFunds;
 use SimplePrepaidCard\CreditCard\Model\CreditCard;
 
@@ -136,5 +137,65 @@ class CreditCardSpec extends ObjectBehavior
 
         $this->availableBalance()->shouldBeLike(Money::GBP(100));
         $this->balance()->shouldBeLike(Money::GBP(100));
+    }
+
+    public function it_can_charge_funds()
+    {
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->loadFunds(Money::GBP(100));
+        $this->blockFunds(Money::GBP(100));
+
+        $this->charge(Money::GBP(100));
+
+        $this->availableBalance()->shouldBeLike(Money::GBP(0));
+        $this->balance()->shouldBeLike(Money::GBP(0));
+    }
+
+    public function it_can_charge_funds_multiple_times()
+    {
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->loadFunds(Money::GBP(100));
+        $this->blockFunds(Money::GBP(90));
+
+        $this->charge(Money::GBP(10));
+        $this->charge(Money::GBP(40));
+
+        $this->availableBalance()->shouldBeLike(Money::GBP(10));
+        $this->balance()->shouldBeLike(Money::GBP(50));
+    }
+
+    public function it_can_not_charge_negative_funds()
+    {
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->loadFunds(Money::GBP(100));
+        $this->blockFunds(Money::GBP(100));
+
+        $this->shouldThrow(CannotLoadNegativeFunds::class)->duringCharge(Money::GBP(-55));
+    }
+
+    public function it_can_not_funds_with_different_currency()
+    {
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->loadFunds(Money::GBP(100));
+        $this->blockFunds(Money::GBP(100));
+
+        $this->shouldThrow(\InvalidArgumentException::class)->duringCharge(Money::USD(55));
+    }
+
+    public function it_can_not_charge_more_funds_than_blocked()
+    {
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->loadFunds(Money::GBP(100));
+        $this->blockFunds(Money::GBP(99));
+
+        $this->shouldThrow(CannotChargeMoreFundsThanBlocked::class)->duringCharge(Money::GBP(100));
+    }
+
+    public function it_can_not_charge_where_funds_were_not_blocked()
+    {
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->loadFunds(Money::GBP(100));
+
+        $this->shouldThrow(CannotChargeMoreFundsThanBlocked::class)->duringCharge(Money::GBP(100));
     }
 }

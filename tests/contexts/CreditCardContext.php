@@ -14,11 +14,13 @@ use SimplePrepaidCard\CreditCard\Application\Command\CreateCreditCard;
 use SimplePrepaidCard\CreditCard\Application\Command\LoadFunds;
 use SimplePrepaidCard\CreditCard\Application\Command\UnblockFunds;
 use SimplePrepaidCard\CreditCard\Model\CannotBlockMoreThanAvailableFunds;
+use SimplePrepaidCard\CreditCard\Model\CannotChargeMoreFundsThanBlocked;
 use SimplePrepaidCard\CreditCard\Model\CreditCardAlreadyExist;
 use SimplePrepaidCard\CreditCard\Model\CreditCardDoesNotExist;
 use SimplePrepaidCard\CreditCard\Model\CreditCardRepository;
 use SimplePrepaidCard\CreditCard\Model\CreditCardWasCreated;
 use SimplePrepaidCard\CreditCard\Model\FundsWereBlocked;
+use SimplePrepaidCard\CreditCard\Model\FundsWereCharged;
 use SimplePrepaidCard\CreditCard\Model\FundsWereLoaded;
 use SimplePrepaidCard\CreditCard\Model\FundsWereUnblocked;
 use tests\builders\CreditCard\CreditCardBuilder;
@@ -101,9 +103,9 @@ class CreditCardContext extends DefaultContext
     }
 
     /**
-     * @When I charge :creditCardId GBP from a credit card with id :arg2
+     * @When I charge :amount GBP from a credit card with id :creditCardId
      */
-    public function iChargeGbpFromACreditCardWithId(UuidInterface $creditCardId, Money $amount)
+    public function iChargeGbpFromACreditCardWithId(Money $amount, UuidInterface $creditCardId)
     {
         $this->handle(new ChargeFunds($creditCardId, (int) $amount->getAmount()));
     }
@@ -189,11 +191,11 @@ class CreditCardContext extends DefaultContext
     }
 
     /**
-     * @Then I should be notified that I can not charge too much funds
+     * @Then I should be notified that I can not charge more funds than blocked
      */
-    public function iShouldBeNotifiedThatICanNotChargeTooMuchFunds()
+    public function iShouldBeNotifiedThatICanNotChargeMoreFundsThanBlocked()
     {
-        throw new PendingException();
+        $this->expectException(CannotChargeMoreFundsThanBlocked::class);
     }
 
     /**

@@ -171,6 +171,27 @@ final class CreditCard implements ContainsRecordedMessages
         );
     }
 
+    public function charge(Money $amount)
+    {
+        $this->guardAgainstNegativeFunds($amount);
+        $this->guardAgainstChargeMoreFundsThanBlocked($amount);
+
+        $this->balance = (int) $this
+            ->balance()
+            ->subtract($amount)
+            ->getAmount();
+
+        $this->record(
+            new FundsWereCharged(
+                $this->creditCardId(),
+                $amount,
+                $this->balance(),
+                $this->availableBalance(),
+                new \DateTime()
+            )
+        );
+    }
+
     private function guardAgainstNegativeFunds(Money $amount)
     {
         if ($amount->isNegative()) {
@@ -182,6 +203,15 @@ final class CreditCard implements ContainsRecordedMessages
     {
         if ($this->availableBalance()->subtract($amount)->isNegative()) {
             throw CannotBlockMoreThanAvailableFunds::with($this->creditCardId());
+        }
+    }
+
+    private function guardAgainstChargeMoreFundsThanBlocked(Money $amount)
+    {
+        $blocked = $this->balance()->subtract($this->availableBalance());
+
+        if ($blocked->subtract($amount)->isNegative()) {
+            throw CannotChargeMoreFundsThanBlocked::with($this->creditCardId());
         }
     }
 }
