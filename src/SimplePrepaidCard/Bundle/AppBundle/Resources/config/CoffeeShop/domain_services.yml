@@ -1,0 +1,11 @@
+services:
+    simple_prepaid_card.coffee_shop.credit_card_provider: "@simple_prepaid_card.coffee_shop.credit_card_provider.local"
+
+    simple_prepaid_card.coffee_shop.credit_card_provider.local:
+        class: SimplePrepaidCard\CoffeeShop\Infrastructure\ACL\LocalCreditCardProvider
+        arguments:
+            - "@command_bus"
+            - "@simple_prepaid_card.credit_card.repository.credit_card"
+
+    simple_prepaid_card.coffee_shop.products:
+        class: SimplePrepaidCard\CoffeeShop\Model\Products

@@ -18,6 +18,11 @@ class SimplePrepaidCardAppExtension extends Extension
         $loader->load('command_handlers.yml');
         $loader->load('queries.yml');
         $loader->load('repositories.yml');
+
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/CoffeeShop'));
+        $loader->load('command_handlers.yml');
+        $loader->load('domain_services.yml');
+        $loader->load('repositories.yml');
     }
 
     /** {@inheritdoc} */

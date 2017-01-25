@@ -1,0 +1,7 @@
+services:
+    simple_prepaid_card.coffee_shop.repository.customer: "@simple_prepaid_card.coffee_shop.repository.customer.doctrine_orm"
+
+    simple_prepaid_card.coffee_shop.repository.customer.doctrine_orm:
+        class: SimplePrepaidCard\CoffeeShop\Infrastructure\DoctrineORMCustomerRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments: [SimplePrepaidCard\CoffeeShop\Model\Customer]

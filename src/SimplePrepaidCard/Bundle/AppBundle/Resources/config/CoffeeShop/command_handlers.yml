@@ -1,0 +1,9 @@
+services:
+    simple_prepaid_card.coffee_shop.command_handler.buy_product:
+        class: SimplePrepaidCard\CoffeeShop\Application\Command\BuyProductHandler
+        arguments:
+            - "@simple_prepaid_card.coffee_shop.repository.customer"
+            - "@simple_prepaid_card.coffee_shop.products"
+            - "@simple_prepaid_card.coffee_shop.credit_card_provider"
+        tags:
+            - { name: command_handler, handles: SimplePrepaidCard\CoffeeShop\Application\Command\BuyProduct }

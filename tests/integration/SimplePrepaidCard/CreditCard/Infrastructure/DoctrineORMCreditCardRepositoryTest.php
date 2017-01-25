@@ -8,6 +8,7 @@ use Ramsey\Uuid\Uuid;
 use SimplePrepaidCard\CreditCard\Infrastructure\DoctrineORMCreditCardRepository;
 use SimplePrepaidCard\CreditCard\Model\CreditCardAlreadyExist;
 use SimplePrepaidCard\CreditCard\Model\CreditCardDoesNotExist;
+use SimplePrepaidCard\CreditCard\Model\CreditCardOfCardHolderDoesNotExist;
 use tests\builders\CreditCard\CreditCardBuilder;
 use tests\integration\SimplePrepaidCard\DatabaseTestCase;
 
@@ -62,6 +63,32 @@ class DoctrineORMCreditCardRepositoryTest extends DatabaseTestCase
                 ->withCreditCardId($creditCardId)
                 ->build()
         );
+    }
+
+    /** @test */
+    public function it_can_get_credit_card_id_of_card_holder()
+    {
+        $expectedCreditCardId = Uuid::uuid4();
+        $holderId             = Uuid::uuid4();
+
+        $this->repository->add(
+            CreditCardBuilder::create()
+                ->withCreditCardId($expectedCreditCardId)
+                ->ofHolder($holderId)
+                ->build()
+        );
+
+        $this->flushAndClear();
+
+        $this->assertEquals($expectedCreditCardId, $this->repository->creditCardIdOfHolder($holderId));
+    }
+
+    /** @test */
+    public function it_fails_when_credit_card_of_card_holder_does_not_exist()
+    {
+        $this->expectException(CreditCardOfCardHolderDoesNotExist::class);
+
+        $this->repository->creditCardIdOfHolder(Uuid::uuid4());
     }
 
     protected function setUp()

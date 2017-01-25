@@ -218,7 +218,6 @@ class CreditCardContext extends DefaultContext
     /**
      * @Transform :balance
      * @Transform :availableBalance
-     * @Transform :amount
      */
     public function money(string $money): Money
     {

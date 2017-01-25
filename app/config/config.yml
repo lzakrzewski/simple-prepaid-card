@@ -55,6 +55,10 @@ doctrine:
                 type: annotation
                 dir: "%kernel.root_dir%/../src/SimplePrepaidCard/CreditCard/Model"
                 prefix: SimplePrepaidCard\CreditCard\Model
+            coffe_shop:
+                type: annotation
+                dir: "%kernel.root_dir%/../src/SimplePrepaidCard/CoffeeShop/Model"
+                prefix: SimplePrepaidCard\CoffeeShop\Model
             statement:
                 type: annotation
                 dir: "%kernel.root_dir%/../src/SimplePrepaidCard/CreditCard/Application/Query"

@@ -37,7 +37,7 @@ class CreditCardControllerTest extends WebTestCase
         $this->fillAndSubmitForm('credit_card[save]', []);
 
         $this->assertResponseStatusCode(Response::HTTP_OK);
-        $this->assertThatFormIsInNotValid();
+        $this->assertThatFormIsNotValid();
     }
 
     /** @test */
@@ -69,7 +69,7 @@ class CreditCardControllerTest extends WebTestCase
         $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '-100']);
 
         $this->assertResponseStatusCode(Response::HTTP_OK);
-        $this->assertThatFormIsInNotValid();
+        $this->assertThatFormIsNotValid();
     }
 
     /** @test */
@@ -105,7 +105,7 @@ class CreditCardControllerTest extends WebTestCase
         $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '-100']);
 
         $this->assertResponseStatusCode(Response::HTTP_OK);
-        $this->assertThatFormIsInNotValid();
+        $this->assertThatFormIsNotValid();
     }
 
     /** @test */
@@ -159,6 +159,6 @@ class CreditCardControllerTest extends WebTestCase
         $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '-100']);
 
         $this->assertResponseStatusCode(Response::HTTP_OK);
-        $this->assertThatFormIsInNotValid();
+        $this->assertThatFormIsNotValid();
     }
 }

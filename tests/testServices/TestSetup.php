@@ -16,16 +16,21 @@ class TestSetup
     /** @var ContainsRecordedEventsMiddleware */
     private $recordedEvents;
 
-    public function __construct(DoctrineDatabaseBackup $backup, ContainsRecordedEventsMiddleware $recordedEvents)
+    /** @var TestCreditCardProvider */
+    private $creditCardProvider;
+
+    public function __construct(DoctrineDatabaseBackup $backup, ContainsRecordedEventsMiddleware $recordedEvents, TestCreditCardProvider $creditCardProvider)
     {
-        $this->backup         = $backup;
-        $this->recordedEvents = $recordedEvents;
+        $this->backup             = $backup;
+        $this->recordedEvents     = $recordedEvents;
+        $this->creditCardProvider = $creditCardProvider;
     }
 
     public function setup()
     {
         $this->setupDatabase();
         $this->clearRecordedEvents();
+        $this->resetCreditCardProvider();
     }
 
     private function setupDatabase()
@@ -47,5 +52,10 @@ class TestSetup
     private function clearRecordedEvents()
     {
         $this->recordedEvents->clear();
+    }
+
+    private function resetCreditCardProvider()
+    {
+        $this->creditCardProvider->reset();
     }
 }

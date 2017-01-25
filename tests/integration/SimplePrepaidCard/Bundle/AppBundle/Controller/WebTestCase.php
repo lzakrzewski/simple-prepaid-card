@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Form\Extension\DataCollector\FormDataCollector;
 use tests\integration\SimplePrepaidCard\DatabaseTestCase;
 
-class WebTestCase extends DatabaseTestCase
+abstract class WebTestCase extends DatabaseTestCase
 {
     /** @var Client */
     private $client;
@@ -39,7 +39,7 @@ class WebTestCase extends DatabaseTestCase
         $this->assertNotContains('alert-danger', $response);
     }
 
-    protected function assertThatFormIsInNotValid()
+    protected function assertThatFormIsNotValid()
     {
         $collector = $this->formCollector();
         $response  = $this->responseContent();

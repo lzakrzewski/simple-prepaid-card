@@ -71,7 +71,7 @@ class CreditCardBuilder implements Builder
         return $copy;
     }
 
-    public function withHolderId(UuidInterface $holderId): self
+    public function ofHolder(UuidInterface $holderId): self
     {
         $copy           = $this->copy();
         $copy->holderId = $holderId;

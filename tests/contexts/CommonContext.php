@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace tests\contexts;
 
+use Money\Money;
+
 class CommonContext extends DefaultContext
 {
     /** @BeforeScenario */
@@ -18,5 +20,13 @@ class CommonContext extends DefaultContext
     public function noEvents()
     {
         $this->expectsNoEvents();
+    }
+
+    /**
+     * @Transform :amount
+     */
+    public function money(string $money): Money
+    {
+        return Money::GBP((int) $money);
     }
 }
