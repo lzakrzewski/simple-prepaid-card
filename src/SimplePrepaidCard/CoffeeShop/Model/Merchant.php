@@ -118,6 +118,16 @@ final class Merchant implements ContainsRecordedMessages
         $creditCardProvider->reverse($amount, $this->authorizedBy());
 
         $this->authorized = (int) $this->authorized()->subtract($amount)->getAmount();
+
+        $this->record(
+            new AuthorizationWasReversed(
+                $this->merchantId(),
+                $this->authorizedBy(),
+                $amount,
+                $this->authorized(),
+                $this->captured(),
+                new \DateTime())
+        );
     }
 
     public function refund(Money $amount, CreditCardProvider $creditCardProvider)
@@ -128,6 +138,16 @@ final class Merchant implements ContainsRecordedMessages
         $creditCardProvider->refund($amount, $this->authorizedBy());
 
         $this->captured = (int) $this->captured()->subtract($amount)->getAmount();
+
+        $this->record(
+            new CapturedWasRefunded(
+                $this->merchantId(),
+                $this->authorizedBy(),
+                $amount,
+                $this->authorized(),
+                $this->captured(),
+                new \DateTime())
+        );
     }
 
     public function authorized(): Money

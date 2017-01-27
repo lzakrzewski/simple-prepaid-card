@@ -11,10 +11,14 @@ use Ramsey\Uuid\UuidInterface;
 use SimplePrepaidCard\CoffeeShop\Application\Command\AuthorizeMerchant;
 use SimplePrepaidCard\CoffeeShop\Application\Command\BuyProduct;
 use SimplePrepaidCard\CoffeeShop\Application\Command\CaptureAuthorization;
+use SimplePrepaidCard\CoffeeShop\Application\Command\RefundCaptured;
+use SimplePrepaidCard\CoffeeShop\Application\Command\ReverseAuthorization;
 use SimplePrepaidCard\CoffeeShop\Model\AuthorizationRequestWasDeclined;
 use SimplePrepaidCard\CoffeeShop\Model\AuthorizationWasCaptured;
+use SimplePrepaidCard\CoffeeShop\Model\AuthorizationWasReversed;
 use SimplePrepaidCard\CoffeeShop\Model\CannotCaptureMoreThanAuthorized;
 use SimplePrepaidCard\CoffeeShop\Model\CannotUseNegativeAmount;
+use SimplePrepaidCard\CoffeeShop\Model\CaptureWasDeclined;
 use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider;
 use SimplePrepaidCard\CoffeeShop\Model\Customer;
 use SimplePrepaidCard\CoffeeShop\Model\CustomerDoesNotExist;
@@ -23,6 +27,7 @@ use SimplePrepaidCard\CoffeeShop\Model\MerchantRepository;
 use SimplePrepaidCard\CoffeeShop\Model\MerchantWasAuthorized;
 use SimplePrepaidCard\CoffeeShop\Model\ProductIsUnknown;
 use SimplePrepaidCard\CoffeeShop\Model\ProductWasBought;
+use SimplePrepaidCard\CoffeeShop\Model\ReverseWasDeclined;
 use tests\builders\CoffeeShop\CustomerBuilder;
 use tests\builders\CoffeeShop\MerchantBuilder;
 use tests\testServices\TestCreditCardProvider;
@@ -76,8 +81,9 @@ class CoffeeShopContext extends DefaultContext
     /**
      * @Given credit card provider will approve authorization request
      * @Given credit card provider will approve capture
+     * @Given credit card provider will approve reverse
      */
-    public function creditCardProviderWillApproveAuthorizationRequest()
+    public function creditCardProviderWillApprove()
     {
         $this->creditCardProvider()->willApprove();
     }
@@ -85,8 +91,9 @@ class CoffeeShopContext extends DefaultContext
     /**
      * @Given credit card provider will decline authorization request
      * @Given credit card provider will decline capture
+     * @Given credit card provider will decline reverse
      */
-    public function creditCardProviderWillDeclineAuthorizationRequest()
+    public function creditCardProviderWillDecline()
     {
         $this->creditCardProvider()->willDecline();
     }
@@ -116,6 +123,22 @@ class CoffeeShopContext extends DefaultContext
     }
 
     /**
+     * @When I reverse :amount GBP from my authorization
+     */
+    public function iReverseGbpFromMyAuthorization(Money $amount)
+    {
+        $this->handle(new ReverseAuthorization($this->merchantId ?: Uuid::uuid4(), (int) $amount->getAmount()));
+    }
+
+    /**
+     * @When I refund :amount GBP from my captured
+     */
+    public function iRefundGbpFromMyCaptured(Money $amount)
+    {
+        $this->handle(new RefundCaptured($this->merchantId ?: Uuid::uuid4(), (int) $amount->getAmount()));
+    }
+
+    /**
      * @Then I should be notified that product was bought
      */
     public function iShouldBeNotifiedThatProductWasBought()
@@ -137,6 +160,14 @@ class CoffeeShopContext extends DefaultContext
     public function iShouldBeNotifiedThatAuthorizationWasCaptured()
     {
         $this->expectEvent(AuthorizationWasCaptured::class);
+    }
+
+    /**
+     * @Then I should be notified that authorization was reversed
+     */
+    public function iShouldBeNotifiedThatAuthorizationWasReversed()
+    {
+        $this->expectEvent(AuthorizationWasReversed::class);
     }
 
     /**
@@ -185,6 +216,22 @@ class CoffeeShopContext extends DefaultContext
     public function iShouldBeNotifiedThatICanNotCaptureMoreThanAuthorized()
     {
         $this->expectException(CannotCaptureMoreThanAuthorized::class);
+    }
+
+    /**
+     * @Then I should be notified that capture was declined
+     */
+    public function iShouldBeNotifiedThatCaptureWasDeclined()
+    {
+        $this->expectException(CaptureWasDeclined::class);
+    }
+
+    /**
+     * @Then I should be notified that reverse was declined
+     */
+    public function iShouldBeNotifiedThatReverseWasDeclined()
+    {
+        $this->expectException(ReverseWasDeclined::class);
     }
 
     /**

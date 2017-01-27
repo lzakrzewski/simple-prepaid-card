@@ -22,3 +22,19 @@ services:
             - "@simple_prepaid_card.coffee_shop.credit_card_provider"
         tags:
             - { name: command_handler, handles: SimplePrepaidCard\CoffeeShop\Application\Command\CaptureAuthorization }
+
+    simple_prepaid_card.coffee_shop.command_handler.reverse_authorization:
+        class: SimplePrepaidCard\CoffeeShop\Application\Command\ReverseAuthorizationHandler
+        arguments:
+            - "@simple_prepaid_card.coffee_shop.repository.merchant"
+            - "@simple_prepaid_card.coffee_shop.credit_card_provider"
+        tags:
+            - { name: command_handler, handles: SimplePrepaidCard\CoffeeShop\Application\Command\ReverseAuthorization }
+
+    simple_prepaid_card.coffee_shop.command_handler.refund_captured:
+        class: SimplePrepaidCard\CoffeeShop\Application\Command\RefundCapturedHandler
+        arguments:
+            - "@simple_prepaid_card.coffee_shop.repository.merchant"
+            - "@simple_prepaid_card.coffee_shop.credit_card_provider"
+        tags:
+            - { name: command_handler, handles: SimplePrepaidCard\CoffeeShop\Application\Command\RefundCaptured }

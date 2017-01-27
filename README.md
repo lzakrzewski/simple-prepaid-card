@@ -5,7 +5,8 @@ Simplified model of a prepaid card the card holds a balance in GBP and users can
 #Todo. Improve deploy with travis encription
 #Todo: Sqlite to composer json
 #Todo: Projections
-#Todo: Panele
+#Todo: Panels
+#Todo: Add marks for command etc
 
 ## Readme todo:
 - [ ] Link to app
