@@ -78,8 +78,8 @@ final class MerchantBuilder implements Builder
         }
 
         if ($this->captured->isPositive()) {
-            $merchant->capture($this->captured, new CreditCardProviderStub());
             $merchant->authorize($this->captured, $this->authorizedBy);
+            $merchant->capture($this->captured, new CreditCardProviderStub());
         }
 
         $merchant->eraseMessages();

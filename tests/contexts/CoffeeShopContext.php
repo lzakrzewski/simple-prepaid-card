@@ -18,6 +18,7 @@ use SimplePrepaidCard\CoffeeShop\Model\AuthorizationWasCaptured;
 use SimplePrepaidCard\CoffeeShop\Model\AuthorizationWasReversed;
 use SimplePrepaidCard\CoffeeShop\Model\CannotCaptureMoreThanAuthorized;
 use SimplePrepaidCard\CoffeeShop\Model\CannotUseNegativeAmount;
+use SimplePrepaidCard\CoffeeShop\Model\CapturedWasRefunded;
 use SimplePrepaidCard\CoffeeShop\Model\CaptureWasDeclined;
 use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider;
 use SimplePrepaidCard\CoffeeShop\Model\Customer;
@@ -27,6 +28,7 @@ use SimplePrepaidCard\CoffeeShop\Model\MerchantRepository;
 use SimplePrepaidCard\CoffeeShop\Model\MerchantWasAuthorized;
 use SimplePrepaidCard\CoffeeShop\Model\ProductIsUnknown;
 use SimplePrepaidCard\CoffeeShop\Model\ProductWasBought;
+use SimplePrepaidCard\CoffeeShop\Model\RefundWasDeclined;
 use SimplePrepaidCard\CoffeeShop\Model\ReverseWasDeclined;
 use tests\builders\CoffeeShop\CustomerBuilder;
 use tests\builders\CoffeeShop\MerchantBuilder;
@@ -82,6 +84,7 @@ class CoffeeShopContext extends DefaultContext
      * @Given credit card provider will approve authorization request
      * @Given credit card provider will approve capture
      * @Given credit card provider will approve reverse
+     * @Given credit card provider will approve refund
      */
     public function creditCardProviderWillApprove()
     {
@@ -92,6 +95,7 @@ class CoffeeShopContext extends DefaultContext
      * @Given credit card provider will decline authorization request
      * @Given credit card provider will decline capture
      * @Given credit card provider will decline reverse
+     * @Given credit card provider will decline refund
      */
     public function creditCardProviderWillDecline()
     {
@@ -171,6 +175,14 @@ class CoffeeShopContext extends DefaultContext
     }
 
     /**
+     * @Then I should be notified that captured was refunded
+     */
+    public function iShouldBeNotifiedThatCapturedWasRefunded()
+    {
+        $this->expectEvent(CapturedWasRefunded::class);
+    }
+
+    /**
      * @Then I should be notified that authorization request was declined
      */
     public function iShouldBeNotifiedThatAuthorizationRequestWasDeclined()
@@ -232,6 +244,14 @@ class CoffeeShopContext extends DefaultContext
     public function iShouldBeNotifiedThatReverseWasDeclined()
     {
         $this->expectException(ReverseWasDeclined::class);
+    }
+
+    /**
+     * @Then I should be notified that refund was declined
+     */
+    public function iShouldBeNotifiedThatRefundWasDeclined()
+    {
+        $this->expectException(RefundWasDeclined::class);
     }
 
     /**
