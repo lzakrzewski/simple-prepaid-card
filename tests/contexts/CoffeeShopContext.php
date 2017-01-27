@@ -35,6 +35,7 @@ class CoffeeShopContext extends DefaultContext
 
     /**
      * @Given I am a customer with id :customerId
+     * @Given there is a customer with id :customerId
      */
     public function iAmACustomerWithId(UuidInterface $customerId)
     {
@@ -48,26 +49,16 @@ class CoffeeShopContext extends DefaultContext
 
     /**
      * @Given there is a merchant with id :merchantId
-     */
-    public function thereIsAMerchantWithId(UuidInterface $merchantId)
-    {
-        $this->buildPersisted(
-            MerchantBuilder::create()
-                ->withMerchantId($merchantId)
-        );
-    }
-
-    /**
      * @Given I am a merchant with id :merchantId authorized to :amount GBP
      */
-    public function iAmAMerchantWithIdAuthorizedToGbp(UuidInterface $merchantId, Money $amount)
+    public function thereIsAMerchantWithId(UuidInterface $merchantId, Money $amount = null)
     {
         $this->merchantId = $merchantId;
 
         $this->buildPersisted(
             MerchantBuilder::create()
                 ->withMerchantId($merchantId)
-                ->authorizedTo($amount)
+                ->authorizedTo($amount ?: Money::GBP(rand(10, 1000)))
         );
     }
 
@@ -96,9 +87,9 @@ class CoffeeShopContext extends DefaultContext
     }
 
     /**
-     * @When I authorize merchant with id :merchantId to :amount GBP
+     * @When A customer authorizes a merchant with id :merchantId to :amount GBP
      */
-    public function iAuthorizeMerchantWithIdToGbp(UuidInterface $merchantId, Money $amount)
+    public function aCustomerAuthorizesAMerchantWithIdToGbp(UuidInterface $merchantId, Money $amount)
     {
         $this->handle(new AuthorizeMerchant($merchantId, $this->customerId ?: Uuid::uuid4(), (int) $amount->getAmount()));
     }
