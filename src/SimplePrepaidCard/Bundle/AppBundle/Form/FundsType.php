@@ -10,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-//Todo: Money transformer
+//Todo: Money transformer, rename to amount ? use symfony Money type
 class FundsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
