@@ -12,6 +12,9 @@ final class MerchantWasAuthorized
     /** @var UuidInterface */
     private $merchantId;
 
+    /** @var UuidInterface */
+    private $authorizedBy;
+
     /** @var Money */
     private $amount;
 
@@ -21,9 +24,10 @@ final class MerchantWasAuthorized
     /** @var \DateTime */
     private $at;
 
-    public function __construct(UuidInterface $merchantId, Money $amount, Money $authorizedTo, \DateTime $at)
+    public function __construct(UuidInterface $merchantId, UuidInterface $authorizedBy, Money $amount, Money $authorizedTo, \DateTime $at)
     {
         $this->merchantId   = $merchantId;
+        $this->authorizedBy = $authorizedBy;
         $this->amount       = $amount;
         $this->authorizedTo = $authorizedTo;
         $this->at           = $at;
@@ -32,6 +36,11 @@ final class MerchantWasAuthorized
     public function merchantId(): UuidInterface
     {
         return $this->merchantId;
+    }
+
+    public function authorizedBy(): UuidInterface
+    {
+        return $this->authorizedBy;
     }
 
     public function amount(): Money

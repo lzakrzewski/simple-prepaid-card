@@ -25,6 +25,7 @@ final class AuthorizeMerchantWhenProductWasBought
         $this->commandBus->handle(
             new AuthorizeMerchant(
                 Uuid::fromString(Merchant::MERCHANT_ID),
+                $event->customerId(),
                 (int) $event->product()->price()->getAmount()
             )
         );

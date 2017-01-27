@@ -71,6 +71,6 @@ class AuthorizeMerchantWhenProductWasBoughtTest extends DatabaseTestCase
     {
         $merchant = $this->merchants->get(Uuid::fromString(Merchant::MERCHANT_ID));
 
-        $this->assertEquals($amount, $merchant->authorizedTo());
+        $this->assertEquals($amount, $merchant->authorized());
     }
 }

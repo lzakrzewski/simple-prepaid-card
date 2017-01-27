@@ -43,12 +43,27 @@ final class Merchant implements ContainsRecordedMessages
      *
      * @ORM\Column(type="integer")
      */
-    private $authorizedTo;
+    private $authorized;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="guid", nullable=true)
+     */
+    private $authorizedBy;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $captured;
 
     public function __construct(UuidInterface $merchantId)
     {
-        $this->merchantId   = $merchantId->toString();
-        $this->authorizedTo = (int) Money::GBP(0)->getAmount();
+        $this->merchantId = $merchantId->toString();
+        $this->authorized = (int) Money::GBP(0)->getAmount();
+        $this->captured   = (int) Money::GBP(0)->getAmount();
     }
 
     public static function create(): self
@@ -56,18 +71,50 @@ final class Merchant implements ContainsRecordedMessages
         return new self(Uuid::fromString(self::MERCHANT_ID));
     }
 
-    public function authorize(Money $amount)
+    public function authorize(Money $amount, UuidInterface $authorizedBy)
     {
         $this->guardNegativeAmount($amount);
 
-        $this->authorizedTo = (int) $this->authorizedTo()->add($amount)->getAmount();
+        $this->authorized   = (int) $this->authorized()->add($amount)->getAmount();
+        $this->authorizedBy = $authorizedBy->toString();
 
-        $this->record(new MerchantWasAuthorized($this->merchantId(), $amount, $this->authorizedTo(), new \DateTime()));
+        $this->record(new MerchantWasAuthorized($this->merchantId(), $this->authorizedBy(), $amount, $this->authorized(), new \DateTime()));
     }
 
-    public function authorizedTo(): Money
+    public function capture(Money $amount, CreditCardProvider $creditCardProvider)
     {
-        return Money::GBP($this->authorizedTo);
+        $this->guardNegativeAmount($amount);
+        $this->guardAgainstCaptureMoreThanAuthorizedTo($amount);
+
+        $creditCardProvider->capture($amount, $this->authorizedBy());
+
+        $this->authorized = (int) $this->authorized()->subtract($amount)->getAmount();
+        $this->captured   = (int) $this->captured()->add($amount)->getAmount();
+    }
+
+    public function reverse(Money $amount, CreditCardProvider $creditCardProvider)
+    {
+        $this->guardNegativeAmount($amount);
+        $this->guardAgainstReverseMoreThanAuthorizedTo($amount);
+
+        $creditCardProvider->reverse($amount, $this->authorizedBy());
+
+        $this->authorized = (int) $this->authorized()->subtract($amount)->getAmount();
+    }
+
+    public function refund(Money $amount, CreditCardProvider $creditCardProvider)
+    {
+        $this->guardNegativeAmount($amount);
+        $this->guardAgainstRefundMoreThanCaptured($amount);
+
+        $creditCardProvider->refund($amount, $this->authorizedBy());
+
+        $this->captured = (int) $this->captured()->subtract($amount)->getAmount();
+    }
+
+    public function authorized(): Money
+    {
+        return Money::GBP($this->authorized);
     }
 
     public function merchantId(): UuidInterface
@@ -75,10 +122,45 @@ final class Merchant implements ContainsRecordedMessages
         return Uuid::fromString($this->merchantId);
     }
 
+    public function captured(): Money
+    {
+        return Money::GBP($this->captured);
+    }
+
+    public function authorizedBy()
+    {
+        if (null === $this->authorizedBy) {
+            return;
+        }
+
+        return Uuid::fromString($this->authorizedBy);
+    }
+
     private function guardNegativeAmount(Money $amount)
     {
         if ($amount->isNegative()) {
             throw CannotUseNegativeAmount::with($this->merchantId());
+        }
+    }
+
+    private function guardAgainstCaptureMoreThanAuthorizedTo(Money $amount)
+    {
+        if (null === $this->authorizedBy() || $this->authorized()->subtract($amount)->isNegative()) {
+            throw CannotCaptureMoreThanAuthorized::with($this->merchantId());
+        }
+    }
+
+    private function guardAgainstReverseMoreThanAuthorizedTo(Money $amount)
+    {
+        if ($this->authorized()->subtract($amount)->isNegative()) {
+            throw CannotReverseMoreThanAuthorized::with($this->merchantId());
+        }
+    }
+
+    private function guardAgainstRefundMoreThanCaptured(Money $amount)
+    {
+        if ($this->captured()->subtract($amount)->isNegative()) {
+            throw CannotRefundMoreThanCaptured::with($this->merchantId());
         }
     }
 }

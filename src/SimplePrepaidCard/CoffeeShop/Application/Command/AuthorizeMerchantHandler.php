@@ -20,6 +20,6 @@ final class AuthorizeMerchantHandler
     public function handle(AuthorizeMerchant $command)
     {
         $merchant = $this->merchants->get($command->merchantId);
-        $merchant->authorize(Money::GBP($command->amount));
+        $merchant->authorize(Money::GBP($command->amount), $command->customerId);
     }
 }

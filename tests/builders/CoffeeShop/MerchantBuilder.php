@@ -18,15 +18,19 @@ final class MerchantBuilder implements Builder
     /** @var Money */
     private $authorizedTo;
 
-    private function __construct(UuidInterface $customerId, Money $authorizedTo)
+    /** @var UuidInterface */
+    private $authorizedBy;
+
+    private function __construct(UuidInterface $merchantId, UuidInterface $authorizedBy, Money $authorizedTo)
     {
-        $this->merchantId   = $customerId;
+        $this->merchantId   = $merchantId;
+        $this->authorizedBy = $authorizedBy;
         $this->authorizedTo = $authorizedTo;
     }
 
     public static function create(): self
     {
-        return new self(Uuid::uuid4(), Money::GBP(rand(10, 1000)));
+        return new self(Uuid::uuid4(), Uuid::uuid4(), Money::GBP(rand(10, 1000)));
     }
 
     public function withMerchantId(UuidInterface $merchantId): self
@@ -45,12 +49,20 @@ final class MerchantBuilder implements Builder
         return $copy;
     }
 
+    public function authorizedBy(UuidInterface $authorizedBy): self
+    {
+        $copy               = $this->copy();
+        $copy->authorizedBy = $authorizedBy;
+
+        return $copy;
+    }
+
     public function build(): Merchant
     {
         $merchant = new Merchant($this->merchantId);
 
         if ($this->authorizedTo->isPositive()) {
-            $merchant->authorize($this->authorizedTo);
+            $merchant->authorize($this->authorizedTo, $this->authorizedBy);
         }
 
         $merchant->eraseMessages();
@@ -60,6 +72,6 @@ final class MerchantBuilder implements Builder
 
     private function copy(): self
     {
-        return new self($this->merchantId, $this->authorizedTo);
+        return new self($this->merchantId, $this->authorizedBy, $this->authorizedTo);
     }
 }

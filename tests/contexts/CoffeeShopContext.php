@@ -100,7 +100,7 @@ class CoffeeShopContext extends DefaultContext
      */
     public function iAuthorizeMerchantWithIdToGbp(UuidInterface $merchantId, Money $amount)
     {
-        $this->handle(new AuthorizeMerchant($merchantId, (int) $amount->getAmount()));
+        $this->handle(new AuthorizeMerchant($merchantId, $this->customerId ?: Uuid::uuid4(), (int) $amount->getAmount()));
     }
 
     /**
@@ -164,7 +164,7 @@ class CoffeeShopContext extends DefaultContext
      */
     public function iShouldBeAuthorizedToGbp(Money $amount)
     {
-        Assertion::eq($amount, $this->merchants()->get($this->merchantId)->authorizedTo());
+        Assertion::eq($amount, $this->merchants()->get($this->merchantId)->authorized());
     }
 
     /**
