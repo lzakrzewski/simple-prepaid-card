@@ -23,4 +23,19 @@ final class ProductWasBought
         $this->product    = $product;
         $this->at         = $at;
     }
+
+    public function customerId(): UuidInterface
+    {
+        return $this->customerId;
+    }
+
+    public function product(): Product
+    {
+        return $this->product;
+    }
+
+    public function at(): \DateTime
+    {
+        return $this->at;
+    }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace integration\SimplePrepaidCard\CoffeeShop\Infrastructure;
+namespace tests\integration\SimplePrepaidCard\CoffeeShop\Infrastructure;
 
 use Ramsey\Uuid\Uuid;
 use SimplePrepaidCard\CoffeeShop\Infrastructure\DoctrineORMCustomerRepository;

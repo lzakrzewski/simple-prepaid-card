@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace integration\SimplePrepaidCard\CoffeeShop\Infrastructure\ACL;
+namespace tests\integration\SimplePrepaidCard\CoffeeShop\Infrastructure\ACL;
 
 use Money\Money;
 use Ramsey\Uuid\Uuid;

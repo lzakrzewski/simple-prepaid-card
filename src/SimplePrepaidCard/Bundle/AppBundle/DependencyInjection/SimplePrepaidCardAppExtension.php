@@ -23,6 +23,7 @@ class SimplePrepaidCardAppExtension extends Extension
         $loader->load('command_handlers.yml');
         $loader->load('domain_services.yml');
         $loader->load('repositories.yml');
+        $loader->load('subscribers.yml');
     }
 
     /** {@inheritdoc} */

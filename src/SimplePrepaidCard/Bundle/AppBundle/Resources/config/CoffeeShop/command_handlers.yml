@@ -7,3 +7,10 @@ services:
             - "@simple_prepaid_card.coffee_shop.credit_card_provider"
         tags:
             - { name: command_handler, handles: SimplePrepaidCard\CoffeeShop\Application\Command\BuyProduct }
+
+    simple_prepaid_card.coffee_shop.command_handler.authorize_merchant:
+        class: SimplePrepaidCard\CoffeeShop\Application\Command\AuthorizeMerchantHandler
+        arguments:
+            - "@simple_prepaid_card.coffee_shop.repository.merchant"
+        tags:
+            - { name: command_handler, handles: SimplePrepaidCard\CoffeeShop\Application\Command\AuthorizeMerchant }

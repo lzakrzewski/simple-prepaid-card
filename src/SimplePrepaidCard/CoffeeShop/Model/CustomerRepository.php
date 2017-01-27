@@ -9,6 +9,11 @@ use Ramsey\Uuid\UuidInterface;
 interface CustomerRepository
 {
     /**
+     * @param Customer $customer
+     */
+    public function add(Customer $customer);
+
+    /**
      * @param UuidInterface $customerId
      *
      * @throws CustomerDoesNotExist

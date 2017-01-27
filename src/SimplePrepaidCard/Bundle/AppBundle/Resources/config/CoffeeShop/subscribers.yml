@@ -1,0 +1,7 @@
+services:
+    simple_prepaid_card.coffee_shop.subscriber.statement.doctrine_orm:
+        class: SimplePrepaidCard\CoffeeShop\Application\Subscriber\AuthorizeMerchantWhenProductWasBought
+        arguments:
+            - '@command_bus'
+        tags:
+            - { name: event_subscriber, subscribes_to: SimplePrepaidCard\CoffeeShop\Model\ProductWasBought, method: authorize }

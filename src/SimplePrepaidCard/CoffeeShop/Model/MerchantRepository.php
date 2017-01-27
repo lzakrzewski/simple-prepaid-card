@@ -8,5 +8,17 @@ use Ramsey\Uuid\UuidInterface;
 
 interface MerchantRepository
 {
-    public function get(UuidInterface $merchantId);
+    /**
+     * @param Merchant $merchant
+     */
+    public function add(Merchant $merchant);
+
+    /**
+     * @param UuidInterface $merchantId
+     *
+     * @throws MerchantDoesNotExist
+     *
+     * @return Merchant
+     */
+    public function get(UuidInterface $merchantId): Merchant;
 }
