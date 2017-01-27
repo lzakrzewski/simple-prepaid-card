@@ -7,13 +7,13 @@ namespace SimplePrepaidCard\CoffeeShop\Model;
 use Money\Money;
 use Ramsey\Uuid\UuidInterface;
 
-final class MerchantWasAuthorized
+final class AuthorizationWasCaptured
 {
     /** @var UuidInterface */
     private $merchantId;
 
     /** @var UuidInterface */
-    private $authorizedBy;
+    private $customerId;
 
     /** @var Money */
     private $amount;
@@ -21,16 +21,20 @@ final class MerchantWasAuthorized
     /** @var Money */
     private $authorized;
 
+    /** @var Money */
+    private $captured;
+
     /** @var \DateTime */
     private $at;
 
-    public function __construct(UuidInterface $merchantId, UuidInterface $authorizedBy, Money $amount, Money $authorizedTo, \DateTime $at)
+    public function __construct(UuidInterface $merchantId, UuidInterface $customerId, Money $amount, Money $authorized, Money $captured, \DateTime $at)
     {
-        $this->merchantId   = $merchantId;
-        $this->authorizedBy = $authorizedBy;
-        $this->amount       = $amount;
-        $this->authorized   = $authorizedTo;
-        $this->at           = $at;
+        $this->merchantId = $merchantId;
+        $this->customerId = $customerId;
+        $this->amount     = $amount;
+        $this->authorized = $authorized;
+        $this->captured   = $captured;
+        $this->at         = $at;
     }
 
     public function merchantId(): UuidInterface
@@ -38,9 +42,9 @@ final class MerchantWasAuthorized
         return $this->merchantId;
     }
 
-    public function authorizedBy(): UuidInterface
+    public function customerId(): UuidInterface
     {
-        return $this->authorizedBy;
+        return $this->customerId;
     }
 
     public function amount(): Money
@@ -51,6 +55,11 @@ final class MerchantWasAuthorized
     public function authorized(): Money
     {
         return $this->authorized;
+    }
+
+    public function captured(): Money
+    {
+        return $this->captured;
     }
 
     public function at(): \DateTime

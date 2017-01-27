@@ -10,7 +10,10 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use SimplePrepaidCard\CoffeeShop\Application\Command\AuthorizeMerchant;
 use SimplePrepaidCard\CoffeeShop\Application\Command\BuyProduct;
+use SimplePrepaidCard\CoffeeShop\Application\Command\CaptureAuthorization;
 use SimplePrepaidCard\CoffeeShop\Model\AuthorizationRequestWasDeclined;
+use SimplePrepaidCard\CoffeeShop\Model\AuthorizationWasCaptured;
+use SimplePrepaidCard\CoffeeShop\Model\CannotCaptureMoreThanAuthorized;
 use SimplePrepaidCard\CoffeeShop\Model\CannotUseNegativeAmount;
 use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider;
 use SimplePrepaidCard\CoffeeShop\Model\Customer;
@@ -49,31 +52,41 @@ class CoffeeShopContext extends DefaultContext
 
     /**
      * @Given there is a merchant with id :merchantId
-     * @Given I am a merchant with id :merchantId authorized to :amount GBP
+     * @Given I am a merchant with id :merchantId authorized to :authorized GBP
+     * @Given I am a merchant with id :merchantId authorized to :authorized GBP and :captured GBP captured
      */
-    public function thereIsAMerchantWithId(UuidInterface $merchantId, Money $amount = null)
+    public function thereIsAMerchantWithId(UuidInterface $merchantId, Money $authorized = null, Money $captured = null)
     {
         $this->merchantId = $merchantId;
 
-        $this->buildPersisted(
-            MerchantBuilder::create()
-                ->withMerchantId($merchantId)
-                ->authorizedTo($amount ?: Money::GBP(rand(10, 1000)))
-        );
+        $builder = MerchantBuilder::create()
+            ->withMerchantId($merchantId);
+
+        if (null !== $authorized) {
+            $builder = $builder->authorizedTo($authorized);
+        }
+
+        if (null !== $captured) {
+            $builder = $builder->withCaptured($captured);
+        }
+
+        $this->buildPersisted($builder);
     }
 
     /**
-     * @Given credit card provider will approve authorization request for :amount GBP
+     * @Given credit card provider will approve authorization request
+     * @Given credit card provider will approve capture
      */
-    public function creditCardProviderWillApproveAuthorizationRequestForGbp(Money $amount)
+    public function creditCardProviderWillApproveAuthorizationRequest()
     {
         $this->creditCardProvider()->willApprove();
     }
 
     /**
-     * @Given credit card provider will decline authorization request for :amount GBP
+     * @Given credit card provider will decline authorization request
+     * @Given credit card provider will decline capture
      */
-    public function creditCardProviderWillDeclineAuthorizationRequestForGbp(Money $amount)
+    public function creditCardProviderWillDeclineAuthorizationRequest()
     {
         $this->creditCardProvider()->willDecline();
     }
@@ -95,6 +108,14 @@ class CoffeeShopContext extends DefaultContext
     }
 
     /**
+     * @When I capture :amount GBP from my authorization
+     */
+    public function iCaptureGbpFromMyAuthorization(Money $amount)
+    {
+        $this->handle(new CaptureAuthorization($this->merchantId ?: Uuid::uuid4(), (int) $amount->getAmount()));
+    }
+
+    /**
      * @Then I should be notified that product was bought
      */
     public function iShouldBeNotifiedThatProductWasBought()
@@ -108,6 +129,14 @@ class CoffeeShopContext extends DefaultContext
     public function iShouldBeNotifiedThatMerchantWasAuthorized()
     {
         $this->expectEvent(MerchantWasAuthorized::class);
+    }
+
+    /**
+     * @Then I should be notified that authorization was captured
+     */
+    public function iShouldBeNotifiedThatAuthorizationWasCaptured()
+    {
+        $this->expectEvent(AuthorizationWasCaptured::class);
     }
 
     /**
@@ -151,11 +180,27 @@ class CoffeeShopContext extends DefaultContext
     }
 
     /**
+     * @Then I should be notified that I can not capture more than authorized
+     */
+    public function iShouldBeNotifiedThatICanNotCaptureMoreThanAuthorized()
+    {
+        $this->expectException(CannotCaptureMoreThanAuthorized::class);
+    }
+
+    /**
      * @Then I should be authorized to :amount GBP
      */
     public function iShouldBeAuthorizedToGbp(Money $amount)
     {
         Assertion::eq($amount, $this->merchants()->get($this->merchantId)->authorized());
+    }
+
+    /**
+     * @Then I should have captured :amount GBP
+     */
+    public function iShouldHaveCapturedGbp(Money $amount)
+    {
+        Assertion::eq($amount, $this->merchants()->get($this->merchantId)->captured());
     }
 
     /**
@@ -172,6 +217,15 @@ class CoffeeShopContext extends DefaultContext
     public function merchantId(string $merchantId): UuidInterface
     {
         return Uuid::fromString($merchantId);
+    }
+
+    /**
+     * @Transform :authorized
+     * @Transform :captured
+     */
+    public function money(string $money): Money
+    {
+        return Money::GBP((int) $money);
     }
 
     /** @BeforeScenario */

@@ -78,7 +78,15 @@ final class Merchant implements ContainsRecordedMessages
         $this->authorized   = (int) $this->authorized()->add($amount)->getAmount();
         $this->authorizedBy = $authorizedBy->toString();
 
-        $this->record(new MerchantWasAuthorized($this->merchantId(), $this->authorizedBy(), $amount, $this->authorized(), new \DateTime()));
+        $this->record(
+            new MerchantWasAuthorized(
+                $this->merchantId(),
+                $this->authorizedBy(),
+                $amount,
+                $this->authorized(),
+                new \DateTime()
+            )
+        );
     }
 
     public function capture(Money $amount, CreditCardProvider $creditCardProvider)
@@ -90,6 +98,16 @@ final class Merchant implements ContainsRecordedMessages
 
         $this->authorized = (int) $this->authorized()->subtract($amount)->getAmount();
         $this->captured   = (int) $this->captured()->add($amount)->getAmount();
+
+        $this->record(
+            new AuthorizationWasCaptured(
+                $this->merchantId(),
+                $this->authorizedBy(),
+                $amount,
+                $this->authorized(),
+                $this->captured(),
+                new \DateTime())
+        );
     }
 
     public function reverse(Money $amount, CreditCardProvider $creditCardProvider)

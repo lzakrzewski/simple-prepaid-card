@@ -15,22 +15,26 @@ final class MerchantBuilder implements Builder
     /** @var UuidInterface */
     private $merchantId;
 
-    /** @var Money */
-    private $authorizedTo;
-
     /** @var UuidInterface */
     private $authorizedBy;
 
-    private function __construct(UuidInterface $merchantId, UuidInterface $authorizedBy, Money $authorizedTo)
+    /** @var Money */
+    private $authorized;
+
+    /** @var Money */
+    private $captured;
+
+    private function __construct(UuidInterface $merchantId, UuidInterface $authorizedBy, Money $authorized, Money $captured)
     {
         $this->merchantId   = $merchantId;
         $this->authorizedBy = $authorizedBy;
-        $this->authorizedTo = $authorizedTo;
+        $this->authorized   = $authorized;
+        $this->captured     = $captured;
     }
 
     public static function create(): self
     {
-        return new self(Uuid::uuid4(), Uuid::uuid4(), Money::GBP(rand(10, 1000)));
+        return new self(Uuid::uuid4(), Uuid::uuid4(), Money::GBP(rand(100, 1000)), Money::GBP(0));
     }
 
     public function withMerchantId(UuidInterface $merchantId): self
@@ -43,8 +47,8 @@ final class MerchantBuilder implements Builder
 
     public function authorizedTo(Money $amount): self
     {
-        $copy               = $this->copy();
-        $copy->authorizedTo = $amount;
+        $copy             = $this->copy();
+        $copy->authorized = $amount;
 
         return $copy;
     }
@@ -57,12 +61,25 @@ final class MerchantBuilder implements Builder
         return $copy;
     }
 
+    public function withCaptured(Money $amount): self
+    {
+        $copy           = $this->copy();
+        $copy->captured = $amount;
+
+        return $copy;
+    }
+
     public function build(): Merchant
     {
         $merchant = new Merchant($this->merchantId);
 
-        if ($this->authorizedTo->isPositive()) {
-            $merchant->authorize($this->authorizedTo, $this->authorizedBy);
+        if ($this->authorized->isPositive()) {
+            $merchant->authorize($this->authorized, $this->authorizedBy);
+        }
+
+        if ($this->captured->isPositive()) {
+            $merchant->capture($this->captured, new CreditCardProviderStub());
+            $merchant->authorize($this->captured, $this->authorizedBy);
         }
 
         $merchant->eraseMessages();
@@ -72,6 +89,6 @@ final class MerchantBuilder implements Builder
 
     private function copy(): self
     {
-        return new self($this->merchantId, $this->authorizedBy, $this->authorizedTo);
+        return new self($this->merchantId, $this->authorizedBy, $this->authorized, $this->captured);
     }
 }
