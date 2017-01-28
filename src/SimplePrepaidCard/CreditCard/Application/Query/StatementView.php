@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SimplePrepaidCard\CreditCard\Application\Query;
 
 use Doctrine\ORM\Mapping as ORM;
+use Money\Money;
 use Ramsey\Uuid\UuidInterface;
 
 /**
@@ -51,27 +52,27 @@ final class StatementView
     public $description;
 
     /**
-     * @var string
+     * @var Money
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Embedded(class="\Money\Money")
      */
-    private $amount;
+    public $amount;
 
     /**
-     * @var string
+     * @var Money
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Embedded(class="\Money\Money")
      */
     public $availableBalance;
 
     /**
-     * @var string
+     * @var Money
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Embedded(class="\Money\Money")
      */
     public $balance;
 
-    public function __construct(int $id = null, UuidInterface $creditCardId, UuidInterface $holderId, \DateTime $date, string $description, int $amount, int $availableBalance, int $balance)
+    public function __construct(int $id = null, UuidInterface $creditCardId, UuidInterface $holderId, \DateTime $date, string $description, Money $amount, Money $availableBalance, Money $balance)
     {
         $this->id               = $id;
         $this->creditCardId     = $creditCardId;

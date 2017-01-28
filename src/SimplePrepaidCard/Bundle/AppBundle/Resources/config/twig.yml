@@ -1,0 +1,16 @@
+services:
+    simple_prepaid_card.app_bundle.twig.money_filter:
+        class: SimplePrepaidCard\Bundle\AppBundle\Twig\MoneyFilter
+        public: false
+        arguments:
+            - "@simple_prepaid_card.money_decimal_formatter"
+        tags:
+            - { name: twig.extension }
+
+    simple_prepaid_card.money_decimal_formatter:
+        class: Money\Formatter\DecimalMoneyFormatter
+        arguments:
+            - "@simple_prepaid_card.money_currencies"
+
+    simple_prepaid_card.money_currencies:
+        class: Money\Currencies\ISOCurrencies

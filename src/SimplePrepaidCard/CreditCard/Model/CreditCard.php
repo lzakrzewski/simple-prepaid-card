@@ -51,18 +51,25 @@ final class CreditCard implements ContainsRecordedMessages
     private $holderName;
 
     /**
-     * @var string
+     * @var Money
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Embedded(class="\Money\Money")
      */
     private $balance;
 
     /**
-     * @var string
+     * @var Money
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Embedded(class="\Money\Money")
      */
     private $availableBalance;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
 
     private function __construct(UuidInterface $creditCardId, UuidInterface $holderId, $holderName)
     {
@@ -72,8 +79,9 @@ final class CreditCard implements ContainsRecordedMessages
 
         $balance = Money::GBP(0);
 
-        $this->balance          = (int) $balance->getAmount();
-        $this->availableBalance = (int) $balance->getAmount();
+        $this->balance          = $balance;
+        $this->availableBalance = $balance;
+        $this->createdAt        = $createdAt        = new \DateTime();
 
         $this->record(
             new CreditCardWasCreated(
@@ -82,7 +90,7 @@ final class CreditCard implements ContainsRecordedMessages
                 $this->holderName,
                 $balance,
                 $balance,
-                new \DateTime()
+                $createdAt
             )
         );
     }
@@ -99,27 +107,20 @@ final class CreditCard implements ContainsRecordedMessages
 
     public function balance(): Money
     {
-        return Money::GBP($this->balance);
+        return $this->balance;
     }
 
     public function availableBalance(): Money
     {
-        return Money::GBP($this->availableBalance);
+        return $this->availableBalance;
     }
 
     public function loadFunds(Money $amount)
     {
         $this->guardAgainstNegativeFunds($amount);
 
-        $this->availableBalance = (int) $this
-            ->availableBalance()
-            ->add($amount)
-            ->getAmount();
-
-        $this->balance = (int) $this
-            ->balance()
-            ->add($amount)
-            ->getAmount();
+        $this->availableBalance = $this->availableBalance()->add($amount);
+        $this->balance          = $this->balance()->add($amount);
 
         $this->record(
             new FundsWereLoaded(
@@ -138,10 +139,7 @@ final class CreditCard implements ContainsRecordedMessages
         $this->guardAgainstNegativeFunds($amount);
         $this->guardAgainstNegativeBalance($amount);
 
-        $this->availableBalance = (int) $this
-            ->availableBalance()
-            ->subtract($amount)
-            ->getAmount();
+        $this->availableBalance = $this->availableBalance()->subtract($amount);
 
         $this->record(
             new FundsWereBlocked(
@@ -167,7 +165,7 @@ final class CreditCard implements ContainsRecordedMessages
             $unblocked = $this->balance()->subtract($this->availableBalance());
         }
 
-        $this->availableBalance = (int) $this->availableBalance()->add($unblocked)->getAmount();
+        $this->availableBalance = $this->availableBalance()->add($unblocked);
 
         $this->record(
             new FundsWereUnblocked(
@@ -186,10 +184,7 @@ final class CreditCard implements ContainsRecordedMessages
         $this->guardAgainstNegativeFunds($amount);
         $this->guardAgainstChargeMoreFundsThanBlocked($amount);
 
-        $this->balance = (int) $this
-            ->balance()
-            ->subtract($amount)
-            ->getAmount();
+        $this->balance = $this->balance()->subtract($amount);
 
         $this->record(
             new FundsWereCharged(

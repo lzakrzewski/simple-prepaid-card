@@ -25,13 +25,33 @@
 </head>
 
 <body>
-{#Todo: Introduce panels#}
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/">Simple prepaid card</a>
+            <a class="navbar-brand" href="{{ path('index') }}">Simple prepaid card</a>
         </div>
+
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <p class="navbar-text">
+                        Logged as: <strong style="color: #ffffff">{{ app.user.username|capitalize }}</strong>
+                    </p>
+                    <li>
+                        <div class="btn-group">
+                            <a href="{{ path('index') }}" class="btn btn-primary navbar-btn">
+                                <span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home
+                            </a>
+                            <a href="{{ path('logout') }}" class="btn btn-danger navbar-btn">
+                                <span class="glyphicon glyphicon-off" aria-hidden="true"></span> Logout
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+
     </div>
 </nav>
 

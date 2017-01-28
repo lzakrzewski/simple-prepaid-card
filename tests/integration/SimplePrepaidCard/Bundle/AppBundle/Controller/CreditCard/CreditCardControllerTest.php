@@ -53,7 +53,7 @@ class CreditCardControllerTest extends WebTestCase
     {
         $this->buildPersisted(
             CreditCardBuilder::create()
-                ->withCreditCardId(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'))
+                ->ofHolder(Uuid::fromString(Holder::HOLDER_ID))
         );
 
         $this->authenticateWithRole('ROLE_HOLDER');
@@ -70,7 +70,7 @@ class CreditCardControllerTest extends WebTestCase
     {
         $this->buildPersisted(
             CreditCardBuilder::create()
-                ->withCreditCardId(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'))
+                ->ofHolder(Uuid::fromString(Holder::HOLDER_ID))
         );
 
         $this->authenticateWithRole('ROLE_HOLDER');

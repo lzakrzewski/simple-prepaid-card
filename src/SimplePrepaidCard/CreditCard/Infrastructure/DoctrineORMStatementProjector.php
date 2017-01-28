@@ -29,9 +29,9 @@ class DoctrineORMStatementProjector implements StatementProjector
                 $event->holderId(),
                 $event->at(),
                 'Funds were loaded',
-                (int) $event->amount()->getAmount(),
-                (int) $event->availableBalance()->getAmount(),
-                (int) $event->balance()->getAmount()
+                $event->amount(),
+                $event->availableBalance(),
+                $event->balance()
             )
         );
         $this->entityManager->flush();
@@ -46,9 +46,9 @@ class DoctrineORMStatementProjector implements StatementProjector
                 $event->holderId(),
                 $event->at(),
                 'Funds were charged',
-                (int) $event->amount()->getAmount(),
-                (int) $event->availableBalance()->getAmount(),
-                (int) $event->balance()->getAmount()
+                $event->amount(),
+                $event->availableBalance(),
+                $event->balance()
             )
         );
         $this->entityManager->flush();

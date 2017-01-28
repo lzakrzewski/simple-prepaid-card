@@ -12,6 +12,7 @@ use SimplePrepaidCard\CreditCard\Model\CreditCardWasCreated;
 use SimplePrepaidCard\CreditCard\Model\FundsWereBlocked;
 use SimplePrepaidCard\CreditCard\Model\FundsWereCharged;
 use SimplePrepaidCard\CreditCard\Model\FundsWereLoaded;
+use tests\builders\CreditCard\CreditCardBuilder;
 use tests\integration\SimplePrepaidCard\DatabaseTestCase;
 
 //Todo: Better descriptions for statement like "coffee was bought"
@@ -26,13 +27,15 @@ class DoctrineORMStatementProjectorTest extends DatabaseTestCase
         $creditCardId = Uuid::uuid4();
         $holderId     = Uuid::uuid4();
 
+        $this->buildPersisted(CreditCardBuilder::create()->withCreditCardId($creditCardId)->ofHolder($holderId));
+
         $this->given(
             new FundsWereLoaded($creditCardId, $holderId, Money::GBP(100), Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-01'))
         );
 
         $this->assertEquals(
             [
-                new StatementView(1, $creditCardId, $holderId, new \DateTime('2017-01-01'), 'Funds were loaded', 100, 100, 100),
+                new StatementView(1, $creditCardId, $holderId, new \DateTime('2017-01-01'), 'Funds were loaded', Money::GBP(100), Money::GBP(100), Money::GBP(100)),
             ],
             $this->query->ofHolder($holderId)
         );
@@ -44,13 +47,15 @@ class DoctrineORMStatementProjectorTest extends DatabaseTestCase
         $creditCardId = Uuid::uuid4();
         $holderId     = Uuid::uuid4();
 
+        $this->buildPersisted(CreditCardBuilder::create()->withCreditCardId($creditCardId)->ofHolder($holderId));
+
         $this->given(
             new FundsWereCharged($creditCardId, $holderId, Money::GBP(100), Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-01'))
         );
 
         $this->assertEquals(
             [
-                new StatementView(1, $creditCardId, $holderId, new \DateTime('2017-01-01'), 'Funds were charged', 100, 100, 100),
+                new StatementView(1, $creditCardId, $holderId, new \DateTime('2017-01-01'), 'Funds were charged', Money::GBP(100), Money::GBP(100), Money::GBP(100)),
             ],
             $this->query->ofHolder($holderId)
         );
@@ -62,6 +67,8 @@ class DoctrineORMStatementProjectorTest extends DatabaseTestCase
         $creditCardId = Uuid::uuid4();
         $holderId     = Uuid::uuid4();
 
+        $this->buildPersisted(CreditCardBuilder::create()->withCreditCardId($creditCardId)->ofHolder($holderId));
+
         $this->given(
             new CreditCardWasCreated($creditCardId, $holderId, 'John Doe', Money::GBP(0), Money::GBP(0), new \DateTime('2017-01-01')),
             new FundsWereLoaded($creditCardId, $holderId, Money::GBP(100), Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-02')),
@@ -71,8 +78,8 @@ class DoctrineORMStatementProjectorTest extends DatabaseTestCase
 
         $this->assertEquals(
             [
-                new StatementView(2, $creditCardId, $holderId, new \DateTime('2017-01-04'), 'Funds were charged', 1, 99, 99),
-                new StatementView(1, $creditCardId, $holderId, new \DateTime('2017-01-02'), 'Funds were loaded', 100, 100, 100),
+                new StatementView(2, $creditCardId, $holderId, new \DateTime('2017-01-04'), 'Funds were charged', Money::GBP(1), Money::GBP(99), Money::GBP(99)),
+                new StatementView(1, $creditCardId, $holderId, new \DateTime('2017-01-02'), 'Funds were loaded', Money::GBP(100), Money::GBP(100), Money::GBP(100)),
             ],
             $this->query->ofHolder($holderId)
         );
@@ -86,6 +93,9 @@ class DoctrineORMStatementProjectorTest extends DatabaseTestCase
         $creditCardId2 = Uuid::uuid4();
         $holderId2     = Uuid::uuid4();
 
+        $this->buildPersisted(CreditCardBuilder::create()->withCreditCardId($creditCardId1)->ofHolder($holderId1));
+        $this->buildPersisted(CreditCardBuilder::create()->withCreditCardId($creditCardId2)->ofHolder($holderId2));
+
         $this->given(
             new FundsWereLoaded($creditCardId1, $holderId1, Money::GBP(100), Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-01')),
             new FundsWereLoaded($creditCardId2, $holderId2, Money::GBP(200), Money::GBP(200), Money::GBP(200), new \DateTime('2018-01-01'))
@@ -93,14 +103,14 @@ class DoctrineORMStatementProjectorTest extends DatabaseTestCase
 
         $this->assertEquals(
             [
-                new StatementView(1, $creditCardId1, $holderId1, new \DateTime('2017-01-01'), 'Funds were loaded', 100, 100, 100),
+                new StatementView(1, $creditCardId1, $holderId1, new \DateTime('2017-01-01'), 'Funds were loaded', Money::GBP(100), Money::GBP(100), Money::GBP(100)),
             ],
             $this->query->ofHolder($holderId1)
         );
 
         $this->assertEquals(
             [
-                new StatementView(2, $creditCardId2, $holderId2, new \DateTime('2018-01-01'), 'Funds were loaded', 200, 200, 200),
+                new StatementView(2, $creditCardId2, $holderId2, new \DateTime('2018-01-01'), 'Funds were loaded', Money::GBP(200), Money::GBP(200), Money::GBP(200)),
             ],
             $this->query->ofHolder($holderId2)
         );

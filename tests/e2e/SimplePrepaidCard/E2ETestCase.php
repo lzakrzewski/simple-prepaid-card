@@ -18,7 +18,7 @@ abstract class E2ETestCase extends WebTestCase
     {
         $this->request('GET', '/login');
 
-        $this->fillAndSubmitForm('login', ['_username' => $userName, '_password' => $password]);
+        $this->fillAndSubmitForm('Login', ['_username' => $userName, '_password' => $password]);
     }
 
     protected function createCreditCard()

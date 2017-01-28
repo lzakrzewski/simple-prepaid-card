@@ -1,20 +1,26 @@
-{% extends '@App/base.html.twig' %}
-
-{% block body %}
-    <table>
-        <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>AvailableBalance</th>
-            <th>Balance</th>
-        </tr>
-        {% for view in statement %}
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead>
             <tr>
-                <td>{{ view.date|date("Y-m-d H:i", false) }}</td>
-                <td>{{ view.date|date("Y-m-d H:i", false) }}</td>
-                <td>{{ view.availableBalance / 100|number_format(2, '.', ',') }}</td>
-                <td>{{ view.balance / 100|number_format(2, '.', ',') }}</td>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Amount (£)</th>
+                <th>AvailableBalance (£)</th>
+                <th>Balance (£)</th>
             </tr>
-        {% endfor %}
+        </thead>
+
+        <tbody>
+            {% for view in statement %}
+                <tr>
+                    <td>{{ view.date|date("Y-m-d H:i") }}</td>
+                    <td>{{ view.description }}</td>
+                    <td>{{ view.amount|moneyRaw }}</td>
+                    <td>{{ view.availableBalance|moneyRaw }}</td>
+                    <td>{{ view.balance|moneyRaw }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
     </table>
-{% endblock %}
+</div>

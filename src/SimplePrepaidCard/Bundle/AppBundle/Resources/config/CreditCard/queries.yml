@@ -5,11 +5,19 @@ services:
         class: SimplePrepaidCard\CreditCard\Infrastructure\DoctrineORMStatementQuery
         arguments:
             - '@doctrine.orm.default_entity_manager'
+            - "@simple_prepaid_card.credit_card.query.credit_card_id_of_holder"
 
     simple_prepaid_card.credit_card.query.credit_card_id_of_holder: "@simple_prepaid_card.credit_card.query.credit_card_id_of_holder.doctrine_orm"
 
     simple_prepaid_card.credit_card.query.credit_card_id_of_holder.doctrine_orm:
         class: SimplePrepaidCard\CreditCard\Infrastructure\DoctrineORMCreditCardIdOfHolderQuery
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
+
+    simple_prepaid_card.credit_card.query.credit_card: "@simple_prepaid_card.credit_card.query.credit_card.doctrine_orm"
+
+    simple_prepaid_card.credit_card.query.credit_card.doctrine_orm:
+        class: SimplePrepaidCard\CreditCard\Infrastructure\DoctrineORMCreditCardQuery
         arguments:
             - '@doctrine.orm.default_entity_manager'
 

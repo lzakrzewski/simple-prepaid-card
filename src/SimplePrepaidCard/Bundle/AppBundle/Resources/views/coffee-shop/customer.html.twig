@@ -1,6 +1,62 @@
 {% extends '@App/base.html.twig' %}
 
 {% block body %}
-Customer
+
+    <div class="col-lg-3">
+        {% block sidebar %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Commands</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="nav nav-pills">
+                        <li role="presentation">
+                            <a href="{{ path('create-credit-card') }}">Create credit card</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="{{ path('load-funds') }}">Load funds</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            {% if creditCard.get.creditCardId is not null %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Credit card</h3>
+                    </div>
+                    <ul class="list-group">
+                        <a href="#" class="list-group-item">
+                            <span class="badge">{{ creditCard.get.balance|moneyFormatted }}</span>Balance
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <span class="badge">{{ creditCard.get.availableBalance|moneyFormatted }}</span>Available balance
+                        </a>
+                    </ul>
+                </div>
+            {% endif %}
+        {% endblock%}
+    </div>
+
+    <div class="col-lg-9">
+        {% block content %}
+            <div class="jumbotron">
+                <h1>Hello, {{ app.user.username|capitalize }}!</h1>
+                <p>
+                    <a class="btn btn-primary btn-lg" href="{{ path('create-credit-card') }}" role="button">Create credit card</a>
+                </p>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Credit card statement</h3>
+                </div>
+                <div class="panel-body">
+                    {{ render(controller('AppBundle:CreditCard/CreditCard:statement')) }}
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+
 {% endblock %}
 

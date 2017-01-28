@@ -21,7 +21,7 @@ class SecurityControllerTest extends WebTestCase
     {
         $this->request('GET', '/login');
 
-        $this->fillAndSubmitForm('login', ['_username' => 'customer', '_password' => 'customer']);
+        $this->fillAndSubmitForm('Login', ['_username' => 'customer', '_password' => 'customer']);
 
         $this->followRedirect();
         $this->assertRedirectResponse('/customer');
@@ -33,7 +33,7 @@ class SecurityControllerTest extends WebTestCase
     {
         $this->request('GET', '/login');
 
-        $this->fillAndSubmitForm('login', ['_username' => 'merchant', '_password' => 'merchant']);
+        $this->fillAndSubmitForm('Login', ['_username' => 'merchant', '_password' => 'merchant']);
 
         $this->followRedirect();
         $this->assertRedirectResponse('/merchant');
@@ -45,7 +45,7 @@ class SecurityControllerTest extends WebTestCase
     {
         $this->request('GET', '/login');
 
-        $this->fillAndSubmitForm('login', ['_username' => 'customer', '_password' => 'invalid']);
+        $this->fillAndSubmitForm('Login', ['_username' => 'customer', '_password' => 'invalid']);
 
         $this->assertRedirectResponse('http://localhost/login');
         $this->assertUsername('');
@@ -56,7 +56,7 @@ class SecurityControllerTest extends WebTestCase
     {
         $this->request('GET', '/login');
 
-        $this->fillAndSubmitForm('login', ['_username' => 'merchant', '_password' => 'invalid']);
+        $this->fillAndSubmitForm('Login', ['_username' => 'merchant', '_password' => 'invalid']);
 
         $this->assertRedirectResponse('http://localhost/login');
         $this->assertUsername('');
@@ -67,7 +67,7 @@ class SecurityControllerTest extends WebTestCase
     {
         $this->request('GET', '/login');
 
-        $this->fillAndSubmitForm('login', ['_username' => 'merchant', '_password' => 'merchant']);
+        $this->fillAndSubmitForm('Login', ['_username' => 'merchant', '_password' => 'merchant']);
 
         $this->request('GET', '/logout');
 

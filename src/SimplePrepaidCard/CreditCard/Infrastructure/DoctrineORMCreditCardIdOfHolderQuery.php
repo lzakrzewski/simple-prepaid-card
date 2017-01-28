@@ -28,6 +28,9 @@ class DoctrineORMCreditCardIdOfHolderQuery implements CreditCardIdOfHolderQuery
             ->select('cc.creditCardId')
             ->from(CreditCard::class, 'cc')
             ->setMaxResults(1)
+            ->orderBy('cc.id', 'DESC')
+            ->where('cc.holderId = :holderId')
+            ->setParameter('holderId', $holderId)
             ->getQuery()
             ->getScalarResult();
 

@@ -32,6 +32,28 @@ class DoctrineORMCreditCardIdOfHolderQueryTest extends DatabaseTestCase
         $this->assertEquals($expectedCreditCardId, $this->query->get($holderId));
     }
 
+    /** @test  */
+    public function it_can_get_latest_credit_card_id_of_card_holder()
+    {
+        $expectedCreditCardId = Uuid::uuid4();
+        $holderId             = Uuid::uuid4();
+
+        $this->buildPersisted(
+            CreditCardBuilder::create()
+                ->ofHolder($holderId)
+        );
+
+        $this->buildPersisted(
+            CreditCardBuilder::create()
+                ->withCreditCardId($expectedCreditCardId)
+                ->ofHolder($holderId)
+        );
+
+        $this->flushAndClear();
+
+        $this->assertEquals($expectedCreditCardId, $this->query->get($holderId));
+    }
+
     /** @test */
     public function it_fails_when_credit_card_of_card_holder_does_not_exist()
     {
