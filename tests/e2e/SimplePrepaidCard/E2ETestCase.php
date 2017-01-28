@@ -6,10 +6,11 @@ namespace tests\e2e\SimplePrepaidCard;
 
 use Money\Money;
 use Ramsey\Uuid\Uuid;
-use SimplePrepaidCard\CoffeeShop\Model\Customer;
+use SimplePrepaidCard\Bundle\AppBundle\Command\SetupCoffeeShopDataCommand;
 use SimplePrepaidCard\CoffeeShop\Model\Merchant;
 use SimplePrepaidCard\CreditCard\Model\CreditCard;
 use SimplePrepaidCard\CreditCard\Model\Holder;
+use Symfony\Component\Console\Tester\CommandTester;
 use tests\integration\SimplePrepaidCard\Bundle\AppBundle\Controller\WebTestCase;
 
 abstract class E2ETestCase extends WebTestCase
@@ -117,7 +118,10 @@ abstract class E2ETestCase extends WebTestCase
     {
         parent::setUp();
 
-        $this->persist(Customer::create());
-        $this->persist(Merchant::create());
+        $cli = new SetupCoffeeShopDataCommand();
+        $cli->setContainer($this->container());
+
+        $commandTester = new CommandTester($cli);
+        $commandTester->execute([]);
     }
 }
