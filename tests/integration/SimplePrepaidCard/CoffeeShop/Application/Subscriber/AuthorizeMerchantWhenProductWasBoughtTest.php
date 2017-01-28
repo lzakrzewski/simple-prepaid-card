@@ -62,11 +62,6 @@ class AuthorizeMerchantWhenProductWasBoughtTest extends DatabaseTestCase
         $this->merchants = null;
     }
 
-    private function given(ProductWasBought $event)
-    {
-        $this->eventBus->handle($event);
-    }
-
     private function assertThatMerchantWasAuthorizedTo(Money $amount)
     {
         $merchant = $this->merchants->get(Uuid::fromString(Merchant::MERCHANT_ID));

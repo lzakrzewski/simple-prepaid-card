@@ -124,6 +124,7 @@ final class CreditCard implements ContainsRecordedMessages
         $this->record(
             new FundsWereLoaded(
                 $this->creditCardId(),
+                $this->holderId(),
                 $amount,
                 $this->balance(),
                 $this->availableBalance(),
@@ -145,6 +146,7 @@ final class CreditCard implements ContainsRecordedMessages
         $this->record(
             new FundsWereBlocked(
                 $this->creditCardId(),
+                $this->holderId(),
                 $amount,
                 $this->balance(),
                 $this->availableBalance(),
@@ -170,6 +172,7 @@ final class CreditCard implements ContainsRecordedMessages
         $this->record(
             new FundsWereUnblocked(
                 $this->creditCardId(),
+                $this->holderId(),
                 $unblocked,
                 $this->balance(),
                 $this->availableBalance(),
@@ -191,12 +194,18 @@ final class CreditCard implements ContainsRecordedMessages
         $this->record(
             new FundsWereCharged(
                 $this->creditCardId(),
+                $this->holderId(),
                 $amount,
                 $this->balance(),
                 $this->availableBalance(),
                 new \DateTime()
             )
         );
+    }
+
+    public function holderId(): UuidInterface
+    {
+        return Uuid::fromString($this->holderId);
     }
 
     private function guardAgainstNegativeFunds(Money $amount)

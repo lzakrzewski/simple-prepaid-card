@@ -15,45 +15,49 @@ class DoctrineORMStatementQueryTest extends DatabaseTestCase
     private $query;
 
     /** @test * */
-    public function it_returns_statement()
+    public function it_returns_statement_of_holders_credit_card()
     {
         $creditCardId = Uuid::uuid4();
+        $holderId     = Uuid::uuid4();
 
-        $this->persist(new StatementView(1, $creditCardId, new \DateTime('2017-01-01'), 'Funds were loaded', 100, 100, 100));
-        $this->persist(new StatementView(2, $creditCardId, new \DateTime('2017-01-02'), 'Funds were loaded', 100, 200, 200));
-        $this->persist(new StatementView(3, $creditCardId, new \DateTime('2017-01-03'), 'Funds were charged', 100, 100, 100));
+        $this->persist(new StatementView(1, $creditCardId, $holderId, new \DateTime('2017-01-01'), 'Funds were loaded', 100, 100, 100));
+        $this->persist(new StatementView(2, $creditCardId, $holderId, new \DateTime('2017-01-02'), 'Funds were loaded', 100, 200, 200));
+        $this->persist(new StatementView(3, $creditCardId, $holderId, new \DateTime('2017-01-03'), 'Funds were charged', 100, 100, 100));
 
         $this->assertEquals(
             [
-                new StatementView(3, $creditCardId, new \DateTime('2017-01-03'), 'Funds were charged', 100, 100, 100),
-                new StatementView(2, $creditCardId, new \DateTime('2017-01-02'), 'Funds were loaded', 100, 200, 200),
-                new StatementView(1, $creditCardId, new \DateTime('2017-01-01'), 'Funds were loaded', 100, 100, 100),
+                new StatementView(3, $creditCardId, $holderId, new \DateTime('2017-01-03'), 'Funds were charged', 100, 100, 100),
+                new StatementView(2, $creditCardId, $holderId, new \DateTime('2017-01-02'), 'Funds were loaded', 100, 200, 200),
+                new StatementView(1, $creditCardId, $holderId, new \DateTime('2017-01-01'), 'Funds were loaded', 100, 100, 100),
             ],
-            $this->query->get($creditCardId)
+            $this->query->ofHolder($holderId)
         );
     }
 
     /** @test * */
-    public function it_does_not_return_statement_of_another_credit_card()
+    public function it_does_not_return_statement_of_another_holder_credit_card()
     {
         $creditCardId        = Uuid::uuid4();
         $anotherCreditCardId = Uuid::uuid4();
 
-        $this->persist(new StatementView(1, $creditCardId, new \DateTime('2017-01-01'), 'Funds were loaded', 100, 100, 100));
-        $this->persist(new StatementView(2, $anotherCreditCardId, new \DateTime('2017-01-02'), 'Funds were loaded', 100, 200, 200));
+        $holderId        = Uuid::uuid4();
+        $anotherHolderId = Uuid::uuid4();
+
+        $this->persist(new StatementView(1, $creditCardId, $holderId, new \DateTime('2017-01-01'), 'Funds were loaded', 100, 100, 100));
+        $this->persist(new StatementView(2, $anotherCreditCardId, $anotherHolderId, new \DateTime('2017-01-02'), 'Funds were loaded', 100, 200, 200));
 
         $this->assertEquals(
             [
-                new StatementView(1, $creditCardId, new \DateTime('2017-01-01'), 'Funds were loaded', 100, 100, 100),
+                new StatementView(1, $creditCardId, $holderId, new \DateTime('2017-01-01'), 'Funds were loaded', 100, 100, 100),
             ],
-            $this->query->get($creditCardId)
+            $this->query->ofHolder($holderId)
         );
     }
 
     /** @test * */
-    public function it_returns_empty_statement_when_no_events_applied_on_credit_card()
+    public function it_returns_empty_statement_when_no_events_applied_on_holders_credit_card()
     {
-        $this->assertEmpty($this->query->get(Uuid::uuid4()));
+        $this->assertEmpty($this->query->ofHolder(Uuid::uuid4()));
     }
 
     protected function setUp()

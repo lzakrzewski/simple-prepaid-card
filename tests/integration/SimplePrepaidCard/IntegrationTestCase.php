@@ -17,6 +17,13 @@ abstract class IntegrationTestCase extends WebTestCase
         return $this->container;
     }
 
+    protected function given(...$events)
+    {
+        foreach ($events as $event) {
+            $this->container()->get('event_bus')->handle($event);
+        }
+    }
+
     /** {@inheritdoc} */
     protected function setUp()
     {

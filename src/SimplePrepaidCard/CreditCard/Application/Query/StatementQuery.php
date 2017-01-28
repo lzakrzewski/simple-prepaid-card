@@ -8,5 +8,5 @@ use Ramsey\Uuid\UuidInterface;
 
 interface StatementQuery
 {
-    public function get(UuidInterface $creditCardId): array;
+    public function ofHolder(UuidInterface $creditCardId): array;
 }

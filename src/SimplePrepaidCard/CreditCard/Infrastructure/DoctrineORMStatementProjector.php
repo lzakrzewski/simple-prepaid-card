@@ -26,6 +26,7 @@ class DoctrineORMStatementProjector implements StatementProjector
             new StatementView(
                 null,
                 $event->creditCardId(),
+                $event->holderId(),
                 $event->at(),
                 'Funds were loaded',
                 (int) $event->amount()->getAmount(),
@@ -42,6 +43,7 @@ class DoctrineORMStatementProjector implements StatementProjector
             new StatementView(
                 null,
                 $event->creditCardId(),
+                $event->holderId(),
                 $event->at(),
                 'Funds were charged',
                 (int) $event->amount()->getAmount(),

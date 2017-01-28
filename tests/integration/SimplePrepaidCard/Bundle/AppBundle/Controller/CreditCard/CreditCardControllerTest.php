@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace tests\integration\SimplePrepaidCard\Bundle\AppBundle\Controller\CreditCard;
 
+use Money\Money;
 use Ramsey\Uuid\Uuid;
+use SimplePrepaidCard\CoffeeShop\Model\Customer;
+use SimplePrepaidCard\CreditCard\Model\CreditCardWasCreated;
+use SimplePrepaidCard\CreditCard\Model\FundsWereBlocked;
+use SimplePrepaidCard\CreditCard\Model\FundsWereCharged;
+use SimplePrepaidCard\CreditCard\Model\FundsWereLoaded;
 use Symfony\Component\HttpFoundation\Response;
 use tests\builders\CreditCard\CreditCardBuilder;
 use tests\integration\SimplePrepaidCard\Bundle\AppBundle\Controller\WebTestCase;
 
-//Todo: Better invalid request tests
+//Todo: Better invalid request tests, add role holder
 class CreditCardControllerTest extends WebTestCase
 {
     /** @test */
@@ -69,5 +75,48 @@ class CreditCardControllerTest extends WebTestCase
 
         $this->assertResponseStatusCode(Response::HTTP_OK);
         $this->assertThatFormIsNotValid();
+    }
+
+    /** @test */
+    public function it_can_get_statement()
+    {
+        $creditCardId = Uuid::uuid4();
+        $holderId     = Uuid::fromString(Customer::CUSTOMER_ID);
+
+        $this->buildPersisted(
+            CreditCardBuilder::create()
+                ->withCreditCardId($creditCardId)
+                ->ofHolder($holderId)
+        );
+
+        $this->given(
+            new CreditCardWasCreated($creditCardId, $holderId, 'John Doe', Money::GBP(0), Money::GBP(0), new \DateTime('2017-01-01')),
+            new FundsWereLoaded($creditCardId, $holderId, Money::GBP(100), Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-02')),
+            new FundsWereBlocked($creditCardId, $holderId, Money::GBP(1), Money::GBP(100), Money::GBP(99), new \DateTime('2017-01-03')),
+            new FundsWereCharged($creditCardId, $holderId, Money::GBP(1), Money::GBP(99), Money::GBP(99), new \DateTime('2017-01-04'))
+        );
+
+        $this->request('GET', '/statement');
+
+        $this->assertResponseStatusCode(Response::HTTP_OK);
+        $this->assertContains('<table', $this->responseContent());
+    }
+
+    /** @test */
+    public function it_can_get_statement_when_no_statement()
+    {
+        $creditCardId = Uuid::uuid4();
+        $holderId     = Uuid::fromString(Customer::CUSTOMER_ID);
+
+        $this->buildPersisted(
+            CreditCardBuilder::create()
+                ->withCreditCardId($creditCardId)
+                ->ofHolder($holderId)
+        );
+
+        $this->request('GET', '/statement');
+
+        $this->assertResponseStatusCode(Response::HTTP_OK);
+        $this->assertContains('<table', $this->responseContent());
     }
 }

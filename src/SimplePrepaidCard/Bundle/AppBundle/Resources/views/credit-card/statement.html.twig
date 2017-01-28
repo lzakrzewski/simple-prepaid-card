@@ -10,10 +10,10 @@
         </tr>
         {% for view in statement %}
             <tr>
-                <td>{{ view.date }}</td>
-                <td>{{ view.date }}</td>
-                <td>{{ view.availableBalance }}</td>
-                <td>{{ view.balance }}</td>
+                <td>{{ view.date|date("Y-m-d H:i", false) }}</td>
+                <td>{{ view.date|date("Y-m-d H:i", false) }}</td>
+                <td>{{ view.availableBalance / 100|number_format(2, '.', ',') }}</td>
+                <td>{{ view.balance / 100|number_format(2, '.', ',') }}</td>
             </tr>
         {% endfor %}
     </table>

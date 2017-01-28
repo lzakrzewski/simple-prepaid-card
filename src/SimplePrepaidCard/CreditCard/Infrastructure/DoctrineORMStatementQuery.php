@@ -19,10 +19,10 @@ class DoctrineORMStatementQuery implements StatementQuery
         $this->entityManager = $entityManager;
     }
 
-    public function get(UuidInterface $creditCardId): array
+    public function ofHolder(UuidInterface $holderId): array
     {
         return $this->entityManager
             ->getRepository(StatementView::class)
-            ->findBy(['creditCardId' => $creditCardId->toString()], ['date' => 'DESC']);
+            ->findBy(['holderId' => $holderId->toString()], ['date' => 'DESC']);
     }
 }

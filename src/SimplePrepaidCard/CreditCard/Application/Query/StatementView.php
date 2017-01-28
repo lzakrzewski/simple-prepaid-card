@@ -32,6 +32,13 @@ final class StatementView
     /**
      * @var string
      *
+     * @ORM\Column(type="guid")
+     */
+    public $holderId;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(type="datetime")
      */
     public $date;
@@ -64,10 +71,11 @@ final class StatementView
      */
     public $balance;
 
-    public function __construct(int $id = null, UuidInterface $creditCardId, \DateTime $date, string $description, int $amount, int $availableBalance, int $balance)
+    public function __construct(int $id = null, UuidInterface $creditCardId, UuidInterface $holderId, \DateTime $date, string $description, int $amount, int $availableBalance, int $balance)
     {
         $this->id               = $id;
         $this->creditCardId     = $creditCardId;
+        $this->holderId         = $holderId;
         $this->date             = $date;
         $this->description      = $description;
         $this->amount           = $amount;

@@ -12,6 +12,9 @@ final class FundsWereBlocked
     /** @var UuidInterface */
     private $creditCardId;
 
+    /** @var UuidInterface */
+    private $holderId;
+
     /** @var Money */
     private $amount;
 
@@ -24,9 +27,10 @@ final class FundsWereBlocked
     /** @var \DateTime */
     private $at;
 
-    public function __construct(UuidInterface $creditCardId, Money $amount, Money $balance, Money $availableBalance, \DateTime $at)
+    public function __construct(UuidInterface $creditCardId, UuidInterface $holderId, Money $amount, Money $balance, Money $availableBalance, \DateTime $at)
     {
         $this->creditCardId     = $creditCardId;
+        $this->holderId         = $holderId;
         $this->amount           = $amount;
         $this->balance          = $balance;
         $this->availableBalance = $availableBalance;
@@ -36,6 +40,11 @@ final class FundsWereBlocked
     public function creditCardId(): UuidInterface
     {
         return $this->creditCardId;
+    }
+
+    public function holderId(): UuidInterface
+    {
+        return $this->holderId;
     }
 
     public function amount(): Money

@@ -67,6 +67,18 @@ class CreditCardController extends Controller
         ]);
     }
 
+    /**
+     * @Config\Route("/statement", name="statement")
+     * @Config\Method({"GET"})
+     */
+    public function statementAction()
+    {
+        return $this->render('@App/credit-card/statement.html.twig', [
+            'statement' => $this->get('simple_prepaid_card.credit_card.query.statement')
+                ->ofHolder(Uuid::fromString(Customer::CUSTOMER_ID)),
+        ]);
+    }
+
     private function creditCardId(): UuidInterface
     {
         return $this->get('simple_prepaid_card.credit_card.query.credit_card_id_of_holder')->get(Uuid::fromString(Customer::CUSTOMER_ID));
