@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace integration\SimplePrepaidCard\Bundle\AppBundle\Controller\CreditCard;
+namespace tests\integration\SimplePrepaidCard\Bundle\AppBundle\Controller\CreditCard;
 
 use Symfony\Component\HttpFoundation\Response;
 use tests\integration\SimplePrepaidCard\Bundle\AppBundle\Controller\WebTestCase;
