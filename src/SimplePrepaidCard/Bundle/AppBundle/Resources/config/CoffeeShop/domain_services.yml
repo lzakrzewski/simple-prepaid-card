@@ -5,7 +5,7 @@ services:
         class: SimplePrepaidCard\CoffeeShop\Infrastructure\ACL\LocalCreditCardProvider
         arguments:
             - "@command_bus"
-            - "@simple_prepaid_card.credit_card.repository.credit_card"
+            - "@simple_prepaid_card.credit_card.query.credit_card_id_of_holder"
 
     simple_prepaid_card.coffee_shop.products:
         class: SimplePrepaidCard\CoffeeShop\Model\Products

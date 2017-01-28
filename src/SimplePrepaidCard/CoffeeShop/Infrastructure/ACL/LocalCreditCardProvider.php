@@ -11,26 +11,27 @@ use SimplePrepaidCard\CoffeeShop\Model\AuthorizationRequestWasDeclined;
 use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider;
 use SimplePrepaidCard\CoffeeShop\Model\Product;
 use SimplePrepaidCard\CreditCard\Application\Command\BlockFunds;
-use SimplePrepaidCard\CreditCard\Model\CreditCardRepository;
+use SimplePrepaidCard\CreditCard\Application\Query\CreditCardIdOfHolderQuery;
 
+//Todo: implement unimplemented
 class LocalCreditCardProvider implements CreditCardProvider
 {
     /** @var MessageBus */
     private $commandBus;
 
-    /** @var CreditCardRepository */
-    private $creditCards;
+    /** @var CreditCardIdOfHolderQuery */
+    private $creditCardId;
 
-    public function __construct(MessageBus $commandBus, CreditCardRepository $creditCards)
+    public function __construct(MessageBus $commandBus, CreditCardIdOfHolderQuery $creditCardId)
     {
-        $this->commandBus  = $commandBus;
-        $this->creditCards = $creditCards;
+        $this->commandBus   = $commandBus;
+        $this->creditCardId = $creditCardId;
     }
 
     /** {@inheritdoc} */
     public function authorizationRequest(UuidInterface $customerId, Product $product)
     {
-        $creditCardId = $this->creditCards->creditCardIdOfHolder($customerId);
+        $creditCardId = $this->creditCardId->get($customerId);
 
         try {
             $this->commandBus->handle(new BlockFunds($creditCardId, (int) $product->price()->getAmount()));

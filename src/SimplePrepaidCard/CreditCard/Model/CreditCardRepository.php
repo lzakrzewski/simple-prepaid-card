@@ -23,13 +23,4 @@ interface CreditCardRepository
      * @return CreditCard
      */
     public function get(UuidInterface $creditCardId): CreditCard;
-
-    /**
-     * @param UuidInterface $holderId
-     *
-     * @throws CreditCardOfCardHolderDoesNotExist
-     *
-     * @return UuidInterface
-     */
-    public function creditCardIdOfHolder(UuidInterface $holderId): UuidInterface;
 }

@@ -7,6 +7,7 @@ namespace tests\integration\SimplePrepaidCard\Bundle\AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Form\Extension\DataCollector\FormDataCollector;
 use tests\integration\SimplePrepaidCard\DatabaseTestCase;
+use tests\testServices\TestCreditCardProvider;
 
 abstract class WebTestCase extends DatabaseTestCase
 {
@@ -59,6 +60,11 @@ abstract class WebTestCase extends DatabaseTestCase
     protected function responseContent(): string
     {
         return (string) $this->client->getResponse();
+    }
+
+    protected function creditCardProvider(): TestCreditCardProvider
+    {
+        return  $this->container()->get('simple_prepaid_card.coffee_shop.credit_card_provider.test');
     }
 
     protected function setUp()

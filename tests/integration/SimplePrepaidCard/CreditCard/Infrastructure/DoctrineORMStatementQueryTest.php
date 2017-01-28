@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace test\integration\SimplePrepaidCard\CreditCard\Infrastructure;
+namespace tests\integration\SimplePrepaidCard\CreditCard\Infrastructure;
 
 use Ramsey\Uuid\Uuid;
 use SimplePrepaidCard\CreditCard\Application\Query\StatementView;

@@ -57,20 +57,23 @@
         "static-analysis": "bin/php-cs-fixer fix --config-file=.php_cs",
         "static-analysis-ci": "bin/php-cs-fixer fix --dry-run --config-file=.php_cs",
         "setup-database-test": "(bin/console do:da:dr --force --env=test || true) && bin/console do:da:cr --env=test && bin/console do:sch:cr --env=test",
-        "integration": "bin/phpunit",
+        "integration": "bin/phpunit --testsuite=integration",
         "spec": "bin/phpspec run",
         "behat": "bin/behat --out=std",
+        "e2e": "bin/phpunit --testsuite=e2e",
         "test": [
             "@static-analysis",
             "@spec",
             "@integration",
-            "@behat"
+            "@behat",
+            "@e2e"
         ],
         "test-ci": [
             "@static-analysis-ci",
             "@spec",
             "@integration",
-            "@behat"
+            "@behat",
+            "@e2e"
         ],
         "symfony-scripts": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",

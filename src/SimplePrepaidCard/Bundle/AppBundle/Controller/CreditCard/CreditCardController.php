@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace SimplePrepaidCard\Bundle\AppBundle\Controller\CreditCard;
 
 use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as Config;
 use SimplePrepaidCard\Bundle\AppBundle\Form\CreditCardType;
 use SimplePrepaidCard\Bundle\AppBundle\Form\FundsType;
 use SimplePrepaidCard\Bundle\AppBundle\Form\SaveType;
+use SimplePrepaidCard\CoffeeShop\Model\Customer;
 use SimplePrepaidCard\CreditCard\Application\Command\BlockFunds;
 use SimplePrepaidCard\CreditCard\Application\Command\ChargeFunds;
 use SimplePrepaidCard\CreditCard\Application\Command\CreateCreditCard;
@@ -18,7 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
-//Todo: Flashbag magic
+//Todo: Flashbag magic, remove customer coupling, remove redundant actions
 class CreditCardController extends Controller
 {
     /**
@@ -32,7 +34,7 @@ class CreditCardController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->get('command_bus')->handle(
-                new CreateCreditCard(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'), Uuid::uuid4(), $form->getData()['card_holder'])
+                new CreateCreditCard(Uuid::uuid4(), Uuid::fromString(Customer::CUSTOMER_ID), $form->getData()['card_holder'])
             );
 
             return $this->redirectToRoute('homepage');
@@ -55,7 +57,7 @@ class CreditCardController extends Controller
         try {
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('command_bus')->handle(
-                    new LoadFunds(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'), (int) $form->getData()['amount'])
+                    new LoadFunds($this->creditCardId(), (int) $form->getData()['amount'])
                 );
 
                 return $this->redirectToRoute('homepage');
@@ -81,7 +83,7 @@ class CreditCardController extends Controller
         try {
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('command_bus')->handle(
-                    new BlockFunds(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'), (int) $form->getData()['amount'])
+                    new BlockFunds($this->creditCardId(), (int) $form->getData()['amount'])
                 );
 
                 return $this->redirectToRoute('homepage');
@@ -106,7 +108,7 @@ class CreditCardController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->get('command_bus')->handle(
-                new UnblockFunds(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'))
+                new UnblockFunds($this->creditCardId())
             );
 
             return $this->redirectToRoute('homepage');
@@ -129,7 +131,7 @@ class CreditCardController extends Controller
         try {
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('command_bus')->handle(
-                    new ChargeFunds(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'), (int) $form->getData()['amount'])
+                    new ChargeFunds($this->creditCardId(), (int) $form->getData()['amount'])
                 );
 
                 return $this->redirectToRoute('homepage');
@@ -141,5 +143,10 @@ class CreditCardController extends Controller
         return $this->render('@App/credit-card/charge-funds.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    private function creditCardId(): UuidInterface
+    {
+        return $this->get('simple_prepaid_card.credit_card.query.credit_card_id_of_holder')->get(Uuid::fromString(Customer::CUSTOMER_ID));
     }
 }

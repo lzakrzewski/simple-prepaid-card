@@ -11,8 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use tests\builders\CoffeeShop\CustomerBuilder;
 use tests\builders\CoffeeShop\MerchantBuilder;
 use tests\integration\SimplePrepaidCard\Bundle\AppBundle\Controller\WebTestCase;
-use tests\testServices\TestCreditCardProvider;
 
+//Todo: test more edge cases
 class CoffeeShopControllerTest extends WebTestCase
 {
     /** @test */
@@ -175,10 +175,5 @@ class CoffeeShopControllerTest extends WebTestCase
 
         $this->assertResponseStatusCode(Response::HTTP_OK);
         $this->assertThatFormIsNotValid();
-    }
-
-    private function creditCardProvider(): TestCreditCardProvider
-    {
-        return  $this->container()->get('simple_prepaid_card.coffee_shop.credit_card_provider.test');
     }
 }

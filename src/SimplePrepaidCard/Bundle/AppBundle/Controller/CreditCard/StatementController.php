@@ -17,8 +17,7 @@ class StatementController extends Controller
     public function unblockFundsAction()
     {
         return $this->render('@App/credit-card/statement.html.twig', [
-            'statement' => $this->container
-                ->get('simple_prepaid_card.credit_card.query.statement')
+            'statement' => $this->get('simple_prepaid_card.credit_card.query.statement')
                 ->get(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7')),
         ]);
     }
