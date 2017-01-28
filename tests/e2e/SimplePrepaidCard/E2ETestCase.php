@@ -9,6 +9,7 @@ use Ramsey\Uuid\Uuid;
 use SimplePrepaidCard\CoffeeShop\Model\Customer;
 use SimplePrepaidCard\CoffeeShop\Model\Merchant;
 use SimplePrepaidCard\CreditCard\Model\CreditCard;
+use SimplePrepaidCard\CreditCard\Model\Holder;
 use tests\integration\SimplePrepaidCard\Bundle\AppBundle\Controller\WebTestCase;
 
 abstract class E2ETestCase extends WebTestCase
@@ -101,7 +102,7 @@ abstract class E2ETestCase extends WebTestCase
             ->get(
                 $this->container()
                     ->get('simple_prepaid_card.credit_card.query.credit_card_id_of_holder')
-                    ->get(Uuid::fromString(Customer::CUSTOMER_ID))
+                    ->get(Uuid::fromString(Holder::HOLDER_ID))
             );
     }
 

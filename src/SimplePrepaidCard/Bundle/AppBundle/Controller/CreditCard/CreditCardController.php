@@ -79,12 +79,13 @@ class CreditCardController extends Controller
     {
         return $this->render('@App/credit-card/statement.html.twig', [
             'statement' => $this->get('simple_prepaid_card.credit_card.query.statement')
-                ->ofHolder(Uuid::fromString(Customer::CUSTOMER_ID)),
+                ->ofHolder(Uuid::fromString(Holder::HOLDER_ID)),
         ]);
     }
 
     private function creditCardId(): UuidInterface
     {
-        return $this->get('simple_prepaid_card.credit_card.query.credit_card_id_of_holder')->get(Uuid::fromString(Customer::CUSTOMER_ID));
+        return $this->get('simple_prepaid_card.credit_card.query.credit_card_id_of_holder')
+            ->get(Uuid::fromString(Holder::HOLDER_ID));
     }
 }

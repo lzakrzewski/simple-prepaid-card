@@ -11,6 +11,7 @@ use SimplePrepaidCard\CreditCard\Model\CreditCardWasCreated;
 use SimplePrepaidCard\CreditCard\Model\FundsWereBlocked;
 use SimplePrepaidCard\CreditCard\Model\FundsWereCharged;
 use SimplePrepaidCard\CreditCard\Model\FundsWereLoaded;
+use SimplePrepaidCard\CreditCard\Model\Holder;
 use Symfony\Component\HttpFoundation\Response;
 use tests\builders\CreditCard\CreditCardBuilder;
 use tests\integration\SimplePrepaidCard\Bundle\AppBundle\Controller\WebTestCase;
@@ -85,7 +86,7 @@ class CreditCardControllerTest extends WebTestCase
     public function it_can_get_statement()
     {
         $creditCardId = Uuid::uuid4();
-        $holderId     = Uuid::fromString(Customer::CUSTOMER_ID);
+        $holderId     = Uuid::fromString(Holder::HOLDER_ID);
 
         $this->buildPersisted(
             CreditCardBuilder::create()
@@ -111,7 +112,7 @@ class CreditCardControllerTest extends WebTestCase
     public function it_can_get_statement_when_no_statement()
     {
         $creditCardId = Uuid::uuid4();
-        $holderId     = Uuid::fromString(Customer::CUSTOMER_ID);
+        $holderId     = Uuid::fromString(Holder::HOLDER_ID);
 
         $this->buildPersisted(
             CreditCardBuilder::create()
