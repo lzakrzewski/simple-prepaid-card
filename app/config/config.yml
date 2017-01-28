@@ -3,14 +3,10 @@ imports:
     - { resource: security.yml }
     - { resource: services.yml }
 
-# Put parameters here that don't need to change on each machine where the app is deployed
-# http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
 
 framework:
-    #esi:             ~
-    #translator:      { fallbacks: ["%locale%"] }
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -18,7 +14,6 @@ framework:
     form:            ~
     csrf_protection: ~
     validation:      { enable_annotations: true }
-    #serializer:      { enable_annotations: true }
     templating:
         engines: ['twig']
     default_locale:  "%locale%"
@@ -33,13 +28,14 @@ framework:
     php_errors:
         log: true
 
-# Twig Configuration
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     form_themes:
         - 'bootstrap_3_layout.html.twig'
-# Doctrine Configuration
+    globals:
+        creditCard: "@simple_prepaid_card.credit_card.query.credit_card"
+
 doctrine:
     dbal:
         driver:   pdo_sqlite
@@ -51,6 +47,10 @@ doctrine:
         auto_mapping: false
         naming_strategy: doctrine.orm.naming_strategy.underscore
         mappings:
+            common:
+                type: yml
+                dir: "%kernel.root_dir%/../src/SimplePrepaidCard/Common/Infrastructure/doctrine"
+                prefix: Money
             credit_card:
                 type: annotation
                 dir: "%kernel.root_dir%/../src/SimplePrepaidCard/CreditCard/Model"
