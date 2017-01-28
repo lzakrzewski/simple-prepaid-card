@@ -12,6 +12,7 @@ use SimplePrepaidCard\Bundle\AppBundle\Form\FundsType;
 use SimplePrepaidCard\CoffeeShop\Model\Customer;
 use SimplePrepaidCard\CreditCard\Application\Command\CreateCreditCard;
 use SimplePrepaidCard\CreditCard\Application\Command\LoadFunds;
+use SimplePrepaidCard\CreditCard\Model\Holder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +22,7 @@ class CreditCardController extends Controller
 {
     /**
      * @Config\Route("/create-credit-card", name="create-credit-card")
+     * @Config\Security("has_role('ROLE_HOLDER')")
      * @Config\Method({"GET", "POST"})
      */
     public function createCreditCardAction(Request $request)
@@ -30,10 +32,10 @@ class CreditCardController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->get('command_bus')->handle(
-                new CreateCreditCard(Uuid::uuid4(), Uuid::fromString(Customer::CUSTOMER_ID), $form->getData()['card_holder'])
+                new CreateCreditCard(Uuid::uuid4(), Uuid::fromString(Holder::HOLDER_ID), $form->getData()['card_holder'])
             );
 
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('customer');
         }
 
         return $this->render('@App/credit-card/create-credit-card.html.twig', [
@@ -43,6 +45,7 @@ class CreditCardController extends Controller
 
     /**
      * @Config\Route("/load-funds", name="load-funds")
+     * @Config\Security("has_role('ROLE_HOLDER')")
      * @Config\Method({"GET", "POST"})
      */
     public function loadFundsAction(Request $request)
@@ -56,7 +59,7 @@ class CreditCardController extends Controller
                     new LoadFunds($this->creditCardId(), (int) $form->getData()['amount'])
                 );
 
-                return $this->redirectToRoute('homepage');
+                return $this->redirectToRoute('customer');
             }
         } catch (\Exception $exception) {
             $form->get('amount')->addError(new FormError($exception->getMessage()));
@@ -69,6 +72,7 @@ class CreditCardController extends Controller
 
     /**
      * @Config\Route("/statement", name="statement")
+     * @Config\Security("has_role('ROLE_HOLDER')")
      * @Config\Method({"GET"})
      */
     public function statementAction()

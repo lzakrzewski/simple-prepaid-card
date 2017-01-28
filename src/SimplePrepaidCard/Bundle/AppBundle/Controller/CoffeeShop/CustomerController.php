@@ -17,6 +17,7 @@ class CustomerController extends Controller
 {
     /**
      * @Config\Route("/customer", name="customer")
+     * @Config\Security("has_role('ROLE_CUSTOMER')")
      * @Config\Method({"GET"})
      */
     public function customerAction()
@@ -26,6 +27,7 @@ class CustomerController extends Controller
 
     /**
      * @Config\Route("/buy-product", name="buy-product")
+     * @Config\Security("has_role('ROLE_CUSTOMER')")
      * @Config\Method({"GET", "POST"})
      */
     public function buyProductAction(Request $request)
@@ -39,7 +41,7 @@ class CustomerController extends Controller
                     new BuyProduct(Uuid::fromString(Customer::CUSTOMER_ID), $form->getData()['product_id'])
                 );
 
-                return $this->redirectToRoute('homepage');
+                return $this->redirectToRoute('customer');
             } catch (\Exception $e) {
                 $form->addError(new FormError($e->getMessage()));
             }

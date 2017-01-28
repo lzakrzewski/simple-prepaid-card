@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace tests\integration\SimplePrepaidCard\Bundle\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\SecurityBundle\DataCollector\SecurityDataCollector;
 use Symfony\Component\Form\Extension\DataCollector\FormDataCollector;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use tests\integration\SimplePrepaidCard\DatabaseTestCase;
 use tests\testServices\TestCreditCardProvider;
@@ -14,6 +16,24 @@ abstract class WebTestCase extends DatabaseTestCase
 {
     /** @var Client */
     private $client;
+
+    private $credentials = [
+        'ROLE_HOLDER'   => ['customer', 'customer'],
+        'ROLE_CUSTOMER' => ['customer', 'customer'],
+        'ROLE_MERCHANT' => ['merchant', 'merchant'],
+    ];
+
+    protected function authenticateWithRole(string $role)
+    {
+        $credentials = $this->credentials[$role];
+
+        $this->client->setServerParameters(
+            [
+                'PHP_AUTH_USER' => $credentials[0],
+                'PHP_AUTH_PW'   => $credentials[1],
+            ]
+        );
+    }
 
     protected function request(string $method, string $uri, array $parameters = [])
     {
@@ -29,6 +49,19 @@ abstract class WebTestCase extends DatabaseTestCase
             ->selectButton($submitButton)->form();
 
         $this->client->submit($form, $data);
+    }
+
+    protected function followRedirect()
+    {
+        $this->client->enableProfiler();
+        $this->client->followRedirect();
+    }
+
+    protected function assertUsername(string $expectedUserName)
+    {
+        $collector = $this->securityCollector();
+
+        $this->assertEquals($expectedUserName, $collector->getUser());
     }
 
     protected function assertThatFormIsValid()
@@ -58,6 +91,16 @@ abstract class WebTestCase extends DatabaseTestCase
         $this->assertEquals($expected, $this->response()->getStatusCode());
     }
 
+    protected function assertRedirectResponse(string $expectedTarget)
+    {
+        /** @var RedirectResponse $response */
+        $response = $this->response();
+
+        $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertEquals($expectedTarget, $this->response()->getTargetUrl());
+    }
+
     protected function responseContent(): string
     {
         return (string) $this->response();
@@ -85,6 +128,11 @@ abstract class WebTestCase extends DatabaseTestCase
     private function formCollector(): FormDataCollector
     {
         return $this->client->getProfile()->getCollector('form');
+    }
+
+    private function securityCollector(): SecurityDataCollector
+    {
+        return $this->client->getProfile()->getCollector('security');
     }
 
     private function response(): Response

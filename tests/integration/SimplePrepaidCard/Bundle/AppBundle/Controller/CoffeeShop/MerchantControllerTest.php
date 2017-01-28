@@ -14,6 +14,15 @@ use tests\integration\SimplePrepaidCard\Bundle\AppBundle\Controller\WebTestCase;
 class MerchantControllerTest extends WebTestCase
 {
     /** @test */
+    public function it_can_render_merchant_page()
+    {
+        $this->authenticateWithRole('ROLE_MERCHANT');
+        $this->request('GET', '/merchant');
+
+        $this->assertResponseStatusCode(Response::HTTP_OK);
+    }
+
+    /** @test */
     public function it_can_capture_authorization()
     {
         $this->creditCardProvider()->willApprove();
@@ -24,11 +33,12 @@ class MerchantControllerTest extends WebTestCase
                 ->withMerchantId(Uuid::fromString(Merchant::MERCHANT_ID))
         );
 
+        $this->authenticateWithRole('ROLE_MERCHANT');
         $this->request('GET', '/capture-authorization');
 
         $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '100']);
 
-        $this->assertResponseStatusCode(Response::HTTP_FOUND);
+        $this->assertRedirectResponse('/merchant');
         $this->assertThatFormIsValid();
     }
 
@@ -43,6 +53,7 @@ class MerchantControllerTest extends WebTestCase
                 ->withMerchantId(Uuid::fromString(Merchant::MERCHANT_ID))
         );
 
+        $this->authenticateWithRole('ROLE_MERCHANT');
         $this->request('GET', '/capture-authorization');
 
         $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '100']);
@@ -62,11 +73,12 @@ class MerchantControllerTest extends WebTestCase
                 ->withMerchantId(Uuid::fromString(Merchant::MERCHANT_ID))
         );
 
+        $this->authenticateWithRole('ROLE_MERCHANT');
         $this->request('GET', '/reverse-authorization');
 
         $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '100']);
 
-        $this->assertResponseStatusCode(Response::HTTP_FOUND);
+        $this->assertRedirectResponse('/merchant');
         $this->assertThatFormIsValid();
     }
 
@@ -81,6 +93,7 @@ class MerchantControllerTest extends WebTestCase
                 ->withMerchantId(Uuid::fromString(Merchant::MERCHANT_ID))
         );
 
+        $this->authenticateWithRole('ROLE_MERCHANT');
         $this->request('GET', '/reverse-authorization');
 
         $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '100']);
@@ -101,11 +114,12 @@ class MerchantControllerTest extends WebTestCase
                 ->withMerchantId(Uuid::fromString(Merchant::MERCHANT_ID))
         );
 
+        $this->authenticateWithRole('ROLE_MERCHANT');
         $this->request('GET', '/refund-captured');
 
         $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '100']);
 
-        $this->assertResponseStatusCode(Response::HTTP_FOUND);
+        $this->assertRedirectResponse('/merchant');
         $this->assertThatFormIsValid();
     }
 
@@ -121,11 +135,32 @@ class MerchantControllerTest extends WebTestCase
                 ->withMerchantId(Uuid::fromString(Merchant::MERCHANT_ID))
         );
 
+        $this->authenticateWithRole('ROLE_MERCHANT');
         $this->request('GET', '/refund-captured');
 
         $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '100']);
 
         $this->assertResponseStatusCode(Response::HTTP_OK);
         $this->assertThatFormIsNotValid();
+    }
+
+    /** @test @dataProvider wrongRoles */
+    public function user_with_wrong_role_can_not_access_merchant_controller(string $uri, string $role)
+    {
+        $this->authenticateWithRole($role);
+
+        $this->request('GET', $uri);
+
+        $this->assertResponseStatusCode(Response::HTTP_FORBIDDEN);
+    }
+
+    public function wrongRoles(): array
+    {
+        return [
+            ['/merchant', 'ROLE_CUSTOMER'],
+            ['/capture-authorization', 'ROLE_CUSTOMER'],
+            ['/reverse-authorization', 'ROLE_CUSTOMER'],
+            ['/refund-captured', 'ROLE_CUSTOMER'],
+        ];
     }
 }

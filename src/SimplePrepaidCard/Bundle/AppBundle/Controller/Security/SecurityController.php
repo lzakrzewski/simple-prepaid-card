@@ -10,6 +10,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class SecurityController extends Controller
 {
     /**
+     * @Config\Route("/", name="index")
+     * @Config\Security("has_role('ROLE_USER')")
+     */
+    public function indexAction()
+    {
+        $roles = $this->getUser()->getRoles();
+
+        if (in_array('ROLE_HOLDER', $roles) || in_array('ROLE_CUSTOMER', $roles)) {
+            return $this->redirect($this->generateUrl('customer'));
+        }
+
+        return $this->redirect($this->generateUrl('merchant'));
+    }
+
+    /**
      * @Config\Route("/login", name="login")
      */
     public function loginAction()

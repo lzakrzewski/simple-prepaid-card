@@ -19,6 +19,7 @@ class MerchantController extends Controller
 {
     /**
      * @Config\Route("/merchant", name="merchant")
+     * @Config\Security("has_role('ROLE_MERCHANT')")
      * @Config\Method({"GET"})
      */
     public function merchantAction()
@@ -28,6 +29,7 @@ class MerchantController extends Controller
 
     /**
      * @Config\Route("/capture-authorization", name="capture-authorization")
+     * @Config\Security("has_role('ROLE_MERCHANT')")
      * @Config\Method({"GET", "POST"})
      */
     public function captureAuthorizationAction(Request $request)
@@ -41,7 +43,7 @@ class MerchantController extends Controller
                     new CaptureAuthorization(Uuid::fromString(Merchant::MERCHANT_ID), (int) $form->getData()['amount'])
                 );
 
-                return $this->redirectToRoute('homepage');
+                return $this->redirectToRoute('merchant');
             } catch (\Exception $e) {
                 $form->addError(new FormError($e->getMessage()));
             }
@@ -54,6 +56,7 @@ class MerchantController extends Controller
 
     /**
      * @Config\Route("/reverse-authorization", name="reverse-authorization")
+     * @Config\Security("has_role('ROLE_MERCHANT')")
      * @Config\Method({"GET", "POST"})
      */
     public function reverseAuthorizationAction(Request $request)
@@ -67,7 +70,7 @@ class MerchantController extends Controller
                     new ReverseAuthorization(Uuid::fromString(Merchant::MERCHANT_ID), (int) $form->getData()['amount'])
                 );
 
-                return $this->redirectToRoute('homepage');
+                return $this->redirectToRoute('merchant');
             } catch (\Exception $e) {
                 $form->addError(new FormError($e->getMessage()));
             }
@@ -80,6 +83,7 @@ class MerchantController extends Controller
 
     /**
      * @Config\Route("/refund-captured", name="refund-captured")
+     * @Config\Security("has_role('ROLE_MERCHANT')")
      * @Config\Method({"GET", "POST"})
      */
     public function refundCapturedAction(Request $request)
@@ -93,7 +97,7 @@ class MerchantController extends Controller
                     new RefundCaptured(Uuid::fromString(Merchant::MERCHANT_ID), (int) $form->getData()['amount'])
                 );
 
-                return $this->redirectToRoute('homepage');
+                return $this->redirectToRoute('merchant');
             } catch (\Exception $e) {
                 $form->addError(new FormError($e->getMessage()));
             }

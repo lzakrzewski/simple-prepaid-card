@@ -21,6 +21,7 @@ class CreditCardControllerTest extends WebTestCase
     /** @test */
     public function it_can_create_credit_card()
     {
+        $this->authenticateWithRole('ROLE_HOLDER');
         $this->request('GET', '/create-credit-card');
 
         $this->fillAndSubmitForm('credit_card[save]', [
@@ -30,13 +31,14 @@ class CreditCardControllerTest extends WebTestCase
             'credit_card[expires]'     => '0919',
         ]);
 
-        $this->assertResponseStatusCode(Response::HTTP_FOUND);
+        $this->assertRedirectResponse('/customer');
         $this->assertThatFormIsValid();
     }
 
     /** @test */
     public function it_can_not_create_credit_card_with_invalid_request()
     {
+        $this->authenticateWithRole('ROLE_HOLDER');
         $this->request('GET', '/create-credit-card');
 
         $this->fillAndSubmitForm('credit_card[save]', []);
@@ -53,11 +55,12 @@ class CreditCardControllerTest extends WebTestCase
                 ->withCreditCardId(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'))
         );
 
+        $this->authenticateWithRole('ROLE_HOLDER');
         $this->request('GET', '/load-funds');
 
         $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '100']);
 
-        $this->assertResponseStatusCode(Response::HTTP_FOUND);
+        $this->assertRedirectResponse('/customer');
         $this->assertThatFormIsValid();
     }
 
@@ -69,6 +72,7 @@ class CreditCardControllerTest extends WebTestCase
                 ->withCreditCardId(Uuid::fromString('6a45032e-738a-48b7-893d-ebdc60d0c3b7'))
         );
 
+        $this->authenticateWithRole('ROLE_HOLDER');
         $this->request('GET', '/load-funds');
 
         $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '-100']);
@@ -96,6 +100,7 @@ class CreditCardControllerTest extends WebTestCase
             new FundsWereCharged($creditCardId, $holderId, Money::GBP(1), Money::GBP(99), Money::GBP(99), new \DateTime('2017-01-04'))
         );
 
+        $this->authenticateWithRole('ROLE_HOLDER');
         $this->request('GET', '/statement');
 
         $this->assertResponseStatusCode(Response::HTTP_OK);
@@ -114,9 +119,29 @@ class CreditCardControllerTest extends WebTestCase
                 ->ofHolder($holderId)
         );
 
+        $this->authenticateWithRole('ROLE_HOLDER');
         $this->request('GET', '/statement');
 
         $this->assertResponseStatusCode(Response::HTTP_OK);
         $this->assertContains('<table', $this->responseContent());
+    }
+
+    /** @test @dataProvider wrongRoles */
+    public function user_with_wrong_role_can_not_access_credit_card_controller(string $uri, string $role)
+    {
+        $this->authenticateWithRole($role);
+
+        $this->request('GET', $uri);
+
+        $this->assertResponseStatusCode(Response::HTTP_FORBIDDEN);
+    }
+
+    public function wrongRoles(): array
+    {
+        return [
+            ['/create-credit-card', 'ROLE_MERCHANT'],
+            ['/load-funds', 'ROLE_MERCHANT'],
+            ['/statement', 'ROLE_MERCHANT'],
+        ];
     }
 }

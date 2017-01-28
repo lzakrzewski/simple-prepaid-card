@@ -4,7 +4,8 @@ security:
 
     role_hierarchy:
         ROLE_MERCHANT: ROLE_USER
-        ROLE_CUSTOMER: ROLE_USER
+        ROLE_HOLDER: ROLE_USER
+        ROLE_CUSTOMER: ROLE_HOLDER
 
     providers:
         in_memory:
