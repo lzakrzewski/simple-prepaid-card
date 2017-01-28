@@ -11,8 +11,12 @@ final class UnblockFunds
     /** @var UuidInterface */
     public $creditCardId;
 
-    public function __construct(UuidInterface $creditCardId)
+    /** @var int */
+    public $amount;
+
+    public function __construct(UuidInterface $creditCardId, int $amount)
     {
         $this->creditCardId = $creditCardId;
+        $this->amount       = $amount;
     }
 }

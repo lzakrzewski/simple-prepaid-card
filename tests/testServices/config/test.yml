@@ -8,6 +8,8 @@ services:
 
     simple_prepaid_card.coffee_shop.credit_card_provider.test:
         class: tests\testServices\TestCreditCardProvider
+        arguments:
+            - "@simple_prepaid_card.coffee_shop.credit_card_provider.local"
 
     test_setup:
         class: tests\testServices\TestSetup

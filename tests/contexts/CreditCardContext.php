@@ -96,11 +96,11 @@ class CreditCardContext extends DefaultContext
     }
 
     /**
-     * @When I unblock funds on a credit card with id :creditCardId
+     * @When I unblock :amount GBP on a credit card with id :creditCardId
      */
-    public function iUnblockFundsOnACreditCardWithId(UuidInterface $creditCardId)
+    public function iUnblockGbpOnACreditCardWithId(Money $amount, UuidInterface $creditCardId)
     {
-        $this->handle(new UnblockFunds($creditCardId));
+        $this->handle(new UnblockFunds($creditCardId, (int) $amount->getAmount()));
     }
 
     /**

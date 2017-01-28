@@ -122,7 +122,31 @@ class CreditCardSpec extends ObjectBehavior
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(77));
 
-        $this->unblockFunds();
+        $this->unblockFunds(Money::GBP(77));
+
+        $this->availableBalance()->shouldBeLike(Money::GBP(100));
+        $this->balance()->shouldBeLike(Money::GBP(100));
+    }
+
+    public function it_can_unblock_partial_funds()
+    {
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->loadFunds(Money::GBP(100));
+        $this->blockFunds(Money::GBP(100));
+
+        $this->unblockFunds(Money::GBP(50));
+
+        $this->availableBalance()->shouldBeLike(Money::GBP(50));
+        $this->balance()->shouldBeLike(Money::GBP(100));
+    }
+
+    public function it_unblock_too_much_funds()
+    {
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->loadFunds(Money::GBP(100));
+        $this->blockFunds(Money::GBP(77));
+
+        $this->unblockFunds(Money::GBP(1111));
 
         $this->availableBalance()->shouldBeLike(Money::GBP(100));
         $this->balance()->shouldBeLike(Money::GBP(100));
@@ -133,10 +157,28 @@ class CreditCardSpec extends ObjectBehavior
         $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
         $this->loadFunds(Money::GBP(100));
 
-        $this->unblockFunds();
+        $this->unblockFunds(Money::GBP(1111));
 
         $this->availableBalance()->shouldBeLike(Money::GBP(100));
         $this->balance()->shouldBeLike(Money::GBP(100));
+    }
+
+    public function it_can_not_unblock_with_negative_funds()
+    {
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->loadFunds(Money::GBP(100));
+        $this->blockFunds(Money::GBP(77));
+
+        $this->shouldThrow(CannotUseNegativeFunds::class)->duringUnblockFunds(Money::GBP(-1));
+    }
+
+    public function it_can_not_unblock_with_funds_in_different_currency()
+    {
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->loadFunds(Money::GBP(100));
+        $this->blockFunds(Money::GBP(77));
+
+        $this->shouldThrow(\InvalidArgumentException::class)->duringUnblockFunds(Money::USD(1));
     }
 
     public function it_can_charge_funds()

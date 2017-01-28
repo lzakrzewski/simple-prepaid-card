@@ -17,6 +17,7 @@ use SimplePrepaidCard\CoffeeShop\Model\AuthorizationRequestWasDeclined;
 use SimplePrepaidCard\CoffeeShop\Model\AuthorizationWasCaptured;
 use SimplePrepaidCard\CoffeeShop\Model\AuthorizationWasReversed;
 use SimplePrepaidCard\CoffeeShop\Model\CannotCaptureMoreThanAuthorized;
+use SimplePrepaidCard\CoffeeShop\Model\CannotReverseMoreThanAuthorized;
 use SimplePrepaidCard\CoffeeShop\Model\CannotUseNegativeAmount;
 use SimplePrepaidCard\CoffeeShop\Model\CapturedWasRefunded;
 use SimplePrepaidCard\CoffeeShop\Model\CaptureWasDeclined;
@@ -244,6 +245,14 @@ class CoffeeShopContext extends DefaultContext
     public function iShouldBeNotifiedThatReverseWasDeclined()
     {
         $this->expectException(ReverseWasDeclined::class);
+    }
+
+    /**
+     * @Then I should be notified than I can not reverse more than authorized
+     */
+    public function iShouldBeNotifiedThanICanNotReverseMoreThanAuthorized()
+    {
+        $this->expectException(CannotReverseMoreThanAuthorized::class);
     }
 
     /**

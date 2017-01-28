@@ -6,6 +6,7 @@ namespace tests\integration\SimplePrepaidCard\Bundle\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Form\Extension\DataCollector\FormDataCollector;
+use Symfony\Component\HttpFoundation\Response;
 use tests\integration\SimplePrepaidCard\DatabaseTestCase;
 use tests\testServices\TestCreditCardProvider;
 
@@ -54,12 +55,12 @@ abstract class WebTestCase extends DatabaseTestCase
 
     protected function assertResponseStatusCode(int $expected)
     {
-        $this->assertEquals($expected, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals($expected, $this->response()->getStatusCode());
     }
 
     protected function responseContent(): string
     {
-        return (string) $this->client->getResponse();
+        return (string) $this->response();
     }
 
     protected function creditCardProvider(): TestCreditCardProvider
@@ -84,5 +85,10 @@ abstract class WebTestCase extends DatabaseTestCase
     private function formCollector(): FormDataCollector
     {
         return $this->client->getProfile()->getCollector('form');
+    }
+
+    private function response(): Response
+    {
+        return $this->client->getResponse();
     }
 }

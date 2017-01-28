@@ -13,7 +13,6 @@ use SimplePrepaidCard\CoffeeShop\Model\Product;
 use SimplePrepaidCard\CoffeeShop\Model\RefundWasDeclined;
 use SimplePrepaidCard\CoffeeShop\Model\ReverseWasDeclined;
 
-//Todo: Wrap real credit card provider
 class TestCreditCardProvider implements CreditCardProvider
 {
     /** @var bool */
@@ -22,28 +21,56 @@ class TestCreditCardProvider implements CreditCardProvider
     /** @var bool */
     private static $willApprove;
 
+    /** @var CreditCardProvider */
+    private $creditCardProvider;
+
+    public function __construct(CreditCardProvider $creditCardProvider)
+    {
+        $this->creditCardProvider = $creditCardProvider;
+    }
+
     /** {@inheritdoc} */
     public function authorizationRequest(UuidInterface $customerId, Product $product)
     {
-        $this->handle(AuthorizationRequestWasDeclined::with($customerId, $product));
+        $this->handle(
+            AuthorizationRequestWasDeclined::with($customerId, $product),
+            function (CreditCardProvider $creditCardProvider) use ($customerId, $product) {
+                $creditCardProvider->authorizationRequest($customerId, $product);
+            }
+        );
     }
 
     /** {@inheritdoc} */
     public function capture(Money $amount, UuidInterface $customerId)
     {
-        $this->handle(CaptureWasDeclined::with($customerId));
+        $this->handle(
+            CaptureWasDeclined::with($customerId),
+            function (CreditCardProvider $creditCardProvider) use ($amount, $customerId) {
+                $creditCardProvider->capture($amount, $customerId);
+            }
+        );
     }
 
     /** {@inheritdoc} */
     public function reverse(Money $amount, UuidInterface $customerId)
     {
-        $this->handle(ReverseWasDeclined::with($customerId));
+        $this->handle(
+            ReverseWasDeclined::with($customerId),
+            function (CreditCardProvider $creditCardProvider) use ($amount, $customerId) {
+                $creditCardProvider->reverse($amount, $customerId);
+            }
+        );
     }
 
     /** {@inheritdoc} */
     public function refund(Money $amount, UuidInterface $customerId)
     {
-        $this->handle(RefundWasDeclined::with($customerId));
+        $this->handle(
+            RefundWasDeclined::with($customerId),
+            function (CreditCardProvider $creditCardProvider) use ($amount, $customerId) {
+                $creditCardProvider->refund($amount, $customerId);
+            }
+        );
     }
 
     public function willApprove()
@@ -62,7 +89,7 @@ class TestCreditCardProvider implements CreditCardProvider
         self::$willDecline = null;
     }
 
-    private function handle(\Exception $exception)
+    private function handle(\Exception $exception, callable $function)
     {
         if (self::$willApprove) {
             return;
@@ -71,5 +98,7 @@ class TestCreditCardProvider implements CreditCardProvider
         if (self::$willDecline) {
             throw $exception;
         }
+
+        $function($this->creditCardProvider);
     }
 }

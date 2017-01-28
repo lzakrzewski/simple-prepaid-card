@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimplePrepaidCard\CreditCard\Application\Command;
 
+use Money\Money;
 use SimplePrepaidCard\CreditCard\Model\CreditCardRepository;
 
 final class UnblockFundsHandler
@@ -19,6 +20,6 @@ final class UnblockFundsHandler
     public function handle(UnblockFunds $command)
     {
         $creditCard = $this->creditCards->get($command->creditCardId);
-        $creditCard->unblockFunds();
+        $creditCard->unblockFunds(Money::GBP($command->amount));
     }
 }

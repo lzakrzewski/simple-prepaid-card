@@ -8,9 +8,8 @@ use Money\Money;
 use Ramsey\Uuid\Uuid;
 use SimplePrepaidCard\CoffeeShop\Model\Customer;
 use SimplePrepaidCard\CoffeeShop\Model\Merchant;
+use SimplePrepaidCard\CoffeeShop\Model\Product;
 use SimplePrepaidCard\CreditCard\Model\CreditCard;
-use tests\builders\CoffeeShop\CustomerBuilder;
-use tests\builders\CoffeeShop\MerchantBuilder;
 use tests\integration\SimplePrepaidCard\Bundle\AppBundle\Controller\WebTestCase;
 
 //Todo: change to btn click
@@ -19,8 +18,6 @@ class E2ETest extends WebTestCase
     /** @test */
     public function holder_can_create_card_and_card_customer_can_buy_product_and_then_merchant_can_capture_authorization()
     {
-        $this->markTestIncomplete();
-
         $this->request('GET', '/create-credit-card');
         $this->fillAndSubmitForm('credit_card[save]', [
             'credit_card[card_number]' => '4111111111111111',
@@ -38,45 +35,118 @@ class E2ETest extends WebTestCase
         $this->request('GET', '/capture-authorization');
         $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '490']);
 
+        $this->flushAndClear();
+
         $this->assertCreditCardBalance(
             Money::GBP(550)
                 ->subtract(Money::GBP(490))
         );
+
         $this->assertCreditCardAvailableBalance(
             Money::GBP(550)
+                ->subtract(Product::coffee()->price())
+        );
+
+        $this->assertMerchantAuthorized(
+            Product::coffee()->price()
                 ->subtract(Money::GBP(490))
         );
-        $this->assertMerchantAuthorized(Money::GBP(500));
+
         $this->assertMerchantCaptured(Money::GBP(490));
     }
 
     /** @test */
     public function holder_can_create_card_and_customer_can_buy_product_and_then_merchant_can_reverse_authorization()
     {
-        $this->markTestIncomplete();
+        $this->request('GET', '/create-credit-card');
+        $this->fillAndSubmitForm('credit_card[save]', [
+            'credit_card[card_number]' => '4111111111111111',
+            'credit_card[card_holder]' => 'John Doe',
+            'credit_card[ccv]'         => '123',
+            'credit_card[expires]'     => '0919',
+        ]);
+
+        $this->request('GET', '/load-funds');
+        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '550']);
+
+        $this->request('GET', '/buy-product');
+        $this->fillAndSubmitForm('product[buy]', []);
+
+        $this->request('GET', '/reverse-authorization');
+        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '490']);
+
+        $this->flushAndClear();
+
+        $this->assertCreditCardBalance(Money::GBP(550));
+
+        $this->assertCreditCardAvailableBalance(
+            Money::GBP(550)
+                ->subtract(Product::coffee()->price())
+                ->add(Money::GBP(490))
+        );
+
+        $this->assertMerchantAuthorized(
+            Product::coffee()->price()
+                ->subtract(Money::GBP(490))
+        );
+
+        $this->assertMerchantCaptured(Money::GBP(0));
     }
 
     /** @test */
     public function holder_can_create_card_and_customer_can_buy_product_and_then_merchant_can_capture_authorization_and_then_refund()
     {
-        $this->markTestIncomplete();
+        $this->request('GET', '/create-credit-card');
+        $this->fillAndSubmitForm('credit_card[save]', [
+            'credit_card[card_number]' => '4111111111111111',
+            'credit_card[card_holder]' => 'John Doe',
+            'credit_card[ccv]'         => '123',
+            'credit_card[expires]'     => '0919',
+        ]);
+
+        $this->request('GET', '/load-funds');
+        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '550']);
+
+        $this->request('GET', '/buy-product');
+        $this->fillAndSubmitForm('product[buy]', []);
+
+        $this->request('GET', '/capture-authorization');
+        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '490']);
+
+        $this->request('GET', '/refund-captured');
+        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '100']);
+
+        $this->flushAndClear();
+
+        $this->assertCreditCardBalance(
+            Money::GBP(550)
+                ->subtract(Money::GBP(490))
+                ->add(Money::GBP(100))
+        );
+
+        $this->assertCreditCardAvailableBalance(
+            Money::GBP(550)
+                ->subtract(Product::coffee()->price())
+                ->add(Money::GBP(100))
+        );
+
+        $this->assertMerchantAuthorized(
+            Product::coffee()->price()
+                ->subtract(Money::GBP(490))
+        );
+
+        $this->assertMerchantCaptured(
+            Money::GBP(490)
+                ->subtract(Money::GBP(100))
+        );
     }
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->creditCardProvider()->willApprove();
-
-        $this->buildPersisted(
-            CustomerBuilder::create()
-                ->withCustomerId(Uuid::fromString(Customer::CUSTOMER_ID))
-        );
-
-        $this->buildPersisted(
-            MerchantBuilder::create()
-                ->withMerchantId(Uuid::fromString(Merchant::MERCHANT_ID))
-        );
+        $this->persist(Customer::create());
+        $this->persist(Merchant::create());
     }
 
     private function assertCreditCardBalance(Money $amount)
@@ -121,7 +191,7 @@ class E2ETest extends WebTestCase
     private function merchant(): Merchant
     {
         return $this->container()
-            ->get('simple_prepaid_card.credit_card.repository.credit_card')
+            ->get('simple_prepaid_card.coffee_shop.repository.merchant')
             ->get(Uuid::fromString(Merchant::MERCHANT_ID));
     }
 }

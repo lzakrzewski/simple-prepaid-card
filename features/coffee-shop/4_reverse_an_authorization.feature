@@ -16,6 +16,15 @@ Feature: Reverse authorization
       And I should be authorized to "50" GBP
       And I should have captured "10" GBP
 
+  Scenario: Reverse more then authorized
+    Given I am a merchant with id "49ce95dc-bb15-4c45-9df4-7b8c0a9f8896" authorized to "100" GBP and "10" GBP captured
+      And credit card provider will approve reverse
+     When I reverse "101" GBP from my authorization
+     Then I should be notified than I can not reverse more than authorized
+      And I should not be notified that authorization was reversed
+      And I should be authorized to "100" GBP
+      And I should have captured "10" GBP
+
   Scenario: Reverse an authorization when credit card provider will decline reverse
     Given I am a merchant with id "49ce95dc-bb15-4c45-9df4-7b8c0a9f8896" authorized to "100" GBP and "0" GBP captured
       And credit card provider will decline reverse
