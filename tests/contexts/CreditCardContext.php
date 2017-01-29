@@ -99,7 +99,7 @@ class CreditCardContext extends DefaultContext
      */
     public function iLoadGbpOntoACreditCardWithId(Money $amount, UuidInterface $creditCardId)
     {
-        $this->handle(new LoadFunds($creditCardId, (int) $amount->getAmount()));
+        $this->handle(new LoadFunds($creditCardId, (int) $amount->getAmount(), 'some reason'));
     }
 
     /**
@@ -123,7 +123,7 @@ class CreditCardContext extends DefaultContext
      */
     public function iChargeGbpFromACreditCardWithId(Money $amount, UuidInterface $creditCardId)
     {
-        $this->handle(new ChargeFunds($creditCardId, (int) $amount->getAmount()));
+        $this->handle(new ChargeFunds($creditCardId, (int) $amount->getAmount(), 'some charge reason'));
     }
 
     /**

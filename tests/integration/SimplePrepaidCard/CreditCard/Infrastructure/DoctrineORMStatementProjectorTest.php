@@ -16,7 +16,6 @@ use tests\builders\CreditCard\CreditCardBuilder;
 use tests\builders\CreditCard\CreditCardDataBuilder;
 use tests\integration\SimplePrepaidCard\DatabaseTestCase;
 
-//Todo: Better descriptions for statement like "coffee was bought"
 class DoctrineORMStatementProjectorTest extends DatabaseTestCase
 {
     /** @var DoctrineORMStatementQuery */
@@ -31,7 +30,7 @@ class DoctrineORMStatementProjectorTest extends DatabaseTestCase
         $this->buildPersisted(CreditCardBuilder::create()->withCreditCardId($creditCardId)->ofHolder($holderId));
 
         $this->given(
-            new FundsWereLoaded($creditCardId, $holderId, Money::GBP(100), Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-01'))
+            new FundsWereLoaded($creditCardId, $holderId, Money::GBP(100), 'Funds were loaded', Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-01'))
         );
 
         $this->assertEquals(
@@ -51,7 +50,7 @@ class DoctrineORMStatementProjectorTest extends DatabaseTestCase
         $this->buildPersisted(CreditCardBuilder::create()->withCreditCardId($creditCardId)->ofHolder($holderId));
 
         $this->given(
-            new FundsWereCharged($creditCardId, $holderId, Money::GBP(100), Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-01'))
+            new FundsWereCharged($creditCardId, $holderId, Money::GBP(100), 'Funds were charged', Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-01'))
         );
 
         $this->assertEquals(
@@ -72,9 +71,9 @@ class DoctrineORMStatementProjectorTest extends DatabaseTestCase
 
         $this->given(
             new CreditCardWasCreated($creditCardId, $holderId, CreditCardDataBuilder::create()->build(), Money::GBP(0), Money::GBP(0), new \DateTime('2017-01-01')),
-            new FundsWereLoaded($creditCardId, $holderId, Money::GBP(100), Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-02')),
+            new FundsWereLoaded($creditCardId, $holderId, Money::GBP(100), 'Funds were loaded', Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-02')),
             new FundsWereBlocked($creditCardId, $holderId, Money::GBP(1), Money::GBP(100), Money::GBP(99), new \DateTime('2017-01-03')),
-            new FundsWereCharged($creditCardId, $holderId, Money::GBP(1), Money::GBP(99), Money::GBP(99), new \DateTime('2017-01-04'))
+            new FundsWereCharged($creditCardId, $holderId, Money::GBP(1), 'Funds were charged', Money::GBP(99), Money::GBP(99), new \DateTime('2017-01-04'))
         );
 
         $this->assertEquals(
@@ -98,8 +97,8 @@ class DoctrineORMStatementProjectorTest extends DatabaseTestCase
         $this->buildPersisted(CreditCardBuilder::create()->withCreditCardId($creditCardId2)->ofHolder($holderId2));
 
         $this->given(
-            new FundsWereLoaded($creditCardId1, $holderId1, Money::GBP(100), Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-01')),
-            new FundsWereLoaded($creditCardId2, $holderId2, Money::GBP(200), Money::GBP(200), Money::GBP(200), new \DateTime('2018-01-01'))
+            new FundsWereLoaded($creditCardId1, $holderId1, Money::GBP(100), 'Funds were loaded', Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-01')),
+            new FundsWereLoaded($creditCardId2, $holderId2, Money::GBP(200), 'Funds were loaded', Money::GBP(200), Money::GBP(200), new \DateTime('2018-01-01'))
         );
 
         $this->assertEquals(

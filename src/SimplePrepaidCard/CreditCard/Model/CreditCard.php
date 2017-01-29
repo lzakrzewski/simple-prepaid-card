@@ -116,7 +116,7 @@ final class CreditCard implements ContainsRecordedMessages, Aggregate
         return $this->availableBalance;
     }
 
-    public function loadFunds(Money $amount)
+    public function loadFunds(Money $amount, string $reason)
     {
         $this->guardAgainstNegativeFunds($amount);
 
@@ -128,6 +128,7 @@ final class CreditCard implements ContainsRecordedMessages, Aggregate
                 $this->creditCardId(),
                 $this->holderId(),
                 $amount,
+                $reason,
                 $this->balance(),
                 $this->availableBalance(),
                 new \DateTime()
@@ -180,7 +181,7 @@ final class CreditCard implements ContainsRecordedMessages, Aggregate
         );
     }
 
-    public function chargeFunds(Money $amount)
+    public function chargeFunds(Money $amount, string $reason)
     {
         $this->guardAgainstNegativeFunds($amount);
         $this->guardAgainstChargeMoreFundsThanBlocked($amount);
@@ -192,6 +193,7 @@ final class CreditCard implements ContainsRecordedMessages, Aggregate
                 $this->creditCardId(),
                 $this->holderId(),
                 $amount,
+                $reason,
                 $this->balance(),
                 $this->availableBalance(),
                 new \DateTime()

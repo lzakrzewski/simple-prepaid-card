@@ -20,6 +20,6 @@ final class ChargeFundsHandler
     public function handle(ChargeFunds $command)
     {
         $creditCard = $this->creditCards->get($command->creditCardId);
-        $creditCard->chargeFunds(Money::GBP($command->amount));
+        $creditCard->chargeFunds(Money::GBP($command->amount), $command->reason);
     }
 }

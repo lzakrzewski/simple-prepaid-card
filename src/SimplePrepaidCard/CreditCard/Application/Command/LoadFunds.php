@@ -14,9 +14,13 @@ final class LoadFunds
     /** @var int */
     public $amount;
 
-    public function __construct(UuidInterface $creditCardId, int $amount)
+    /** @var string */
+    public $reason;
+
+    public function __construct(UuidInterface $creditCardId, int $amount, string $reason)
     {
         $this->creditCardId = $creditCardId;
         $this->amount       = $amount;
+        $this->reason       = $reason;
     }
 }

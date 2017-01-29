@@ -115,9 +115,9 @@ class CreditCardControllerTest extends WebTestCase
 
         $this->given(
             new CreditCardWasCreated($creditCardId, $holderId, CreditCardDataBuilder::create()->build(), Money::GBP(0), Money::GBP(0), new \DateTime('2017-01-01')),
-            new FundsWereLoaded($creditCardId, $holderId, Money::GBP(100), Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-02')),
+            new FundsWereLoaded($creditCardId, $holderId, Money::GBP(100), "Credit card holder's deposit", Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-02')),
             new FundsWereBlocked($creditCardId, $holderId, Money::GBP(1), Money::GBP(100), Money::GBP(99), new \DateTime('2017-01-03')),
-            new FundsWereCharged($creditCardId, $holderId, Money::GBP(1), Money::GBP(99), Money::GBP(99), new \DateTime('2017-01-04'))
+            new FundsWereCharged($creditCardId, $holderId, Money::GBP(1), "Credit card holder's charge", Money::GBP(99), Money::GBP(99), new \DateTime('2017-01-04'))
         );
 
         $this->authenticateWithRole('ROLE_HOLDER');

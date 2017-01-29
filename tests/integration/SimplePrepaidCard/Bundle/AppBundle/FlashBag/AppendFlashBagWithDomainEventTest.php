@@ -37,9 +37,9 @@ class AppendFlashBagWithDomainEventTest extends DatabaseTestCase
 
         $this->given(
             new CreditCardWasCreated($creditCardId, $holderId, CreditCardDataBuilder::create()->build(), $amount, $amount, $now),
-            new FundsWereLoaded($creditCardId, $holderId, $amount, $amount, $amount, $now),
+            new FundsWereLoaded($creditCardId, $holderId, $amount, 'Deposit', $amount, $amount, $now),
             new FundsWereBlocked($creditCardId, $holderId, $amount, $amount, $amount, $now),
-            new FundsWereCharged($creditCardId, $holderId, $amount, $amount, $amount, $now),
+            new FundsWereCharged($creditCardId, $holderId, $amount, 'Charge', $amount, $amount, $now),
             new FundsWereUnblocked($creditCardId, $holderId, $amount, $amount, $amount, $now)
         );
 

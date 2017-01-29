@@ -28,7 +28,7 @@ class DoctrineORMStatementProjector implements StatementProjector
                 $event->creditCardId(),
                 $event->holderId(),
                 $event->at(),
-                'Funds were loaded',
+                $event->reason(),
                 $event->amount(),
                 $event->availableBalance(),
                 $event->balance()

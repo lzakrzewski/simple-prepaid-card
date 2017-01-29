@@ -20,6 +20,9 @@ final class FundsWereLoaded implements DomainEvent
     /** @var Money */
     private $amount;
 
+    /** @var string */
+    private $reason;
+
     /** @var Money */
     private $balance;
 
@@ -29,10 +32,11 @@ final class FundsWereLoaded implements DomainEvent
     /** @var \DateTime */
     private $at;
 
-    public function __construct(UuidInterface $creditCardId, UuidInterface $holderId, Money $amount, Money $balance, Money $availableBalance, \DateTime $at)
+    public function __construct(UuidInterface $creditCardId, UuidInterface $holderId, Money $amount, string $reason, Money $balance, Money $availableBalance, \DateTime $at)
     {
         $this->creditCardId     = $creditCardId;
         $this->amount           = $amount;
+        $this->reason           = $reason;
         $this->balance          = $balance;
         $this->availableBalance = $availableBalance;
         $this->at               = $at;
@@ -52,6 +56,11 @@ final class FundsWereLoaded implements DomainEvent
     public function amount(): Money
     {
         return $this->amount;
+    }
+
+    public function reason(): string
+    {
+        return $this->reason;
     }
 
     public function balance(): Money

@@ -51,7 +51,7 @@ class CreditCardBuilder implements Builder
     public function build(): CreditCard
     {
         $creditCard = CreditCard::create($this->creditCardId, $this->holderId, $this->creditCardData);
-        $creditCard->loadFunds($this->balance);
+        $creditCard->loadFunds($this->balance, 'deposit');
 
         $amountToBlock = $this->balance->subtract($this->availableBalance);
 

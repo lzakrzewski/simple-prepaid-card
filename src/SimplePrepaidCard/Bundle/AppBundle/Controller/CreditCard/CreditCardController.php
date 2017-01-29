@@ -67,7 +67,7 @@ class CreditCardController extends Controller
         try {
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('command_bus')->handle(
-                    new LoadFunds($this->creditCardId(), (int) $form->getData()['amount']->getAmount())
+                    new LoadFunds($this->creditCardId(), (int) $form->getData()['amount']->getAmount(), "Credit card holder's deposit.")
                 );
 
                 return $this->redirectToRoute('customer');

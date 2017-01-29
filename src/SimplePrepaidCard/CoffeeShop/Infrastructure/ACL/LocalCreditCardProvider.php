@@ -52,7 +52,7 @@ class LocalCreditCardProvider implements CreditCardProvider
         try {
             $creditCardId = $this->creditCardId($customerId);
 
-            $this->commandBus->handle(new ChargeFunds($creditCardId, (int) $amount->getAmount()));
+            $this->commandBus->handle(new ChargeFunds($creditCardId, (int) $amount->getAmount(), "Merchant's capture."));
         } catch (\Exception $e) {
             throw CaptureWasDeclined::with($customerId);
         }
@@ -76,7 +76,7 @@ class LocalCreditCardProvider implements CreditCardProvider
         try {
             $creditCardId = $this->creditCardId($customerId);
 
-            $this->commandBus->handle(new LoadFunds($creditCardId, (int) $amount->getAmount()));
+            $this->commandBus->handle(new LoadFunds($creditCardId, (int) $amount->getAmount(), "Merchant's refund."));
         } catch (\Exception $e) {
             throw RefundWasDeclined::with($customerId);
         }
