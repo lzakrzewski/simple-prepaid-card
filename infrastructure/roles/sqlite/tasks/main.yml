@@ -1,0 +1,6 @@
+---
+  - name: Install sqlite3
+    apt: name={{ item }} state=present
+    become_user: yes
+    with_items:
+      - sqlite3

@@ -16,3 +16,9 @@
       path: "{{ release_dir }}/var/sessions"
       state: directory
       mode: 0777
+
+  - name: Prepare db directory
+    file:
+      path: "{{ release_dir }}/var/db"
+      state: directory
+      mode: 0777
