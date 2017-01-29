@@ -27,6 +27,7 @@ class SimplePrepaidCardAppExtension extends Extension
         $loader->load('subscribers.yml');
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('session.yml');
         $loader->load('twig.yml');
     }
 

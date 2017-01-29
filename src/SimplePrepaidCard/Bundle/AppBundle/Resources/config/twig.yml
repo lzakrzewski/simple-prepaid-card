@@ -8,9 +8,5 @@ services:
             - { name: twig.extension }
 
     simple_prepaid_card.money_decimal_formatter:
-        class: Money\Formatter\DecimalMoneyFormatter
-        arguments:
-            - "@simple_prepaid_card.money_currencies"
-
-    simple_prepaid_card.money_currencies:
-        class: Money\Currencies\ISOCurrencies
+        class: SimplePrepaidCard\Common\Model\MoneyDecimalFormatter
+        factory: [SimplePrepaidCard\Common\Model\MoneyDecimalFormatter, create]

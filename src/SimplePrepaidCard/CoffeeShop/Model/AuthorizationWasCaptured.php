@@ -6,8 +6,10 @@ namespace SimplePrepaidCard\CoffeeShop\Model;
 
 use Money\Money;
 use Ramsey\Uuid\UuidInterface;
+use SimplePrepaidCard\Common\Model\DomainEvent;
+use SimplePrepaidCard\Common\Model\MoneyDecimalFormatter;
 
-final class AuthorizationWasCaptured
+final class AuthorizationWasCaptured implements DomainEvent
 {
     /** @var UuidInterface */
     private $merchantId;
@@ -65,5 +67,13 @@ final class AuthorizationWasCaptured
     public function at(): \DateTime
     {
         return $this->at;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf(
+            '"%s" of authorization was captured.',
+            MoneyDecimalFormatter::create()->format($this->amount())
+        );
     }
 }

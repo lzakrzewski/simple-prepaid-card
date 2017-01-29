@@ -6,8 +6,10 @@ namespace SimplePrepaidCard\CreditCard\Model;
 
 use Money\Money;
 use Ramsey\Uuid\UuidInterface;
+use SimplePrepaidCard\Common\Model\DomainEvent;
+use SimplePrepaidCard\Common\Model\MoneyDecimalFormatter;
 
-final class FundsWereBlocked
+final class FundsWereBlocked implements DomainEvent
 {
     /** @var UuidInterface */
     private $creditCardId;
@@ -65,5 +67,14 @@ final class FundsWereBlocked
     public function at(): \DateTime
     {
         return $this->at;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf(
+            '"%s" funds were blocked on a credit card with id "%s"',
+            MoneyDecimalFormatter::create()->format($this->amount()),
+            $this->creditCardId()
+        );
     }
 }

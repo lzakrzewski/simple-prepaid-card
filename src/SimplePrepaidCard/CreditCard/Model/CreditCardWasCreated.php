@@ -6,8 +6,10 @@ namespace SimplePrepaidCard\CreditCard\Model;
 
 use Money\Money;
 use Ramsey\Uuid\UuidInterface;
+use SimplePrepaidCard\Common\Model\DomainEvent;
+use SimplePrepaidCard\Common\Model\MoneyDecimalFormatter;
 
-final class CreditCardWasCreated
+final class CreditCardWasCreated implements DomainEvent
 {
     /** @var UuidInterface */
     private $creditCardId;
@@ -71,5 +73,16 @@ final class CreditCardWasCreated
     public function at(): \DateTime
     {
         return $this->at;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf(
+            'Credit card with id "%s" was created with balance "%s" for "%s" at "%s"',
+            $this->creditCardId(),
+            MoneyDecimalFormatter::create()->format($this->balance()),
+            $this->holderName(),
+            $this->at()->format('Y:m:d h:i a')
+        );
     }
 }

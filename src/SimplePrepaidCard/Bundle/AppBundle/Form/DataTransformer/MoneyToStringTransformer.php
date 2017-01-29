@@ -6,6 +6,7 @@ namespace SimplePrepaidCard\Bundle\AppBundle\Form\DataTransformer;
 
 use Money\Currency;
 use Money\Money;
+use SimplePrepaidCard\Common\Model\MoneyDecimalFormatter;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
@@ -22,7 +23,7 @@ class MoneyToStringTransformer implements DataTransformerInterface
             throw new TransformationFailedException('Expected a \Money\Money');
         }
 
-        return sprintf('%.2f', (int) $value->getAmount() / 100.0);
+        return MoneyDecimalFormatter::create()->format($value);
     }
 
     /** {@inheritdoc} */

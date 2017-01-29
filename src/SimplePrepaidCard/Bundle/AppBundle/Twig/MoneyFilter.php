@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace SimplePrepaidCard\Bundle\AppBundle\Twig;
 
 use Money\Money;
-use Money\MoneyFormatter;
+use SimplePrepaidCard\Common\Model\MoneyDecimalFormatter;
 
 class MoneyFilter extends \Twig_Extension
 {
-    /** @var MoneyFormatter */
+    /** @var MoneyDecimalFormatter */
     private $formatter;
 
-    public function __construct(MoneyFormatter $formatter)
+    public function __construct(MoneyDecimalFormatter $formatter)
     {
         $this->formatter = $formatter;
     }

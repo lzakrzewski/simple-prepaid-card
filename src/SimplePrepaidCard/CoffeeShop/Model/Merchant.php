@@ -106,7 +106,8 @@ final class Merchant implements ContainsRecordedMessages
                 $amount,
                 $this->authorized(),
                 $this->captured(),
-                new \DateTime())
+                new \DateTime()
+            )
         );
     }
 
@@ -126,7 +127,8 @@ final class Merchant implements ContainsRecordedMessages
                 $amount,
                 $this->authorized(),
                 $this->captured(),
-                new \DateTime())
+                new \DateTime()
+            )
         );
     }
 
@@ -146,7 +148,8 @@ final class Merchant implements ContainsRecordedMessages
                 $amount,
                 $this->authorized(),
                 $this->captured(),
-                new \DateTime())
+                new \DateTime()
+            )
         );
     }
 

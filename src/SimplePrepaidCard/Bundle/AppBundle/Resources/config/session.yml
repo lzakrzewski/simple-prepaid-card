@@ -1,0 +1,7 @@
+services:
+    simple_prepaid_card.app_bundle.flash_bag.append_domain_events:
+      class: SimplePrepaidCard\Bundle\AppBundle\FlashBag\AppendFlashBagWithDomainEvent
+      arguments:
+          - "@session.flash_bag"
+      tags:
+          - { name: event_bus_middleware }
