@@ -6,9 +6,7 @@
     mode: 0755
 
 - name: Clean release directory
-  file:
-    state: absent
-    path: "{{ release_dir }}/"
+  command: "rm -rf {{ release_dir }}/*"
 
 - name: Ensure release directory
   file:
