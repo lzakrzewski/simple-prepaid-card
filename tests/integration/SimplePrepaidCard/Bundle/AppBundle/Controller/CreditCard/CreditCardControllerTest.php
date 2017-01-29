@@ -14,9 +14,9 @@ use SimplePrepaidCard\CreditCard\Model\FundsWereLoaded;
 use SimplePrepaidCard\CreditCard\Model\Holder;
 use Symfony\Component\HttpFoundation\Response;
 use tests\builders\CreditCard\CreditCardBuilder;
+use tests\builders\CreditCard\CreditCardDataBuilder;
 use tests\integration\SimplePrepaidCard\Bundle\AppBundle\Controller\WebTestCase;
 
-//Todo: Better invalid request tests
 class CreditCardControllerTest extends WebTestCase
 {
     /** @test */
@@ -29,8 +29,8 @@ class CreditCardControllerTest extends WebTestCase
             'credit_card[card_number]'       => '4111111111111111',
             'credit_card[card_holder]'       => 'John Doe',
             'credit_card[cvv_code]'          => '123',
-            'credit_card[expiry_date_month]' => '09',
             'credit_card[expiry_date_year]'  => '99',
+            'credit_card[expiry_date_month]' => '09',
         ]);
 
         $this->assertRedirectResponse('/customer');
@@ -39,6 +39,24 @@ class CreditCardControllerTest extends WebTestCase
 
     /** @test */
     public function it_can_not_create_credit_card_with_invalid_request()
+    {
+        $this->authenticateWithRole('ROLE_HOLDER');
+        $this->request('GET', '/create-credit-card');
+
+        $this->fillAndSubmitForm('credit_card[submit]', [
+            'credit_card[card_number]'       => 'invalid',
+            'credit_card[card_holder]'       => 'John Doe',
+            'credit_card[cvv_code]'          => '123',
+            'credit_card[expiry_date_year]'  => '99',
+            'credit_card[expiry_date_month]' => '09',
+        ]);
+
+        $this->assertResponseStatusCode(Response::HTTP_OK);
+        $this->assertThatFormIsNotValid();
+    }
+
+    /** @test */
+    public function it_can_not_create_credit_card_with_empty_request()
     {
         $this->authenticateWithRole('ROLE_HOLDER');
         $this->request('GET', '/create-credit-card');
@@ -96,7 +114,7 @@ class CreditCardControllerTest extends WebTestCase
         );
 
         $this->given(
-            new CreditCardWasCreated($creditCardId, $holderId, 'John Doe', Money::GBP(0), Money::GBP(0), new \DateTime('2017-01-01')),
+            new CreditCardWasCreated($creditCardId, $holderId, CreditCardDataBuilder::create()->build(), Money::GBP(0), Money::GBP(0), new \DateTime('2017-01-01')),
             new FundsWereLoaded($creditCardId, $holderId, Money::GBP(100), Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-02')),
             new FundsWereBlocked($creditCardId, $holderId, Money::GBP(1), Money::GBP(100), Money::GBP(99), new \DateTime('2017-01-03')),
             new FundsWereCharged($creditCardId, $holderId, Money::GBP(1), Money::GBP(99), Money::GBP(99), new \DateTime('2017-01-04'))

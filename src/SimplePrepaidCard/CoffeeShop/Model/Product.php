@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace SimplePrepaidCard\CoffeeShop\Model;
 
 use Money\Money;
+use SimplePrepaidCard\Common\Model\ValueObject;
 
-final class Product
+final class Product implements ValueObject
 {
     const COFFEE_PRODUCT_ID    = 'coffee';
     const COFFEE_PRODUCT_NAME  = self::COFFEE_PRODUCT_ID;

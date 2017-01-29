@@ -11,34 +11,42 @@ use SimplePrepaidCard\CreditCard\Model\CannotBlockMoreThanAvailableFunds;
 use SimplePrepaidCard\CreditCard\Model\CannotChargeMoreFundsThanBlocked;
 use SimplePrepaidCard\CreditCard\Model\CannotUseNegativeFunds;
 use SimplePrepaidCard\CreditCard\Model\CreditCard;
+use tests\builders\CreditCard\CreditCardDataBuilder;
 
 /** @mixin CreditCard */
 class CreditCardSpec extends ObjectBehavior
 {
     public function it_can_be_created()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
 
         $this->shouldBeAnInstanceOf(CreditCard::class);
     }
 
+    public function it_can_has_credit_card_data()
+    {
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), $creditCardData = CreditCardDataBuilder::create()->build()]);
+
+        $this->creditCardData()->shouldBeLike($creditCardData);
+    }
+
     public function it_has_0_balance_just_after_creation()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
 
         $this->balance()->shouldBeLike(Money::GBP(0));
     }
 
     public function it_has_0_available_balance_just_after_creation()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
 
         $this->availableBalance()->shouldBeLike(Money::GBP(0));
     }
 
     public function it_can_load_funds()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
 
         $this->loadFunds(Money::GBP(55));
 
@@ -48,7 +56,7 @@ class CreditCardSpec extends ObjectBehavior
 
     public function it_can_load_funds_multiple_times()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
 
         $this->loadFunds(Money::GBP(55));
         $this->loadFunds(Money::GBP(123));
@@ -59,21 +67,21 @@ class CreditCardSpec extends ObjectBehavior
 
     public function it_can_not_load_negative_funds()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
 
         $this->shouldThrow(CannotUseNegativeFunds::class)->duringLoadFunds(Money::GBP(-55));
     }
 
     public function it_can_not_load_funds_with_invalid_currency()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
 
         $this->shouldThrow(\InvalidArgumentException::class)->duringLoadFunds(Money::USD(55));
     }
 
     public function it_can_block_funds()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
         $this->loadFunds(Money::GBP(100));
 
         $this->blockFunds(Money::GBP(100));
@@ -84,7 +92,7 @@ class CreditCardSpec extends ObjectBehavior
 
     public function it_can_block_funds_multiple_times()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
         $this->loadFunds(Money::GBP(178));
 
         $this->blockFunds(Money::GBP(31));
@@ -96,7 +104,7 @@ class CreditCardSpec extends ObjectBehavior
 
     public function it_can_not_block_more_than_available_funds()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
         $this->loadFunds(Money::GBP(100));
 
         $this->shouldThrow(CannotBlockMoreThanAvailableFunds::class)->duringBlockFunds(Money::GBP(101));
@@ -104,21 +112,21 @@ class CreditCardSpec extends ObjectBehavior
 
     public function it_can_not_block_negative_funds()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
 
         $this->shouldThrow(CannotUseNegativeFunds::class)->duringBlockFunds(Money::GBP(-55));
     }
 
     public function it_can_not_block_funds_with_invalid_currency()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
 
         $this->shouldThrow(\InvalidArgumentException::class)->duringBlockFunds(Money::USD(55));
     }
 
     public function it_can_unblock_funds()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(77));
 
@@ -130,7 +138,7 @@ class CreditCardSpec extends ObjectBehavior
 
     public function it_can_unblock_partial_funds()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(100));
 
@@ -142,7 +150,7 @@ class CreditCardSpec extends ObjectBehavior
 
     public function it_unblock_too_much_funds()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(77));
 
@@ -154,7 +162,7 @@ class CreditCardSpec extends ObjectBehavior
 
     public function it_can_unblock_funds_when_funds_are_not_blocked()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
         $this->loadFunds(Money::GBP(100));
 
         $this->unblockFunds(Money::GBP(1111));
@@ -165,7 +173,7 @@ class CreditCardSpec extends ObjectBehavior
 
     public function it_can_not_unblock_with_negative_funds()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(77));
 
@@ -174,7 +182,7 @@ class CreditCardSpec extends ObjectBehavior
 
     public function it_can_not_unblock_with_funds_in_different_currency()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(77));
 
@@ -183,7 +191,7 @@ class CreditCardSpec extends ObjectBehavior
 
     public function it_can_charge_funds()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(100));
 
@@ -195,7 +203,7 @@ class CreditCardSpec extends ObjectBehavior
 
     public function it_can_charge_funds_multiple_times()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(90));
 
@@ -208,7 +216,7 @@ class CreditCardSpec extends ObjectBehavior
 
     public function it_can_not_charge_negative_funds()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(100));
 
@@ -217,7 +225,7 @@ class CreditCardSpec extends ObjectBehavior
 
     public function it_can_charge_not_funds_with_different_currency()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(100));
 
@@ -226,7 +234,7 @@ class CreditCardSpec extends ObjectBehavior
 
     public function it_can_not_charge_more_funds_than_blocked()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
         $this->loadFunds(Money::GBP(100));
         $this->blockFunds(Money::GBP(99));
 
@@ -235,7 +243,7 @@ class CreditCardSpec extends ObjectBehavior
 
     public function it_can_not_charge_where_funds_were_not_blocked()
     {
-        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), 'John Doe']);
+        $this->beConstructedThrough('create', [Uuid::uuid4(), Uuid::uuid4(), CreditCardDataBuilder::create()->build()]);
         $this->loadFunds(Money::GBP(100));
 
         $this->shouldThrow(CannotChargeMoreFundsThanBlocked::class)->duringChargeFunds(Money::GBP(100));

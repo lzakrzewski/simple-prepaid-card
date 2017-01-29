@@ -17,8 +17,8 @@ final class CreditCardWasCreated implements DomainEvent
     /** @var UuidInterface */
     private $holderId;
 
-    /** @var string */
-    private $holderName;
+    /** @var CreditCardData */
+    private $creditCardData;
 
     /** @var Money */
     private $balance;
@@ -32,14 +32,14 @@ final class CreditCardWasCreated implements DomainEvent
     public function __construct(
         UuidInterface $creditCardId,
         UuidInterface $holderId,
-        $holderName,
+        CreditCardData $creditCardData,
         Money $balance,
         Money $availableBalance,
         \DateTime $at
     ) {
         $this->creditCardId     = $creditCardId;
         $this->holderId         = $holderId;
-        $this->holderName       = $holderName;
+        $this->creditCardData   = $creditCardData;
         $this->balance          = $balance;
         $this->availableBalance = $availableBalance;
         $this->at               = $at;
@@ -55,9 +55,9 @@ final class CreditCardWasCreated implements DomainEvent
         return $this->holderId;
     }
 
-    public function holderName(): string
+    public function creditCardData(): CreditCardData
     {
-        return $this->holderName;
+        return $this->creditCardData;
     }
 
     public function balance(): Money
@@ -81,7 +81,7 @@ final class CreditCardWasCreated implements DomainEvent
             'Credit card with id "%s" was created with balance "%s" for "%s" at "%s"',
             $this->creditCardId(),
             MoneyDecimalFormatter::create()->format($this->balance()),
-            $this->holderName(),
+            $this->creditCardData()->number(),
             $this->at()->format('Y:m:d h:i a')
         );
     }

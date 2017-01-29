@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace tests\contexts;
 
 use Assert\Assertion;
+use Behat\Gherkin\Node\TableNode;
 use Money\Money;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
@@ -72,11 +73,25 @@ class CreditCardContext extends DefaultContext
     }
 
     /**
-     * @When I create a credit card with id :creditCardId and holder name :holderName
+     * @When I create a credit card with id :creditCardId and data:
      */
-    public function iCreateACreditCardWithIdAndHolderName(UuidInterface $creditCardId, string $holderName)
+    public function iCreateACreditCardWithIdAndData(UuidInterface $creditCardId, TableNode $table)
     {
-        $this->handle(new CreateCreditCard($creditCardId, Uuid::uuid4(), $holderName));
+        $creditCardData = $table->getRows();
+
+        array_shift($creditCardData);
+
+        $this->handle(
+            new CreateCreditCard(
+                $creditCardId,
+                Uuid::uuid4(),
+                $creditCardData[0][0],
+                $creditCardData[0][1],
+                (int) $creditCardData[0][2],
+                (int) $creditCardData[0][3],
+                (int) $creditCardData[0][4]
+            )
+        );
     }
 
     /**
@@ -205,6 +220,14 @@ class CreditCardContext extends DefaultContext
     public function iShouldBeNotifiedThatICanNotUseNegativeFunds()
     {
         $this->expectException(CannotUseNegativeFunds::class);
+    }
+
+    /**
+     * @Then I should be notified that a credit card data is invalid
+     */
+    public function iShouldBeNotifiedThatACreditCardDataIsInvalid()
+    {
+        $this->expectException(\InvalidArgumentException::class);
     }
 
     /**

@@ -9,13 +9,14 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use SimpleBus\Message\Recorder\ContainsRecordedMessages;
 use SimpleBus\Message\Recorder\PrivateMessageRecorderCapabilities;
+use SimplePrepaidCard\Common\Model\Aggregate;
 use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * @ORM\Entity(repositoryClass="SimplePrepaidCard\CoffeeShop\Infrastructure\DoctrineORMCustomerRepository")
  * @ORM\Table
  */
-final class Customer implements ContainsRecordedMessages
+final class Customer implements ContainsRecordedMessages, Aggregate
 {
     use PrivateMessageRecorderCapabilities;
 

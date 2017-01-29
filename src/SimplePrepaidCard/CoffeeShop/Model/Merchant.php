@@ -10,13 +10,14 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use SimpleBus\Message\Recorder\ContainsRecordedMessages;
 use SimpleBus\Message\Recorder\PrivateMessageRecorderCapabilities;
+use SimplePrepaidCard\Common\Model\Aggregate;
 
 //Todo: ORM for money && UUid
 /**
  * @ORM\Entity(repositoryClass="SimplePrepaidCard\CoffeeShop\Infrastructure\DoctrineORMMerchantRepository")
  * @ORM\Table
  */
-final class Merchant implements ContainsRecordedMessages
+final class Merchant implements ContainsRecordedMessages, Aggregate
 {
     use PrivateMessageRecorderCapabilities;
 

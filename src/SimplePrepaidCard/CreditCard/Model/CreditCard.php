@@ -10,13 +10,14 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use SimpleBus\Message\Recorder\ContainsRecordedMessages;
 use SimpleBus\Message\Recorder\PrivateMessageRecorderCapabilities;
+use SimplePrepaidCard\Common\Model\Aggregate;
 
 //Todo: move to yml
 /**
  * @ORM\Entity(repositoryClass="SimplePrepaidCard\CreditCard\Infrastructure\DoctrineORMCreditCardRepository")
  * @ORM\Table
  */
-final class CreditCard implements ContainsRecordedMessages
+final class CreditCard implements ContainsRecordedMessages, Aggregate
 {
     use PrivateMessageRecorderCapabilities;
 
@@ -44,11 +45,11 @@ final class CreditCard implements ContainsRecordedMessages
     private $holderId;
 
     /**
-     * @var string
+     * @var CreditCardData
      *
-     * @ORM\Column(type="string")
+     * @ORM\Embedded(class="CreditCardData")
      */
-    private $holderName;
+    private $creditCardData;
 
     /**
      * @var Money
@@ -71,11 +72,11 @@ final class CreditCard implements ContainsRecordedMessages
      */
     private $createdAt;
 
-    private function __construct(UuidInterface $creditCardId, UuidInterface $holderId, $holderName)
+    private function __construct(UuidInterface $creditCardId, UuidInterface $holderId, CreditCardData $creditCardData)
     {
-        $this->creditCardId = $creditCardId->toString();
-        $this->holderId     = $holderId->toString();
-        $this->holderName   = $holderName;
+        $this->creditCardId   = $creditCardId->toString();
+        $this->holderId       = $holderId->toString();
+        $this->creditCardData = $creditCardData;
 
         $balance = Money::GBP(0);
 
@@ -87,7 +88,7 @@ final class CreditCard implements ContainsRecordedMessages
             new CreditCardWasCreated(
                 $creditCardId,
                 $holderId,
-                $this->holderName,
+                $this->creditCardData(),
                 $balance,
                 $balance,
                 $createdAt
@@ -95,9 +96,9 @@ final class CreditCard implements ContainsRecordedMessages
         );
     }
 
-    public static function create(UuidInterface $creditCardId, UuidInterface $holderId, string $holderName): self
+    public static function create(UuidInterface $creditCardId, UuidInterface $holderId, CreditCardData $creditCardData): self
     {
-        return new self($creditCardId, $holderId, $holderName);
+        return new self($creditCardId, $holderId, $creditCardData);
     }
 
     public function creditCardId(): UuidInterface
@@ -201,6 +202,11 @@ final class CreditCard implements ContainsRecordedMessages
     public function holderId(): UuidInterface
     {
         return Uuid::fromString($this->holderId);
+    }
+
+    public function creditCardData(): CreditCardData
+    {
+        return $this->creditCardData;
     }
 
     private function guardAgainstNegativeFunds(Money $amount)

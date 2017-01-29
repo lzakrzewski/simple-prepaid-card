@@ -8,6 +8,7 @@ use Money\Money;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use SimplePrepaidCard\CreditCard\Model\CreditCard;
+use SimplePrepaidCard\CreditCard\Model\CreditCardData;
 use tests\builders\Builder;
 
 class CreditCardBuilder implements Builder
@@ -18,8 +19,8 @@ class CreditCardBuilder implements Builder
     /** @var UuidInterface */
     private $holderId;
 
-    /** @var string */
-    private $holderName;
+    /** @var CreditCardData */
+    private $creditCardData;
 
     /** @var Money */
     private $balance;
@@ -27,11 +28,11 @@ class CreditCardBuilder implements Builder
     /** @var Money */
     private $availableBalance;
 
-    private function __construct(UuidInterface $creditCardId, UuidInterface $holderId, $holderName, Money $balance, Money $availableBalance)
+    private function __construct(UuidInterface $creditCardId, UuidInterface $holderId, CreditCardData $creditCardData, Money $balance, Money $availableBalance)
     {
         $this->creditCardId     = $creditCardId;
         $this->holderId         = $holderId;
-        $this->holderName       = $holderName;
+        $this->creditCardData   = $creditCardData;
         $this->balance          = $balance;
         $this->availableBalance = $availableBalance;
     }
@@ -41,7 +42,7 @@ class CreditCardBuilder implements Builder
         return new self(
             Uuid::uuid4(),
             Uuid::uuid4(),
-            'John Doe '.uniqid(),
+            CreditCardDataBuilder::create()->build(),
             Money::GBP(rand(1, 100000)),
             Money::GBP(rand(1, 100000))
         );
@@ -49,7 +50,7 @@ class CreditCardBuilder implements Builder
 
     public function build(): CreditCard
     {
-        $creditCard = CreditCard::create($this->creditCardId, $this->holderId, $this->holderName);
+        $creditCard = CreditCard::create($this->creditCardId, $this->holderId, $this->creditCardData);
         $creditCard->loadFunds($this->balance);
 
         $amountToBlock = $this->balance->subtract($this->availableBalance);
@@ -79,14 +80,6 @@ class CreditCardBuilder implements Builder
         return $copy;
     }
 
-    public function withHolderName(UuidInterface $holderName): self
-    {
-        $copy             = $this->copy();
-        $copy->holderName = $holderName;
-
-        return $copy;
-    }
-
     public function withBalance(Money $balance): self
     {
         $copy          = $this->copy();
@@ -105,6 +98,6 @@ class CreditCardBuilder implements Builder
 
     private function copy(): self
     {
-        return new self($this->creditCardId, $this->holderId, $this->holderName, $this->balance, $this->availableBalance);
+        return new self($this->creditCardId, $this->holderId, $this->creditCardData, $this->balance, $this->availableBalance);
     }
 }

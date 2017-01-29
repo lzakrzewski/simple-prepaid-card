@@ -15,12 +15,36 @@ final class CreateCreditCard
     public $holderId;
 
     /** @var string */
-    public $holderName;
+    public $holder;
 
-    public function __construct(UuidInterface $creditCardId, UuidInterface $holderId, string $holderName)
-    {
+    /** @var string */
+    public $number;
+
+    /** @var string */
+    public $cvv;
+
+    /** @var int */
+    public $expiryDateYear;
+
+    /** @var int */
+    public $expiryDateMonth;
+
+    public function __construct(
+        UuidInterface $creditCardId,
+        UuidInterface $holderId,
+        string $holder,
+        string $number,
+        int $cvv,
+        int $expiryDateYear,
+        int $expiryDateMonth
+    ) {
         $this->creditCardId = $creditCardId;
         $this->holderId     = $holderId;
-        $this->holderName   = $holderName;
+
+        $this->holder          = $holder;
+        $this->number          = $number;
+        $this->cvv             = $cvv;
+        $this->expiryDateYear  = $expiryDateYear;
+        $this->expiryDateMonth = $expiryDateMonth;
     }
 }

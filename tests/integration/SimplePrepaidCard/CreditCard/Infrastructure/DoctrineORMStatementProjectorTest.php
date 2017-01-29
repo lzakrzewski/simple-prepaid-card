@@ -13,6 +13,7 @@ use SimplePrepaidCard\CreditCard\Model\FundsWereBlocked;
 use SimplePrepaidCard\CreditCard\Model\FundsWereCharged;
 use SimplePrepaidCard\CreditCard\Model\FundsWereLoaded;
 use tests\builders\CreditCard\CreditCardBuilder;
+use tests\builders\CreditCard\CreditCardDataBuilder;
 use tests\integration\SimplePrepaidCard\DatabaseTestCase;
 
 //Todo: Better descriptions for statement like "coffee was bought"
@@ -70,7 +71,7 @@ class DoctrineORMStatementProjectorTest extends DatabaseTestCase
         $this->buildPersisted(CreditCardBuilder::create()->withCreditCardId($creditCardId)->ofHolder($holderId));
 
         $this->given(
-            new CreditCardWasCreated($creditCardId, $holderId, 'John Doe', Money::GBP(0), Money::GBP(0), new \DateTime('2017-01-01')),
+            new CreditCardWasCreated($creditCardId, $holderId, CreditCardDataBuilder::create()->build(), Money::GBP(0), Money::GBP(0), new \DateTime('2017-01-01')),
             new FundsWereLoaded($creditCardId, $holderId, Money::GBP(100), Money::GBP(100), Money::GBP(100), new \DateTime('2017-01-02')),
             new FundsWereBlocked($creditCardId, $holderId, Money::GBP(1), Money::GBP(100), Money::GBP(99), new \DateTime('2017-01-03')),
             new FundsWereCharged($creditCardId, $holderId, Money::GBP(1), Money::GBP(99), Money::GBP(99), new \DateTime('2017-01-04'))

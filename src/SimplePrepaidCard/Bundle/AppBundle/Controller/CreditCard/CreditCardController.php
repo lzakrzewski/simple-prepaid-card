@@ -17,7 +17,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
-//Todo: Flashbag magic, remove customer coupling, remove redundant actions
 class CreditCardController extends Controller
 {
     /**
@@ -30,16 +29,24 @@ class CreditCardController extends Controller
         $form = $this->createForm(CreditCardType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('command_bus')->handle(
-                new CreateCreditCard(
-                    Uuid::uuid4(),
-                    Uuid::fromString(Holder::HOLDER_ID),
-                    $form->getData()['card_holder']
-                )
-            );
+        try {
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->get('command_bus')->handle(
+                    new CreateCreditCard(
+                        Uuid::uuid4(),
+                        Uuid::fromString(Holder::HOLDER_ID),
+                        $form->getData()['card_holder'],
+                        $form->getData()['card_number'],
+                        (int) $form->getData()['cvv_code'],
+                        (int) $form->getData()['expiry_date_year'],
+                        (int) $form->getData()['expiry_date_month']
+                    )
+                );
 
-            return $this->redirectToRoute('customer');
+                return $this->redirectToRoute('customer');
+            }
+        } catch (\Exception $exception) {
+            $form->addError(new FormError($exception->getMessage()));
         }
 
         return $this->render('@App/credit-card/create-credit-card.html.twig', [

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SimplePrepaidCard\CreditCard\Application\Command;
 
 use SimplePrepaidCard\CreditCard\Model\CreditCard;
+use SimplePrepaidCard\CreditCard\Model\CreditCardData;
 use SimplePrepaidCard\CreditCard\Model\CreditCardRepository;
 
 final class CreateCreditCardHandler
@@ -23,7 +24,13 @@ final class CreateCreditCardHandler
             CreditCard::create(
                 $command->creditCardId,
                 $command->holderId,
-                $command->holderName
+                CreditCardData::fromRawValues(
+                    $command->holder,
+                    $command->number,
+                    $command->cvv,
+                    $command->expiryDateYear,
+                    $command->expiryDateMonth
+                )
             )
         );
     }

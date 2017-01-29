@@ -19,6 +19,7 @@ use SimplePrepaidCard\CreditCard\Model\FundsWereLoaded;
 use SimplePrepaidCard\CreditCard\Model\FundsWereUnblocked;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use tests\builders\CoffeeShop\MerchantBuilder;
+use tests\builders\CreditCard\CreditCardDataBuilder;
 use tests\integration\SimplePrepaidCard\DatabaseTestCase;
 
 class AppendFlashBagWithDomainEventTest extends DatabaseTestCase
@@ -35,7 +36,7 @@ class AppendFlashBagWithDomainEventTest extends DatabaseTestCase
         $amount       = Money::GBP(100);
 
         $this->given(
-            new CreditCardWasCreated($creditCardId, $holderId, 'John Doe', $amount, $amount, $now),
+            new CreditCardWasCreated($creditCardId, $holderId, CreditCardDataBuilder::create()->build(), $amount, $amount, $now),
             new FundsWereLoaded($creditCardId, $holderId, $amount, $amount, $amount, $now),
             new FundsWereBlocked($creditCardId, $holderId, $amount, $amount, $amount, $now),
             new FundsWereCharged($creditCardId, $holderId, $amount, $amount, $amount, $now),
