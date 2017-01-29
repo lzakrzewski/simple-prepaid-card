@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use tests\builders\CreditCard\CreditCardBuilder;
 use tests\integration\SimplePrepaidCard\Bundle\AppBundle\Controller\WebTestCase;
 
-//Todo: Better invalid request tests, add role holder
+//Todo: Better invalid request tests
 class CreditCardControllerTest extends WebTestCase
 {
     /** @test */
@@ -25,11 +25,12 @@ class CreditCardControllerTest extends WebTestCase
         $this->authenticateWithRole('ROLE_HOLDER');
         $this->request('GET', '/create-credit-card');
 
-        $this->fillAndSubmitForm('credit_card[save]', [
-            'credit_card[card_number]' => '4111111111111111',
-            'credit_card[card_holder]' => 'John Doe',
-            'credit_card[ccv]'         => '123',
-            'credit_card[expires]'     => '0919',
+        $this->fillAndSubmitForm('credit_card[submit]', [
+            'credit_card[card_number]'       => '4111111111111111',
+            'credit_card[card_holder]'       => 'John Doe',
+            'credit_card[cvv_code]'          => '123',
+            'credit_card[expiry_date_month]' => '09',
+            'credit_card[expiry_date_year]'  => '99',
         ]);
 
         $this->assertRedirectResponse('/customer');
@@ -42,7 +43,7 @@ class CreditCardControllerTest extends WebTestCase
         $this->authenticateWithRole('ROLE_HOLDER');
         $this->request('GET', '/create-credit-card');
 
-        $this->fillAndSubmitForm('credit_card[save]', []);
+        $this->fillAndSubmitForm('credit_card[submit]', []);
 
         $this->assertResponseStatusCode(Response::HTTP_OK);
         $this->assertThatFormIsNotValid();
@@ -59,7 +60,7 @@ class CreditCardControllerTest extends WebTestCase
         $this->authenticateWithRole('ROLE_HOLDER');
         $this->request('GET', '/load-funds');
 
-        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '100']);
+        $this->fillAndSubmitForm('amount[submit]', ['amount[amount]' => '100']);
 
         $this->assertRedirectResponse('/customer');
         $this->assertThatFormIsValid();
@@ -76,7 +77,7 @@ class CreditCardControllerTest extends WebTestCase
         $this->authenticateWithRole('ROLE_HOLDER');
         $this->request('GET', '/load-funds');
 
-        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '-100']);
+        $this->fillAndSubmitForm('amount[submit]', ['amount[amount]' => '-100']);
 
         $this->assertResponseStatusCode(Response::HTTP_OK);
         $this->assertThatFormIsNotValid();

@@ -7,8 +7,8 @@ namespace SimplePrepaidCard\Bundle\AppBundle\Controller\CreditCard;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as Config;
+use SimplePrepaidCard\Bundle\AppBundle\Form\AmountType;
 use SimplePrepaidCard\Bundle\AppBundle\Form\CreditCardType;
-use SimplePrepaidCard\Bundle\AppBundle\Form\FundsType;
 use SimplePrepaidCard\CoffeeShop\Model\Customer;
 use SimplePrepaidCard\CreditCard\Application\Command\CreateCreditCard;
 use SimplePrepaidCard\CreditCard\Application\Command\LoadFunds;
@@ -32,7 +32,11 @@ class CreditCardController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->get('command_bus')->handle(
-                new CreateCreditCard(Uuid::uuid4(), Uuid::fromString(Holder::HOLDER_ID), $form->getData()['card_holder'])
+                new CreateCreditCard(
+                    Uuid::uuid4(),
+                    Uuid::fromString(Holder::HOLDER_ID),
+                    $form->getData()['card_holder']
+                )
             );
 
             return $this->redirectToRoute('customer');
@@ -50,13 +54,13 @@ class CreditCardController extends Controller
      */
     public function loadFundsAction(Request $request)
     {
-        $form = $this->createForm(FundsType::class);
+        $form = $this->createForm(AmountType::class);
         $form->handleRequest($request);
 
         try {
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('command_bus')->handle(
-                    new LoadFunds($this->creditCardId(), (int) $form->getData()['amount'])
+                    new LoadFunds($this->creditCardId(), (int) $form->getData()['amount']->getAmount())
                 );
 
                 return $this->redirectToRoute('customer');

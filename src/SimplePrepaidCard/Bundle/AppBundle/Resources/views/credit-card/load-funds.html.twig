@@ -1,5 +1,14 @@
 {% extends '@App/coffee-shop/customer.html.twig' %}
 
 {% block content %}
-    {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Load funds onto a credit card</h3>
+        </div>
+        <div class="panel-body">
+            <div class="col-xs-4">
+                {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            </div>
+        </div>
+    </div>
 {% endblock %}

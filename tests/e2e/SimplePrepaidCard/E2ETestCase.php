@@ -25,24 +25,25 @@ abstract class E2ETestCase extends WebTestCase
     protected function createCreditCard()
     {
         $this->request('GET', '/create-credit-card');
-        $this->fillAndSubmitForm('credit_card[save]', [
-            'credit_card[card_number]' => '4111111111111111',
-            'credit_card[card_holder]' => 'John Doe',
-            'credit_card[ccv]'         => '123',
-            'credit_card[expires]'     => '0919',
+        $this->fillAndSubmitForm('credit_card[submit]', [
+            'credit_card[card_number]'       => '4111111111111111',
+            'credit_card[card_holder]'       => 'John Doe',
+            'credit_card[cvv_code]'          => '123',
+            'credit_card[expiry_date_month]' => '09',
+            'credit_card[expiry_date_year]'  => '99',
         ]);
     }
 
     protected function loadFunds(string $amountRepresentation)
     {
         $this->request('GET', '/load-funds');
-        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => $amountRepresentation]);
+        $this->fillAndSubmitForm('amount[submit]', ['amount[amount]' => $amountRepresentation]);
     }
 
     protected function buyCoffee()
     {
         $this->request('GET', '/buy-product');
-        $this->fillAndSubmitForm('product[buy]', []);
+        $this->fillAndSubmitForm('product[submit]', []);
     }
 
     protected function logOut()
@@ -53,19 +54,19 @@ abstract class E2ETestCase extends WebTestCase
     protected function captureAuthorization(string $amountRepresentation)
     {
         $this->request('GET', '/capture-authorization');
-        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => $amountRepresentation]);
+        $this->fillAndSubmitForm('amount[submit]', ['amount[amount]' => $amountRepresentation]);
     }
 
     protected function reverseAuthorization(string $amountRepresentation)
     {
         $this->request('GET', '/reverse-authorization');
-        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => $amountRepresentation]);
+        $this->fillAndSubmitForm('amount[submit]', ['amount[amount]' => $amountRepresentation]);
     }
 
     protected function refundCaptured(string $amountRepresentation)
     {
         $this->request('GET', '/refund-captured');
-        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => $amountRepresentation]);
+        $this->fillAndSubmitForm('amount[submit]', ['amount[amount]' => $amountRepresentation]);
     }
 
     protected function assertCreditCardBalance(Money $amount)

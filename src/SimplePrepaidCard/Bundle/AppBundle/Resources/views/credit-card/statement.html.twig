@@ -13,7 +13,7 @@
         <tbody>
             {% for view in statement %}
                 <tr>
-                    <td>{{ view.date|date("Y-m-d H:i") }}</td>
+                    <td>{{ view.date|date("Y-m-d h:i a") }}</td>
                     <td>{{ view.description }}</td>
                     <td>{{ view.amount|moneyRaw }}</td>
                     <td>{{ view.availableBalance|moneyRaw }}</td>

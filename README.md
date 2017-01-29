@@ -7,6 +7,7 @@ Simplified model of a prepaid card the card holds a balance in GBP and users can
 #Todo: Projections
 #Todo: Panels
 #Todo: Add marks for command etc
+#Todo: Luhn This constraint is used to ensure that a credit card number passes
 
 ## Readme todo:
 - [ ] Link to app

@@ -29,14 +29,14 @@ class MerchantControllerTest extends WebTestCase
 
         $this->buildPersisted(
             MerchantBuilder::create()
-                ->authorizedTo(Money::GBP(100))
+                ->authorizedTo(Money::GBP(10001))
                 ->withMerchantId(Uuid::fromString(Merchant::MERCHANT_ID))
         );
 
         $this->authenticateWithRole('ROLE_MERCHANT');
         $this->request('GET', '/capture-authorization');
 
-        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '100']);
+        $this->fillAndSubmitForm('amount[submit]', ['amount[amount]' => '100.01']);
 
         $this->assertRedirectResponse('/merchant');
         $this->assertThatFormIsValid();
@@ -49,14 +49,14 @@ class MerchantControllerTest extends WebTestCase
 
         $this->buildPersisted(
             MerchantBuilder::create()
-                ->authorizedTo(Money::GBP(100))
+                ->authorizedTo(Money::GBP(10001))
                 ->withMerchantId(Uuid::fromString(Merchant::MERCHANT_ID))
         );
 
         $this->authenticateWithRole('ROLE_MERCHANT');
         $this->request('GET', '/capture-authorization');
 
-        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '100']);
+        $this->fillAndSubmitForm('amount[submit]', ['amount[amount]' => '100.01']);
 
         $this->assertResponseStatusCode(Response::HTTP_OK);
         $this->assertThatFormIsNotValid();
@@ -69,14 +69,14 @@ class MerchantControllerTest extends WebTestCase
 
         $this->buildPersisted(
             MerchantBuilder::create()
-                ->authorizedTo(Money::GBP(100))
+                ->authorizedTo(Money::GBP(10001))
                 ->withMerchantId(Uuid::fromString(Merchant::MERCHANT_ID))
         );
 
         $this->authenticateWithRole('ROLE_MERCHANT');
         $this->request('GET', '/reverse-authorization');
 
-        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '100']);
+        $this->fillAndSubmitForm('amount[submit]', ['amount[amount]' => '100.01']);
 
         $this->assertRedirectResponse('/merchant');
         $this->assertThatFormIsValid();
@@ -89,14 +89,14 @@ class MerchantControllerTest extends WebTestCase
 
         $this->buildPersisted(
             MerchantBuilder::create()
-                ->authorizedTo(Money::GBP(100))
+                ->authorizedTo(Money::GBP(10001))
                 ->withMerchantId(Uuid::fromString(Merchant::MERCHANT_ID))
         );
 
         $this->authenticateWithRole('ROLE_MERCHANT');
         $this->request('GET', '/reverse-authorization');
 
-        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '100']);
+        $this->fillAndSubmitForm('amount[submit]', ['amount[amount]' => '100.01']);
 
         $this->assertResponseStatusCode(Response::HTTP_OK);
         $this->assertThatFormIsNotValid();
@@ -109,15 +109,15 @@ class MerchantControllerTest extends WebTestCase
 
         $this->buildPersisted(
             MerchantBuilder::create()
-                ->authorizedTo(Money::GBP(100))
-                ->withCaptured(Money::GBP(100))
+                ->authorizedTo(Money::GBP(10001))
+                ->withCaptured(Money::GBP(10001))
                 ->withMerchantId(Uuid::fromString(Merchant::MERCHANT_ID))
         );
 
         $this->authenticateWithRole('ROLE_MERCHANT');
         $this->request('GET', '/refund-captured');
 
-        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '100']);
+        $this->fillAndSubmitForm('amount[submit]', ['amount[amount]' => '100.01']);
 
         $this->assertRedirectResponse('/merchant');
         $this->assertThatFormIsValid();
@@ -130,15 +130,15 @@ class MerchantControllerTest extends WebTestCase
 
         $this->buildPersisted(
             MerchantBuilder::create()
-                ->authorizedTo(Money::GBP(100))
-                ->withCaptured(Money::GBP(100))
+                ->authorizedTo(Money::GBP(10001))
+                ->withCaptured(Money::GBP(10001))
                 ->withMerchantId(Uuid::fromString(Merchant::MERCHANT_ID))
         );
 
         $this->authenticateWithRole('ROLE_MERCHANT');
         $this->request('GET', '/refund-captured');
 
-        $this->fillAndSubmitForm('funds[save]', ['funds[amount]' => '100']);
+        $this->fillAndSubmitForm('amount[submit]', ['amount[amount]' => '100.01']);
 
         $this->assertResponseStatusCode(Response::HTTP_OK);
         $this->assertThatFormIsNotValid();

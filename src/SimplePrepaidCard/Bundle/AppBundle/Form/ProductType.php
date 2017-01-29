@@ -49,6 +49,6 @@ class ProductType extends AbstractType
             ]
         );
 
-        $builder->add('buy', SubmitType::class);
+        $builder->add('submit', SubmitType::class, ['attr' => ['class' => 'btn-success']]);
     }
 }

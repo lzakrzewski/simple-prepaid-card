@@ -6,7 +6,7 @@ namespace SimplePrepaidCard\Bundle\AppBundle\Controller\CoffeeShop;
 
 use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as Config;
-use SimplePrepaidCard\Bundle\AppBundle\Form\FundsType;
+use SimplePrepaidCard\Bundle\AppBundle\Form\AmountType;
 use SimplePrepaidCard\CoffeeShop\Application\Command\CaptureAuthorization;
 use SimplePrepaidCard\CoffeeShop\Application\Command\RefundCaptured;
 use SimplePrepaidCard\CoffeeShop\Application\Command\ReverseAuthorization;
@@ -34,13 +34,13 @@ class MerchantController extends Controller
      */
     public function captureAuthorizationAction(Request $request)
     {
-        $form = $this->createForm(FundsType::class);
+        $form = $this->createForm(AmountType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->get('command_bus')->handle(
-                    new CaptureAuthorization(Uuid::fromString(Merchant::MERCHANT_ID), (int) $form->getData()['amount'])
+                    new CaptureAuthorization(Uuid::fromString(Merchant::MERCHANT_ID), (int) $form->getData()['amount']->getAmount())
                 );
 
                 return $this->redirectToRoute('merchant');
@@ -61,13 +61,13 @@ class MerchantController extends Controller
      */
     public function reverseAuthorizationAction(Request $request)
     {
-        $form = $this->createForm(FundsType::class);
+        $form = $this->createForm(AmountType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->get('command_bus')->handle(
-                    new ReverseAuthorization(Uuid::fromString(Merchant::MERCHANT_ID), (int) $form->getData()['amount'])
+                    new ReverseAuthorization(Uuid::fromString(Merchant::MERCHANT_ID), (int) $form->getData()['amount']->getAmount())
                 );
 
                 return $this->redirectToRoute('merchant');
@@ -88,13 +88,13 @@ class MerchantController extends Controller
      */
     public function refundCapturedAction(Request $request)
     {
-        $form = $this->createForm(FundsType::class);
+        $form = $this->createForm(AmountType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->get('command_bus')->handle(
-                    new RefundCaptured(Uuid::fromString(Merchant::MERCHANT_ID), (int) $form->getData()['amount'])
+                    new RefundCaptured(Uuid::fromString(Merchant::MERCHANT_ID), (int) $form->getData()['amount']->getAmount())
                 );
 
                 return $this->redirectToRoute('merchant');

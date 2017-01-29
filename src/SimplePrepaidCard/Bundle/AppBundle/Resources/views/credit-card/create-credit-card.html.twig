@@ -1,6 +1,43 @@
 {% extends '@App/coffee-shop/customer.html.twig' %}
 
 {% block content %}
-    {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Create credit card</h3>
+        </div>
+        <div class="panel-body">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                {{ form_errors(form) }}
+                <div class='form-row'>
+                    <div class='col-xs-12'>
+                        {{ form_row(form.card_holder, {'label': 'Name on Card'}) }}
+                    </div>
+                </div>
+                <div class='form-row'>
+                    <div class='col-xs-12'>
+                        {{ form_row(form.card_number, {'label': 'Card Number'}) }}
+                    </div>
+                </div>
+                <div class='form-row'>
+                    <div class='col-xs-4'>
+                        {{ form_row(form.cvv_code, {'label': 'CVV', 'attr': {'placeholder': 'ex. 123'}}) }}
+                    </div>
+                    <div class='col-xs-4'>
+                        {{ form_row(form.expiry_date_month, {'label': 'Expiration Month', 'attr': {'placeholder': 'MM'}}) }}
+                    </div>
+                    <div class='col-xs-4'>
+                        {{ form_row(form.expiry_date_year, {'label': 'Expiration Year', 'attr': {'placeholder': 'YY'}}) }}
+                    </div>
+                </div>
+                <div class='form-row'>
+                    <div class='col-xs-12'>
+                        {{ form_row(form.submit, {'label': 'Create'}) }}
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
 {% endblock %}
 

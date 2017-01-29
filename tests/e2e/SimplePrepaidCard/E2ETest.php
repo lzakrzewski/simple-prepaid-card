@@ -9,7 +9,6 @@ use SimplePrepaidCard\CoffeeShop\Model\Customer;
 use SimplePrepaidCard\CoffeeShop\Model\Merchant;
 use SimplePrepaidCard\CoffeeShop\Model\Product;
 
-//Todo: change to btn click
 class E2ETest extends E2ETestCase
 {
     /** @test */
@@ -17,11 +16,11 @@ class E2ETest extends E2ETestCase
     {
         $this->logInWithCredentials('customer', 'customer');
         $this->createCreditCard();
-        $this->loadFunds('550');
+        $this->loadFunds('5.50');
         $this->buyCoffee();
         $this->logOut();
         $this->logInWithCredentials('merchant', 'merchant');
-        $this->captureAuthorization('490');
+        $this->captureAuthorization('4.90');
 
         $this->flushAndClear();
 
@@ -41,11 +40,11 @@ class E2ETest extends E2ETestCase
     {
         $this->logInWithCredentials('customer', 'customer');
         $this->createCreditCard();
-        $this->loadFunds('550');
+        $this->loadFunds('5.50');
         $this->buyCoffee();
         $this->logOut();
         $this->logInWithCredentials('merchant', 'merchant');
-        $this->reverseAuthorization('490');
+        $this->reverseAuthorization('4.90');
 
         $this->flushAndClear();
 
@@ -65,12 +64,12 @@ class E2ETest extends E2ETestCase
     {
         $this->logInWithCredentials('customer', 'customer');
         $this->createCreditCard();
-        $this->loadFunds('550');
+        $this->loadFunds('5.50');
         $this->buyCoffee();
         $this->logOut();
         $this->logInWithCredentials('merchant', 'merchant');
-        $this->captureAuthorization('490');
-        $this->refundCaptured('100');
+        $this->captureAuthorization('4.90');
+        $this->refundCaptured('1.00');
 
         $this->flushAndClear();
 
