@@ -1,6 +1,12 @@
-{% extends '@App/base.html.twig' %}
+{% extends '@App/coffee-shop/merchant.html.twig' %}
 
-{% block body %}
-    {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Refund captured</h3>
+        </div>
+        <div class="panel-body">
+            {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        </div>
+    </div>
 {% endblock %}
-

@@ -43,7 +43,7 @@ abstract class E2ETestCase extends WebTestCase
     protected function buyCoffee()
     {
         $this->request('GET', '/buy-product');
-        $this->fillAndSubmitForm('product[submit]', []);
+        $this->fillAndSubmitForm('product[buy]', []);
     }
 
     protected function logOut()

@@ -1,5 +1,5 @@
 Feature: Load funds onto a credit card
-#todo: Negative handle
+
   Scenario: Load funds onto a empty credit card
     Given I have a credit card with id "e6eb2b4c-94ce-46eb-b01c-67ed491dad26" with balance "0" GBP
      When I load "100" GBP onto a credit card with id "e6eb2b4c-94ce-46eb-b01c-67ed491dad26"

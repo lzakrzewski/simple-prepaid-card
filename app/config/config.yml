@@ -1,7 +1,6 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
-    - { resource: services.yml }
 
 parameters:
     locale: en
@@ -35,6 +34,7 @@ twig:
         - 'bootstrap_3_layout.html.twig'
     globals:
         creditCard: "@simple_prepaid_card.credit_card.query.credit_card"
+        merchant:   "@simple_prepaid_card.coffee_shop.query.merchant"
 
 doctrine:
     dbal:

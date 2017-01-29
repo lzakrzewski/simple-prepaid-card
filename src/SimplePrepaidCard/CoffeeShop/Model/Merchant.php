@@ -39,9 +39,9 @@ final class Merchant implements ContainsRecordedMessages
     private $merchantId;
 
     /**
-     * @var string
+     * @var Money
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Embedded(class="\Money\Money")
      */
     private $authorized;
 
@@ -53,17 +53,17 @@ final class Merchant implements ContainsRecordedMessages
     private $authorizedBy;
 
     /**
-     * @var string
+     * @var Money
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Embedded(class="\Money\Money")
      */
     private $captured;
 
     public function __construct(UuidInterface $merchantId)
     {
         $this->merchantId = $merchantId->toString();
-        $this->authorized = (int) Money::GBP(0)->getAmount();
-        $this->captured   = (int) Money::GBP(0)->getAmount();
+        $this->authorized = Money::GBP(0);
+        $this->captured   = Money::GBP(0);
     }
 
     public static function create(): self
@@ -75,7 +75,7 @@ final class Merchant implements ContainsRecordedMessages
     {
         $this->guardNegativeAmount($amount);
 
-        $this->authorized   = (int) $this->authorized()->add($amount)->getAmount();
+        $this->authorized   = $this->authorized()->add($amount);
         $this->authorizedBy = $authorizedBy->toString();
 
         $this->record(
@@ -96,8 +96,8 @@ final class Merchant implements ContainsRecordedMessages
 
         $creditCardProvider->capture($amount, $this->authorizedBy());
 
-        $this->authorized = (int) $this->authorized()->subtract($amount)->getAmount();
-        $this->captured   = (int) $this->captured()->add($amount)->getAmount();
+        $this->authorized = $this->authorized()->subtract($amount);
+        $this->captured   = $this->captured()->add($amount);
 
         $this->record(
             new AuthorizationWasCaptured(
@@ -117,7 +117,7 @@ final class Merchant implements ContainsRecordedMessages
 
         $creditCardProvider->reverse($amount, $this->authorizedBy());
 
-        $this->authorized = (int) $this->authorized()->subtract($amount)->getAmount();
+        $this->authorized = $this->authorized()->subtract($amount);
 
         $this->record(
             new AuthorizationWasReversed(
@@ -137,7 +137,7 @@ final class Merchant implements ContainsRecordedMessages
 
         $creditCardProvider->refund($amount, $this->authorizedBy());
 
-        $this->captured = (int) $this->captured()->subtract($amount)->getAmount();
+        $this->captured = $this->captured()->subtract($amount);
 
         $this->record(
             new CapturedWasRefunded(
@@ -152,7 +152,7 @@ final class Merchant implements ContainsRecordedMessages
 
     public function authorized(): Money
     {
-        return Money::GBP($this->authorized);
+        return $this->authorized;
     }
 
     public function merchantId(): UuidInterface
@@ -162,7 +162,7 @@ final class Merchant implements ContainsRecordedMessages
 
     public function captured(): Money
     {
-        return Money::GBP($this->captured);
+        return $this->captured;
     }
 
     public function authorizedBy()

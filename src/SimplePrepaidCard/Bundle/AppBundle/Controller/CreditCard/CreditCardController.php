@@ -66,7 +66,7 @@ class CreditCardController extends Controller
                 return $this->redirectToRoute('customer');
             }
         } catch (\Exception $exception) {
-            $form->get('amount')->addError(new FormError($exception->getMessage()));
+            $form->addError(new FormError($exception->getMessage()));
         }
 
         return $this->render('@App/credit-card/load-funds.html.twig', [

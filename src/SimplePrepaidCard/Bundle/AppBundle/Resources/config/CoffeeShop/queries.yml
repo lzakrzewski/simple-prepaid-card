@@ -1,0 +1,7 @@
+services:
+    simple_prepaid_card.coffee_shop.query.merchant: "@simple_prepaid_card.coffee_shop.query.merchant.doctrine_orm"
+
+    simple_prepaid_card.coffee_shop.query.merchant.doctrine_orm:
+        class: SimplePrepaidCard\CoffeeShop\Infrastructure\DoctrineORMMerchantQuery
+        arguments:
+            - '@doctrine.orm.default_entity_manager'

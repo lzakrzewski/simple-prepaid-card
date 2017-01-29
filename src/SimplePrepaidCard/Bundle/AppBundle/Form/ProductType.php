@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimplePrepaidCard\Bundle\AppBundle\Form;
 
+use SimplePrepaidCard\Bundle\AppBundle\Form\DataTransformer\MoneyToStringTransformer;
 use SimplePrepaidCard\CoffeeShop\Model\Product;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -44,11 +45,14 @@ class ProductType extends AbstractType
                 'attr' => [
                     'readonly' => 'readonly',
                 ],
-                'data'        => Product::coffee()->price()->getAmount(),
+                'data'        => Product::coffee()->price(),
+                'data_class'  => null,
                 'constraints' => new Assert\NotBlank(),
             ]
         );
 
-        $builder->add('submit', SubmitType::class, ['attr' => ['class' => 'btn-success']]);
+        $builder->get('price')->addModelTransformer(new MoneyToStringTransformer());
+
+        $builder->add('buy', SubmitType::class, ['attr' => ['class' => 'btn-success']]);
     }
 }

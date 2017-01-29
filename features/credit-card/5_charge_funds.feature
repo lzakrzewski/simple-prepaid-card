@@ -1,5 +1,5 @@
 Feature: Charge funds from a credit card
-#Todo: Case with negative funds
+
   Scenario: Charge whole funds from a credit card
     Given I have a credit card with id "e6eb2b4c-94ce-46eb-b01c-67ed491dad26" with balance "50" GBP and available balance "0" GBP
      When I charge "50" GBP from a credit card with id "e6eb2b4c-94ce-46eb-b01c-67ed491dad26"

@@ -41,7 +41,7 @@ class CustomerControllerTest extends WebTestCase
         $this->authenticateWithRole('ROLE_CUSTOMER');
         $this->request('GET', '/buy-product');
 
-        $this->fillAndSubmitForm('product[submit]', []);
+        $this->fillAndSubmitForm('product[buy]', []);
 
         $this->assertRedirectResponse('/customer');
         $this->assertThatFormIsValid();
@@ -65,7 +65,7 @@ class CustomerControllerTest extends WebTestCase
         $this->authenticateWithRole('ROLE_CUSTOMER');
         $this->request('GET', '/buy-product');
 
-        $this->fillAndSubmitForm('product[submit]', []);
+        $this->fillAndSubmitForm('product[buy]', []);
 
         $this->assertResponseStatusCode(Response::HTTP_OK);
         $this->assertThatFormIsNotValid();

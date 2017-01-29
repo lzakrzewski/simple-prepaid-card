@@ -1,6 +1,61 @@
 {% extends '@App/base.html.twig' %}
 
 {% block body %}
-Merchant
+
+    <div class="col-lg-3">
+        {% block sidebar %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Commands</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="nav nav-pills">
+                        <li role="presentation">
+                            <a href="{{ path('capture-authorization') }}">Capture an authorization</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="{{ path('reverse-authorization') }}">Reverse an authorization</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="{{ path('refund-captured') }}">Refund captured</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            {% if merchant.get.merchantId is not null %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Merchant</h3>
+                    </div>
+                    <ul class="list-group">
+                        <a href="#" class="list-group-item">
+                            <span class="badge">{{ merchant.get.captured|moneyFormatted }}</span>Captured
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <span class="badge">{{ merchant.get.authorized|moneyFormatted }}</span>Authorized
+                        </a>
+                    </ul>
+                </div>
+            {% endif %}
+        {% endblock%}
+    </div>
+
+    <div class="col-lg-9">
+        {% block content %}
+            <div class="jumbotron">
+                <h1>Hello, {{ app.user.username|capitalize }}!</h1>
+                {% if merchant.get.merchantId is not null %}
+                    {% if merchant.get.authorized|moneyRaw > 0  %}
+                        <p>
+                            <a class="btn btn-primary btn-lg" href="{{ path('create-credit-card') }}" role="button">Capture an authorization</a>
+                        </p>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endblock %}
+    </div>
+
 {% endblock %}
+
 
