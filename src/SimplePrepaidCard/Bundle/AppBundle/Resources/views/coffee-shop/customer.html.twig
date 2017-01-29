@@ -43,6 +43,8 @@
 
     <div class="col-lg-9">
         {% block content %}
+            {% include '@App/flash-bag.html.twig' %}
+
             <div class="jumbotron">
                 <h1>Hello, {{ app.user.username|capitalize }}!</h1>
                 <p>
