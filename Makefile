@@ -1,6 +1,6 @@
 BUILD_DIR      = infrastructure/build
 REPOSITORY_DIR = $(BUILD_DIR)/repository
-REPOSITORY_URL = git@github.com:lzakrzewski/simple-prepaid-card.git
+REPOSITORY_URL = https://github.com/lzakrzewski/simple-prepaid-card.git
 PACKAGE_DIR    = $(BUILD_DIR)/package
 
 build_package:
@@ -13,4 +13,7 @@ build_package:
 	rm -rf $(REPOSITORY_DIR)
 
 deploy: build_package
-	ansible-playbook -i infrastructure/inventories/default/inventory infrastructure/deploy.yml
+	ansible-playbook -i infrastructure/inventories/default/inventory infrastructure/deploy.yml --ssh-common-args="-o StrictHostKeyChecking=no"
+
+make test:
+	composer test
