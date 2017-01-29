@@ -15,7 +15,11 @@ use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * @ORM\Entity(repositoryClass="SimplePrepaidCard\CoffeeShop\Infrastructure\DoctrineORMCustomerRepository")
- * @ORM\Table
+ * @ORM\Table(
+ *   indexes={
+ *     @ORM\Index(name="customer_id_idx", columns={"customer_id"}),
+ *   }
+ * )
  */
 final class Customer implements ContainsRecordedMessages, Aggregate
 {

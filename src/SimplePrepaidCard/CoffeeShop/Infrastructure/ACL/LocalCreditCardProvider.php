@@ -19,7 +19,6 @@ use SimplePrepaidCard\CreditCard\Application\Command\LoadFunds;
 use SimplePrepaidCard\CreditCard\Application\Command\UnblockFunds;
 use SimplePrepaidCard\CreditCard\Application\Query\CreditCardIdOfHolderQuery;
 
-//Todo: add reasons to errors
 class LocalCreditCardProvider implements CreditCardProvider
 {
     /** @var MessageBus */

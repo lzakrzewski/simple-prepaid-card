@@ -15,7 +15,12 @@ use SimplePrepaidCard\Common\Model\Aggregate;
 //Todo: move to yml
 /**
  * @ORM\Entity(repositoryClass="SimplePrepaidCard\CreditCard\Infrastructure\DoctrineORMCreditCardRepository")
- * @ORM\Table
+ * @ORM\Table(
+ *   indexes={
+ *     @ORM\Index(name="credit_card_id_idx", columns={"credit_card_id"}),
+ *     @ORM\Index(name="holder_id_idx", columns={"holder_id"}),
+ *   }
+ * )
  */
 final class CreditCard implements ContainsRecordedMessages, Aggregate
 {
@@ -33,14 +38,14 @@ final class CreditCard implements ContainsRecordedMessages, Aggregate
     /**
      * @var string
      *
-     * @ORM\Column(type="guid")
+     * @ORM\Column(type="uuid")
      */
     private $creditCardId;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="guid")
+     * @ORM\Column(type="uuid")
      */
     private $holderId;
 
@@ -74,8 +79,8 @@ final class CreditCard implements ContainsRecordedMessages, Aggregate
 
     private function __construct(UuidInterface $creditCardId, UuidInterface $holderId, CreditCardData $creditCardData)
     {
-        $this->creditCardId   = $creditCardId->toString();
-        $this->holderId       = $holderId->toString();
+        $this->creditCardId   = $creditCardId;
+        $this->holderId       = $holderId;
         $this->creditCardData = $creditCardData;
 
         $balance = Money::GBP(0);
@@ -103,7 +108,7 @@ final class CreditCard implements ContainsRecordedMessages, Aggregate
 
     public function creditCardId(): UuidInterface
     {
-        return Uuid::fromString($this->creditCardId);
+        return $this->creditCardId;
     }
 
     public function balance(): Money
@@ -203,7 +208,7 @@ final class CreditCard implements ContainsRecordedMessages, Aggregate
 
     public function holderId(): UuidInterface
     {
-        return Uuid::fromString($this->holderId);
+        return $this->holderId;
     }
 
     public function creditCardData(): CreditCardData

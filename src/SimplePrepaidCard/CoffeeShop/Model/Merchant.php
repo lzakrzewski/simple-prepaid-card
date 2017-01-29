@@ -16,7 +16,12 @@ use SimplePrepaidCard\Common\Model\Aggregate;
 //Todo: ORM for money && UUid
 /**
  * @ORM\Entity(repositoryClass="SimplePrepaidCard\CoffeeShop\Infrastructure\DoctrineORMMerchantRepository")
- * @ORM\Table
+ * @ORM\Table(
+ *   indexes={
+ *     @ORM\Index(name="merchant_id_idx", columns={"merchant_id"}),
+ *     @ORM\Index(name="authorized_by_idx", columns={"authorized_by"}),
+ *   }
+ * )
  */
 final class Merchant implements ContainsRecordedMessages, Aggregate
 {
@@ -34,7 +39,7 @@ final class Merchant implements ContainsRecordedMessages, Aggregate
     private $id;
 
     /**
-     * @ORM\Column(type="guid")
+     * @ORM\Column(type="uuid")
      *
      * @var string
      */
@@ -50,7 +55,7 @@ final class Merchant implements ContainsRecordedMessages, Aggregate
     /**
      * @var string
      *
-     * @ORM\Column(type="guid", nullable=true)
+     * @ORM\Column(type="uuid", nullable=true)
      */
     private $authorizedBy;
 
@@ -63,7 +68,7 @@ final class Merchant implements ContainsRecordedMessages, Aggregate
 
     public function __construct(UuidInterface $merchantId)
     {
-        $this->merchantId = $merchantId->toString();
+        $this->merchantId = $merchantId;
         $this->authorized = Money::GBP(0);
         $this->captured   = Money::GBP(0);
     }
@@ -78,7 +83,7 @@ final class Merchant implements ContainsRecordedMessages, Aggregate
         $this->guardNegativeAmount($amount);
 
         $this->authorized   = $this->authorized()->add($amount);
-        $this->authorizedBy = $authorizedBy->toString();
+        $this->authorizedBy = $authorizedBy;
 
         $this->record(
             new MerchantWasAuthorized(
@@ -162,7 +167,7 @@ final class Merchant implements ContainsRecordedMessages, Aggregate
 
     public function merchantId(): UuidInterface
     {
-        return Uuid::fromString($this->merchantId);
+        return $this->merchantId;
     }
 
     public function captured(): Money
@@ -176,7 +181,7 @@ final class Merchant implements ContainsRecordedMessages, Aggregate
             return;
         }
 
-        return Uuid::fromString($this->authorizedBy);
+        return $this->authorizedBy;
     }
 
     private function guardNegativeAmount(Money $amount)
