@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace SimplePrepaidCard\CoffeeShop\Application\Command;
 
 use Money\Money;
-use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider;
+use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\CreditCardProvider;
 use SimplePrepaidCard\CoffeeShop\Model\MerchantRepository;
 
 final class RefundCapturedHandler

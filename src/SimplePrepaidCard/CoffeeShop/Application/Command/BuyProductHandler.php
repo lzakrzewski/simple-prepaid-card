@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SimplePrepaidCard\CoffeeShop\Application\Command;
 
-use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider;
+use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\CreditCardProvider;
 use SimplePrepaidCard\CoffeeShop\Model\CustomerRepository;
 use SimplePrepaidCard\CoffeeShop\Model\Products;
 

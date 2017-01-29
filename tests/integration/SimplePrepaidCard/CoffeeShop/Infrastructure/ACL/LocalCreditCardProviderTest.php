@@ -7,11 +7,11 @@ namespace tests\integration\SimplePrepaidCard\CoffeeShop\Infrastructure\ACL;
 use Money\Money;
 use Ramsey\Uuid\Uuid;
 use SimplePrepaidCard\CoffeeShop\Infrastructure\ACL\LocalCreditCardProvider;
-use SimplePrepaidCard\CoffeeShop\Model\AuthorizationRequestWasDeclined;
-use SimplePrepaidCard\CoffeeShop\Model\CaptureWasDeclined;
+use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\AuthorizationRequestWasDeclined;
+use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\CaptureWasDeclined;
+use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\RefundWasDeclined;
+use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\ReverseWasDeclined;
 use SimplePrepaidCard\CoffeeShop\Model\Product;
-use SimplePrepaidCard\CoffeeShop\Model\RefundWasDeclined;
-use SimplePrepaidCard\CoffeeShop\Model\ReverseWasDeclined;
 use tests\builders\CreditCard\CreditCardBuilder;
 use tests\integration\SimplePrepaidCard\DatabaseTestCase;
 

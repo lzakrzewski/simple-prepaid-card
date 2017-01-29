@@ -9,6 +9,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use SimpleBus\Message\Recorder\ContainsRecordedMessages;
 use SimpleBus\Message\Recorder\PrivateMessageRecorderCapabilities;
+use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\CreditCardProvider;
 use SimplePrepaidCard\Common\Model\Aggregate;
 use Symfony\Component\Validator\Constraints\DateTime;
 

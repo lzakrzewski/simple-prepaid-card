@@ -6,8 +6,8 @@ namespace tests\specs\SimplePrepaidCard\CoffeeShop\Model;
 
 use PhpSpec\ObjectBehavior;
 use Ramsey\Uuid\Uuid;
-use SimplePrepaidCard\CoffeeShop\Model\AuthorizationRequestWasDeclined;
-use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider;
+use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\AuthorizationRequestWasDeclined;
+use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\CreditCardProvider;
 use SimplePrepaidCard\CoffeeShop\Model\Customer;
 use SimplePrepaidCard\CoffeeShop\Model\Product;
 

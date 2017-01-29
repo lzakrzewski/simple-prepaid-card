@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace SimplePrepaidCard\CoffeeShop\Model;
+namespace SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider;
 
 use Ramsey\Uuid\UuidInterface;
 
-//Todo: add prefix CreditCard
 final class RefundWasDeclined extends \DomainException
 {
     public static function with(UuidInterface $customerId): self

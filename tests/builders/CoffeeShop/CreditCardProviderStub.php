@@ -6,7 +6,7 @@ namespace tests\builders\CoffeeShop;
 
 use Money\Money;
 use Ramsey\Uuid\UuidInterface;
-use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider;
+use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\CreditCardProvider;
 use SimplePrepaidCard\CoffeeShop\Model\Product;
 
 class CreditCardProviderStub implements CreditCardProvider

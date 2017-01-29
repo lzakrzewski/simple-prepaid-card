@@ -12,11 +12,11 @@ use SimplePrepaidCard\CoffeeShop\Model\CannotCaptureMoreThanAuthorized;
 use SimplePrepaidCard\CoffeeShop\Model\CannotRefundMoreThanCaptured;
 use SimplePrepaidCard\CoffeeShop\Model\CannotReverseMoreThanAuthorized;
 use SimplePrepaidCard\CoffeeShop\Model\CannotUseNegativeAmount;
-use SimplePrepaidCard\CoffeeShop\Model\CaptureWasDeclined;
-use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider;
+use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\CaptureWasDeclined;
+use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\CreditCardProvider;
+use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\RefundWasDeclined;
+use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\ReverseWasDeclined;
 use SimplePrepaidCard\CoffeeShop\Model\Merchant;
-use SimplePrepaidCard\CoffeeShop\Model\RefundWasDeclined;
-use SimplePrepaidCard\CoffeeShop\Model\ReverseWasDeclined;
 
 //Todo: Handle cases when refund/reverse/capture not authorized (probably on credit card provider side)
 /** @mixin Merchant */

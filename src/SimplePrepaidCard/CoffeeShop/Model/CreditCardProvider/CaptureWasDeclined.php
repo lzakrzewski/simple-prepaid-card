@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace SimplePrepaidCard\CoffeeShop\Model;
+namespace SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider;
 
 use Ramsey\Uuid\UuidInterface;
 
-//Todo: add prefix CreditCard
-final class ReverseWasDeclined extends \DomainException
+final class CaptureWasDeclined extends \DomainException
 {
     public static function with(UuidInterface $customerId): self
     {
         return new self(
             sprintf(
-                'A reverse for customer "%s" was declined',
+                'A capture of customer "%s" was declined',
                 $customerId
             )
         );

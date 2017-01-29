@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace SimplePrepaidCard\CoffeeShop\Model;
+namespace SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider;
 
 use Ramsey\Uuid\UuidInterface;
+use SimplePrepaidCard\CoffeeShop\Model\Product;
 
-//Todo: add prefix CreditCard
 final class AuthorizationRequestWasDeclined extends \DomainException
 {
     public static function with(UuidInterface $customerId, Product $product): self

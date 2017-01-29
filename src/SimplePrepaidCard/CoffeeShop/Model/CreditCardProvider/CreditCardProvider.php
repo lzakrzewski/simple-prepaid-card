@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace SimplePrepaidCard\CoffeeShop\Model;
+namespace SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider;
 
 use Money\Money;
 use Ramsey\Uuid\UuidInterface;
+use SimplePrepaidCard\CoffeeShop\Model\Product;
 
-//Todo: change arguments order
 interface CreditCardProvider
 {
     /**
