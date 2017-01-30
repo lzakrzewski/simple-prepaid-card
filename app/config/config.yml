@@ -64,8 +64,3 @@ doctrine:
                 dir: "%kernel.root_dir%/../src/SimplePrepaidCard/CoffeeShop/Infrastructure/doctrine"
                 prefix: SimplePrepaidCard\CoffeeShop\Model
                 is_bundle: false
-            statement:
-                type: annotation
-                dir: "%kernel.root_dir%/../src/SimplePrepaidCard/CreditCard/Application/Query"
-                prefix: SimplePrepaidCard\CreditCard\Application\Query
-                is_bundle: false

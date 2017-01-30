@@ -12,6 +12,7 @@ use SimplePrepaidCard\Bundle\AppBundle\Form\CreditCardType;
 use SimplePrepaidCard\CoffeeShop\Model\Customer;
 use SimplePrepaidCard\CreditCard\Application\Command\CreateCreditCard;
 use SimplePrepaidCard\CreditCard\Application\Command\LoadFunds;
+use SimplePrepaidCard\CreditCard\Application\Query\CreditCardOfHolderDoesNotExist;
 use SimplePrepaidCard\CreditCard\Model\Holder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
@@ -89,8 +90,7 @@ class CreditCardController extends Controller
     public function statementAction()
     {
         return $this->render('@App/credit-card/statement.html.twig', [
-            'statement' => $this->get('simple_prepaid_card.credit_card.query.statement')
-                ->ofHolder(Uuid::fromString(Holder::HOLDER_ID)),
+            'statement' => $this->statement(),
         ]);
     }
 
@@ -98,5 +98,16 @@ class CreditCardController extends Controller
     {
         return $this->get('simple_prepaid_card.credit_card.query.credit_card_id_of_holder')
             ->get(Uuid::fromString(Holder::HOLDER_ID));
+    }
+
+    private function statement(): array
+    {
+        try {
+            return $this->get('simple_prepaid_card.credit_card.query.statement')
+                ->get($this->creditCardId());
+        } catch (CreditCardOfHolderDoesNotExist $e) {
+        }
+
+        return [];
     }
 }

@@ -17,6 +17,7 @@ services:
             - "@lzakrzewski.doctrine_database_backup"
             - "@simple_prepaid_card.command_bus.recorded_events"
             - "@simple_prepaid_card.coffee_shop.credit_card_provider.test"
+            - "@redis_client"
 
     lzakrzewski.doctrine_database_backup:
         class: Lzakrzewski\DoctrineDatabaseBackup\DoctrineDatabaseBackup

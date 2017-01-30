@@ -1,0 +1,13 @@
+---
+  - name: Install Redis
+    apt: name=redis-server state=present
+    become_user: yes
+    notify:
+      - start redis
+
+  - meta: flush_handlers
+
+  - name: Restart Redis
+    service:
+      name: redis-server
+      state: restarted

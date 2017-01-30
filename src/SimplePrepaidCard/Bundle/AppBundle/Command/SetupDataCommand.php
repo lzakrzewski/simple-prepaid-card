@@ -24,6 +24,7 @@ class SetupDataCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->clearDatabase();
+        $this->flushRedis();
         $this->coffeeShopFixtures($output);
     }
 
@@ -55,5 +56,10 @@ class SetupDataCommand extends ContainerAwareCommand
         $schemaTool = new SchemaTool($entityManager);
         $schemaTool->dropSchema($entityManager->getMetadataFactory()->getAllMetadata());
         $schemaTool->createSchema($entityManager->getMetadataFactory()->getAllMetadata());
+    }
+
+    private function flushRedis()
+    {
+        $this->getContainer()->get('redis_client')->flushall();
     }
 }

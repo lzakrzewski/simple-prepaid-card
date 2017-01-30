@@ -15,5 +15,12 @@ build_package:
 deploy: build_package
 	ansible-playbook -i infrastructure/inventories/default/inventory infrastructure/deploy.yml --ssh-common-args="-o StrictHostKeyChecking=no"
 
-make test:
-	composer test
+redis_up:
+	docker run --name redis -h redis -p 6379:6379 -d redis
+
+redis_down:
+	-docker stop redis
+	-docker rm redis
+
+test_ci:
+	composer test-ci

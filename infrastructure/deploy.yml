@@ -3,6 +3,7 @@
   roles:
     - common
     - sqlite
+    - redis
     - php
     - php-fpm
     - nginx

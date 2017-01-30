@@ -1,11 +1,10 @@
 services:
-    simple_prepaid_card.credit_card.query.statement: "@simple_prepaid_card.credit_card.query.statement.doctrine_orm"
+    simple_prepaid_card.credit_card.query.statement: "@simple_prepaid_card.credit_card.query.statement.redis"
 
-    simple_prepaid_card.credit_card.query.statement.doctrine_orm:
-        class: SimplePrepaidCard\CreditCard\Infrastructure\DoctrineORMStatementQuery
+    simple_prepaid_card.credit_card.query.statement.redis:
+        class: SimplePrepaidCard\CreditCard\Infrastructure\RedisStatementQuery
         arguments:
-            - '@doctrine.orm.default_entity_manager'
-            - "@simple_prepaid_card.credit_card.query.credit_card_id_of_holder"
+            - '@redis_client'
 
     simple_prepaid_card.credit_card.query.credit_card_id_of_holder: "@simple_prepaid_card.credit_card.query.credit_card_id_of_holder.doctrine_orm"
 
@@ -21,10 +20,15 @@ services:
         arguments:
             - '@doctrine.orm.default_entity_manager'
 
-    simple_prepaid_card.credit_card.projector.statement.doctrine_orm:
-        class: SimplePrepaidCard\CreditCard\Infrastructure\DoctrineORMStatementProjector
+    simple_prepaid_card.credit_card.projector.statement.redis:
+        class: SimplePrepaidCard\CreditCard\Infrastructure\RedisStatementProjector
         arguments:
-            - '@doctrine.orm.default_entity_manager'
+            - '@redis_client'
         tags:
             - { name: event_subscriber, subscribes_to: SimplePrepaidCard\CreditCard\Model\FundsWereCharged, method: applyThatFundsWereCharged }
             - { name: event_subscriber, subscribes_to: SimplePrepaidCard\CreditCard\Model\FundsWereLoaded, method: applyThatFundsWereLoaded }
+
+    redis_client:
+        class: Predis\Client
+        arguments:
+            - '%redis_address%'

@@ -27,6 +27,7 @@
         "ramsey/uuid-doctrine": "~1.2",
         "moneyphp/money": "~3.0",
         "incenteev/composer-parameter-handler": "^2.0",
+        "predis/predis": "~1.1",
 
         "symfony/symfony": "~3.2",
         "symfony/monolog-bundle": "~2.9",

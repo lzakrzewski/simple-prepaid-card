@@ -7,6 +7,7 @@ namespace tests\testServices;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Lzakrzewski\DoctrineDatabaseBackup\DoctrineDatabaseBackup;
+use Predis\Client as RedisClient;
 
 class TestSetup
 {
@@ -19,16 +20,21 @@ class TestSetup
     /** @var TestCreditCardProvider */
     private $creditCardProvider;
 
-    public function __construct(DoctrineDatabaseBackup $backup, ContainsRecordedEventsMiddleware $recordedEvents, TestCreditCardProvider $creditCardProvider)
+    /** @var RedisClient */
+    private $redis;
+
+    public function __construct(DoctrineDatabaseBackup $backup, ContainsRecordedEventsMiddleware $recordedEvents, TestCreditCardProvider $creditCardProvider, RedisClient $redis)
     {
         $this->backup             = $backup;
         $this->recordedEvents     = $recordedEvents;
         $this->creditCardProvider = $creditCardProvider;
+        $this->redis              = $redis;
     }
 
     public function setup()
     {
         $this->setupDatabase();
+        $this->flushRedis();
         $this->clearRecordedEvents();
         $this->resetCreditCardProvider();
     }
@@ -57,5 +63,10 @@ class TestSetup
     private function resetCreditCardProvider()
     {
         $this->creditCardProvider->reset();
+    }
+
+    private function flushRedis()
+    {
+        $this->redis->flushall();
     }
 }
