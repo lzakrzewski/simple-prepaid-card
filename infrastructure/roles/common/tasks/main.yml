@@ -15,6 +15,7 @@
   - name: Ensure fresh APT cache
     apt:
       update_cache: yes
+    become_user: yes
 
   - name: Install wget
     apt: name=wget state=present

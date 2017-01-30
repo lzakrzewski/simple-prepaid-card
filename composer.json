@@ -2,7 +2,7 @@
     "name": "lzakrzewski/simple-prepaid-card",
     "license": "MIT",
     "type": "project",
-    "description": "Simplified model of a prepaid card the card holds a balance in GBP and users can make transactions in GBP",
+    "description": "Simplified model of a prepaid card. The card holds a balance in GBP and users can make transactions in GBP",
     "autoload": {
         "psr-4": {
             "": "src/"
