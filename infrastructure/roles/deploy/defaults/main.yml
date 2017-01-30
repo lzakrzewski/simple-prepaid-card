@@ -1,4 +1,5 @@
 ---
 release_dir: "/srv/application"
+old_release_dir: "/srv/old_application"
 public_dir: "{{ release_dir }}/web"
 app_name: application

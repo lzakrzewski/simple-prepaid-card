@@ -5,11 +5,17 @@
     state: directory
     mode: 0755
 
-- name: Clean release directory
-  command: "rm -rf {{ release_dir }}/*"
+- name: Move release to old release dir
+  command: "mv {{ release_dir }} {{ old_release_dir }}"
 
 - name: Ensure release directory
   file:
     path: "{{ release_dir }}"
     state: directory
     mode: 0755
+
+- name: Clean old release directory
+  file:
+    path: "{{ old_release_dir }}"
+    state: absent
+    force: yes
