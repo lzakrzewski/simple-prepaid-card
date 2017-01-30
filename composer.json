@@ -57,9 +57,9 @@
     "scripts": {
         "static-analysis": "bin/php-cs-fixer fix --config-file=.php_cs",
         "static-analysis-ci": "bin/php-cs-fixer fix --dry-run --config-file=.php_cs",
-        "setup-database-test": "(bin/console do:da:dr --force --env=test || true) && bin/console do:da:cr --env=test && bin/console do:sch:cr --env=test",
-        "setup-database-dev": "(bin/console do:da:dr --force --env=dev || true) && bin/console do:da:cr --env=dev && bin/console do:sch:cr --env=dev && bin/console simple-credit-card:setup-coffee-shop-data --env=dev",
-        "setup-database-prod": "(bin/console do:da:dr --force --env=prod || true) && bin/console do:da:cr --env=prod && bin/console do:sch:cr --env=prod && bin/console simple-credit-card:setup-coffee-shop-data --env=prod",
+        "setup-data-test": "(bin/console do:da:dr --force --env=test || true) && bin/console do:da:cr --env=test && bin/console simple-credit-card:setup-data --env=test",
+        "setup-data-dev": "(bin/console do:da:dr --force --env=dev || true) && bin/console do:da:cr --env=dev && bin/console simple-credit-card:setup-data --env=dev",
+        "setup-data-prod": "(bin/console do:da:dr --force --env=prod || true) && bin/console do:da:cr --env=prod && bin/console simple-credit-card:setup-data --env=prod",
         "integration": "bin/phpunit --testsuite=integration",
         "spec": "bin/phpspec run",
         "behat": "bin/behat --out=std",

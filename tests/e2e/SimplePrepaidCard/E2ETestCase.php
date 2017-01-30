@@ -6,7 +6,7 @@ namespace tests\e2e\SimplePrepaidCard;
 
 use Money\Money;
 use Ramsey\Uuid\Uuid;
-use SimplePrepaidCard\Bundle\AppBundle\Command\SetupCoffeeShopDataCommand;
+use SimplePrepaidCard\Bundle\AppBundle\Command\SetupDataCommand;
 use SimplePrepaidCard\CoffeeShop\Model\Merchant;
 use SimplePrepaidCard\CreditCard\Model\CreditCard;
 use SimplePrepaidCard\CreditCard\Model\Holder;
@@ -119,7 +119,7 @@ abstract class E2ETestCase extends WebTestCase
     {
         parent::setUp();
 
-        $cli = new SetupCoffeeShopDataCommand();
+        $cli = new SetupDataCommand();
         $cli->setContainer($this->container());
 
         $commandTester = new CommandTester($cli);
