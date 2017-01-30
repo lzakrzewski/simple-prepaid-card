@@ -72,8 +72,10 @@ final class CapturedWasRefunded implements DomainEvent
     public function __toString(): string
     {
         return sprintf(
-            '"%s" of captured was refunded.',
-            MoneyDecimalFormatter::create()->format($this->amount())
+            'Capture "%s" GBP was refunded by Merchant with id "%s" at "%s".',
+            MoneyDecimalFormatter::create()->format($this->amount()),
+            $this->merchantId(),
+            $this->at()->format('Y:m:d h:i a')
         );
     }
 }

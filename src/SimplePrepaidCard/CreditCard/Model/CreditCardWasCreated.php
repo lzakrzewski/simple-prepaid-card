@@ -78,10 +78,9 @@ final class CreditCardWasCreated implements DomainEvent
     public function __toString(): string
     {
         return sprintf(
-            'Credit card with id "%s" was created with balance "%s" for "%s" at "%s"',
+            'Credit card with id "%s" was created with balance "%s" GBP at "%s".',
             $this->creditCardId(),
             MoneyDecimalFormatter::create()->format($this->balance()),
-            $this->creditCardData()->number(),
             $this->at()->format('Y:m:d h:i a')
         );
     }

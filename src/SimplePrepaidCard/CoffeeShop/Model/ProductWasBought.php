@@ -44,10 +44,11 @@ final class ProductWasBought implements DomainEvent
     public function __toString(): string
     {
         return sprintf(
-            'Product "%s" was bought by customer with "%s" for "%s"',
+            'Product "%s" was bought by customer with id "%s" for "%s" GBP at "%s".',
             $this->product()->productId(),
             $this->customerId(),
-            MoneyDecimalFormatter::create()->format($this->product()->price())
+            MoneyDecimalFormatter::create()->format($this->product()->price()),
+            $this->at()->format('Y:m:d h:i a')
         );
     }
 }

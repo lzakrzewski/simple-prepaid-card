@@ -72,8 +72,10 @@ final class AuthorizationWasCaptured implements DomainEvent
     public function __toString(): string
     {
         return sprintf(
-            '"%s" of authorization was captured.',
-            MoneyDecimalFormatter::create()->format($this->amount())
+            'Authorization "%s" GBP was captured by Merchant with id "%s" at "%s".',
+            MoneyDecimalFormatter::create()->format($this->amount()),
+            $this->merchantId(),
+            $this->at()->format('Y:m:d h:i a')
         );
     }
 }

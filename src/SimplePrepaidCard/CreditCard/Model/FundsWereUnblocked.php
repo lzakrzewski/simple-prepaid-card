@@ -72,9 +72,10 @@ final class FundsWereUnblocked implements DomainEvent
     public function __toString(): string
     {
         return sprintf(
-            '"%s" funds were unblocked on a credit card with id "%s"',
+            'Funds "%s" GBP were unblocked on a credit card with id "%s" at "%s".',
             MoneyDecimalFormatter::create()->format($this->amount()),
-            $this->creditCardId()
+            $this->creditCardId(),
+            $this->at()->format('Y:m:d h:i a')
         );
     }
 }

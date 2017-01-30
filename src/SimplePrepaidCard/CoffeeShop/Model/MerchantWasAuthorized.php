@@ -63,9 +63,10 @@ final class MerchantWasAuthorized implements DomainEvent
     public function __toString(): string
     {
         return sprintf(
-            'Merchant with id "%s" was authorized to "%s" ',
+            'Merchant with id "%s" was authorized to "%s" GBP at "%s".',
             $this->merchantId(),
-            MoneyDecimalFormatter::create()->format($this->amount())
+            MoneyDecimalFormatter::create()->format($this->amount()),
+            $this->at()->format('Y:m:d h:i a')
         );
     }
 }

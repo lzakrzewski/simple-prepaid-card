@@ -72,8 +72,10 @@ final class AuthorizationWasReversed implements DomainEvent
     public function __toString(): string
     {
         return sprintf(
-            '"%s" from authorization was reversed.',
-            MoneyDecimalFormatter::create()->format($this->amount())
+            'Authorization "%s" GBP was reversed by Merchant with id "%s" at "%s".',
+            MoneyDecimalFormatter::create()->format($this->amount()),
+            $this->merchantId(),
+            $this->at()->format('Y:m:d h:i a')
         );
     }
 }

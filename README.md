@@ -9,7 +9,7 @@ Sandbox is available here: [http://138.68.141.70/](http://138.68.141.70/). At an
 ## Design and Architecture
 
 #### DDD and Bounded contexts
-As in real life the **Customer** and the **Merchant** in the shop are not focused how the **CreditCardProvider** deal with the transactions on card internally.
+As in real life, the **Customer** and the **Merchant** in the shop are not focused how the **CreditCardProvider** deals with the transactions on card internally.
 So, the application was split for 2 main bounded contexts, which are independent individually:
 
 CoffeeShop:
@@ -49,7 +49,7 @@ CreditCard context commands:
 - [Load funds](features/credit-card/2_load_funds.feature)
 - [Block funds](features/credit-card/3_block_funds.feature)
 - [Unblock funds](features/credit-card/4_unblock_funds.feature)
-- [Charge funds](features/credit-card/5_unblock_funds.feature)
+- [Charge funds](features/credit-card/5_charge_funds.feature)
  
 **Read model** and **write model** are completely separated.  
 To expose that fact the write model was realized with **Sqlite** database and read model with **Redis** cache.
@@ -61,11 +61,11 @@ Examples:
 `CustomerRepository` => `DoctrineORMRepository`  
 `CreditCardProvider` => `LocalCreditCardProvider`   
 
-It allows me to quickly switch between implementations in case when I decide for e.g. to use `DoctrineODM` instead of `DoctrineORM`.   
-It is helpful for test purposes as well. Here is another implementation od credit card provider `TestCreditCardProvider` which allows me to define behavior of credit card provider for test purposes.
+It allows me to quickly switch between implementations in a case when I decide for e.g. to use `DoctrineODM` instead of `DoctrineORM`.   
+It is helpful for test purposes as well. Here is another implementation od credit card provider `TestCreditCardProvider` which allows me to define a behavior of credit card provider for test purposes.
 
 #### Coupling with framework
-The application has framework agnostic model. Entry point for the application model is Symfony controller within the Bundle. The bundle contains only framework related stuff (views) and configuration of them.
+The application has framework agnostic model. The entry point for the application model is Symfony controller within the Bundle. The bundle contains only framework related stuff (views) and configuration of them.
 
 ## Provisioning and Deployment
 Here is a simple script to firstly provision http://138.68.141.70/ host with [Ansible](https://www.ansible.com/) and then deploy the application on it.
@@ -75,9 +75,9 @@ Each deployment is triggered in automated way after each successful build with *
 An application has wide test-suite:
 - `composer static-analysis` - (php-cs-fixer was used to fix automatically the broken code standards)
 - `composer spec` - (PHPSpec was used specification testing of business model)
-- `composer integration` - (PHPUnit was used for test integration with database, redis cache and framework)
+- `composer integration` - (PHPUnit was used for test integration with **Sqlite** database, **Redis** cache and **Symfony** framework)
 - `composer behat` - (Behat was used for acceptance test of business requirements)
-- `composer e2e` - Its a test-suite that simulates using whole application on production. It's for ensuring that everything is able to work together (framework, two bounded contexts etc)
+- `composer e2e` - It's a test-suite that simulates using a whole application on production. It's for ensuring that everything is able to work together (framework, two bounded contexts etc)
 
 
 
