@@ -18,10 +18,14 @@ CoffeeShop:
 CreditCard:
  - Contains **CreditCard** aggregate and behavior (load/block/unblock/charge funds)
  
-It's highly possible that in future the responsibility of CreditCard will by moved to an external 3rd party credit card provider like ([https://stripe.com](Stripe), [https://www.braintreepayments.com/](Braintree)), so in order to easy switch **CreditCardProvider**  the CreditCard context was completely decoupled from CoffeeShop.
-CoffeeShop context has an interface `CreditCardProvider` and current implementation is `LocalCreditCardProvider` which is a bridge to CreditCard context. If the external `CreditCardProvider` will be chosen then `CreditCardProvider` need to have another implementation like `StripeCreditCardProvider`.
+It's highly possible that in future the responsibility of CreditCard will by moved to an external 3rd party credit card provider like ([https://stripe.com](Stripe), [https://www.braintreepayments.com/](Braintree)).  
+In order to easy switch **CreditCardProvider**  the CreditCard context was completely decoupled from CoffeeShop context.  
+CoffeeShop context has an interface `CreditCardProvider` and current implementation is `LocalCreditCardProvider` which is a bridge to CreditCard context.   
+If the external `CreditCardProvider` will be chosen then `CreditCardProvider` need to have another implementation like `StripeCreditCardProvider`.  
 
-Aggregates were marked with `SimplePrepaidCard\Common\Model\Aggregate` interface, Value objects with `SimplePrepaidCard\Common\Model\ValueObject` interface and Domain events with `SimplePrepaidCard\Common\Model\DomainEvent`.
+- Aggregates were marked with `SimplePrepaidCard\Common\Model\Aggregate` interface,   
+- Value objects with `SimplePrepaidCard\Common\Model\ValueObject` interface,  
+- Domain events with `SimplePrepaidCard\Common\Model\DomainEvent` interface.  
 
 #### Layered Application Architecture
 Each context of that application (CoffeeShop, CreditCard) has layers:
@@ -33,25 +37,25 @@ Each context of that application (CoffeeShop, CreditCard) has layers:
 I used [SimpleBus/MessageBus](http://simplebus.github.io/MessageBus/) to implement **CQRS** pattern. 
 Each command has only one responsibility and those responsibilities were described with `Gherkin` scenarios:
 
-CoffeeShop context:
-- [Buy a product](features/1_buy_a_product.feature)
-- [Authorize a merchant](features/2_authorize_a_merchant.feature)
-- [Capture an authorization](features/3_capture_an_authorization.feature)
-- [Reverse an authorization](features/4_reverse_an_authorization.feature)
-- [Refund captured.feature](features/5_refund_captured.feature)
+CoffeeShop context commands:
+- [Buy a product](features/coffee-shop/1_buy_a_product.feature)
+- [Authorize a merchant](features/coffee-shop/2_authorize_a_merchant.feature)
+- [Capture an authorization](features/coffee-shop/3_capture_an_authorization.feature)
+- [Reverse an authorization](features/coffee-shop/4_reverse_an_authorization.feature)
+- [Refund captured](features/coffee-shop/5_refund_captured.feature)
 
-CreditCard context:
-- [Create a credit card](features/1_create_a_credit_card.feature)
-- [Load funds](features/2_load_funds.feature)
-- [Block funds](features/3_block_funds.feature)
-- [Unblock funds](features/4_unblock_funds.feature)
-- [Charge funds](features/5_unblock_funds.feature)
+CreditCard context commands:
+- [Create a credit card](features/credit-card/1_create_a_credit_card.feature)
+- [Load funds](features/credit-card/2_load_funds.feature)
+- [Block funds](features/credit-card/3_block_funds.feature)
+- [Unblock funds](features/credit-card/4_unblock_funds.feature)
+- [Charge funds](features/credit-card/5_unblock_funds.feature)
  
 **Read model** and **write model** are completely separated.  
 To expose that fact the write model was realized with **Sqlite** database and read model with **Redis** cache.
 
 #### Hexagonal architecture
-Each adapter to an infrastructure has an interface extracted and implementation within `Infrastructure` layer. 
+Each adapter to an infrastructure has an interface extracted and implementation within `Infrastructure` layer.    
 Examples:   
 `StatementQuery` => `RedisStatementQuery`  
 `CustomerRepository` => `DoctrineORMRepository`  
@@ -65,7 +69,7 @@ The application has framework agnostic model. Entry point for the application mo
 
 ## Provisioning and Deployment
 Here is a simple script to firstly provision http://138.68.141.70/ host with [Ansible](https://www.ansible.com/) and then deploy the application on it.
-Each deployment is triggered in automated way after each successful build with **Travis CI**. I used encrypted ssh key to allow Travis CI deploy my host.
+Each deployment is triggered in automated way after each successful build with **Travis CI**. I used encrypted ssh key to allow **Travis CI** deploy my host.
 
 ## Testing
 An application has wide test-suite:
