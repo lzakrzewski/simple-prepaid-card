@@ -35,7 +35,6 @@ use tests\builders\CoffeeShop\CustomerBuilder;
 use tests\builders\CoffeeShop\MerchantBuilder;
 use tests\testServices\TestCreditCardProvider;
 
-//Todo: try to concatenate some steps
 class CoffeeShopContext extends DefaultContext
 {
     /** @var UuidInterface */

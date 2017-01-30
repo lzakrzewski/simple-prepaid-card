@@ -18,7 +18,6 @@ use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\RefundWasDeclined;
 use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\ReverseWasDeclined;
 use SimplePrepaidCard\CoffeeShop\Model\Merchant;
 
-//Todo: Handle cases when refund/reverse/capture not authorized (probably on credit card provider side)
 /** @mixin Merchant */
 class MerchantSpec extends ObjectBehavior
 {
