@@ -4,77 +4,35 @@ declare(strict_types=1);
 
 namespace SimplePrepaidCard\CreditCard\Model;
 
-use Doctrine\ORM\Mapping as ORM;
 use Money\Money;
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use SimpleBus\Message\Recorder\ContainsRecordedMessages;
 use SimpleBus\Message\Recorder\PrivateMessageRecorderCapabilities;
 use SimplePrepaidCard\Common\Model\Aggregate;
 
-//Todo: move to yml
-/**
- * @ORM\Entity(repositoryClass="SimplePrepaidCard\CreditCard\Infrastructure\DoctrineORMCreditCardRepository")
- * @ORM\Table(
- *   indexes={
- *     @ORM\Index(name="credit_card_id_idx", columns={"credit_card_id"}),
- *     @ORM\Index(name="holder_id_idx", columns={"holder_id"}),
- *   }
- * )
- */
 final class CreditCard implements ContainsRecordedMessages, Aggregate
 {
     use PrivateMessageRecorderCapabilities;
 
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     *
-     * @var int
-     */
+    /** @var int */
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="uuid")
-     */
+    /** @var string */
     private $creditCardId;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="uuid")
-     */
+    /** @var string */
     private $holderId;
 
-    /**
-     * @var CreditCardData
-     *
-     * @ORM\Embedded(class="CreditCardData")
-     */
+    /** @var CreditCardData */
     private $creditCardData;
 
-    /**
-     * @var Money
-     *
-     * @ORM\Embedded(class="\Money\Money")
-     */
+    /** @var Money */
     private $balance;
 
-    /**
-     * @var Money
-     *
-     * @ORM\Embedded(class="\Money\Money")
-     */
+    /** @var Money */
     private $availableBalance;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="datetime")
-     */
+    /** @var string */
     private $createdAt;
 
     private function __construct(UuidInterface $creditCardId, UuidInterface $holderId, CreditCardData $creditCardData)

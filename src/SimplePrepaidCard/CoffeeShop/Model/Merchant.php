@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SimplePrepaidCard\CoffeeShop\Model;
 
-use Doctrine\ORM\Mapping as ORM;
 use Money\Money;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
@@ -13,57 +12,25 @@ use SimpleBus\Message\Recorder\PrivateMessageRecorderCapabilities;
 use SimplePrepaidCard\CoffeeShop\Model\CreditCardProvider\CreditCardProvider;
 use SimplePrepaidCard\Common\Model\Aggregate;
 
-//Todo: ORM for money && UUid
-/**
- * @ORM\Entity(repositoryClass="SimplePrepaidCard\CoffeeShop\Infrastructure\DoctrineORMMerchantRepository")
- * @ORM\Table(
- *   indexes={
- *     @ORM\Index(name="merchant_id_idx", columns={"merchant_id"}),
- *     @ORM\Index(name="authorized_by_idx", columns={"authorized_by"}),
- *   }
- * )
- */
 final class Merchant implements ContainsRecordedMessages, Aggregate
 {
     use PrivateMessageRecorderCapabilities;
 
     const MERCHANT_ID = '49ce95dc-bb15-4c45-9df4-7b8c0a9f8896';
 
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     *
-     * @var int
-     */
+    /** @var int */
     private $id;
 
-    /**
-     * @ORM\Column(type="uuid")
-     *
-     * @var string
-     */
+    /** @var string */
     private $merchantId;
 
-    /**
-     * @var Money
-     *
-     * @ORM\Embedded(class="\Money\Money")
-     */
+    /** @var Money */
     private $authorized;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="uuid", nullable=true)
-     */
+    /** @var string */
     private $authorizedBy;
 
-    /**
-     * @var Money
-     *
-     * @ORM\Embedded(class="\Money\Money")
-     */
+    /** @var Money */
     private $captured;
 
     public function __construct(UuidInterface $merchantId)

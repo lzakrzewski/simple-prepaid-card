@@ -5,40 +5,20 @@ declare(strict_types=1);
 namespace SimplePrepaidCard\CreditCard\Model;
 
 use Assert\Assertion;
-use Doctrine\ORM\Mapping as ORM;
 use SimplePrepaidCard\Common\Model\ValueObject;
 
-/**
- * @ORM\Embeddable
- */
 final class CreditCardData implements ValueObject
 {
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     */
+    /** @var string */
     private $holder;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     */
+    /** @var string */
     private $number;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     */
+    /** @var string */
     private $cvv;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date")
-     */
+    /** @var \DateTime */
     private $expiryDate;
 
     private function __construct(string $holder, string $number, int $cvv, \DateTime $expiryDate)

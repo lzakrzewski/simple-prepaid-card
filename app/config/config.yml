@@ -55,13 +55,13 @@ doctrine:
                 prefix: Money
                 is_bundle: false
             credit_card:
-                type: annotation
-                dir: "%kernel.root_dir%/../src/SimplePrepaidCard/CreditCard/Model"
+                type: yml
+                dir: "%kernel.root_dir%/../src/SimplePrepaidCard/CreditCard/Infrastructure/doctrine"
                 prefix: SimplePrepaidCard\CreditCard\Model
                 is_bundle: false
             coffe_shop:
-                type: annotation
-                dir: "%kernel.root_dir%/../src/SimplePrepaidCard/CoffeeShop/Model"
+                type: yml
+                dir: "%kernel.root_dir%/../src/SimplePrepaidCard/CoffeeShop/Infrastructure/doctrine"
                 prefix: SimplePrepaidCard\CoffeeShop\Model
                 is_bundle: false
             statement:

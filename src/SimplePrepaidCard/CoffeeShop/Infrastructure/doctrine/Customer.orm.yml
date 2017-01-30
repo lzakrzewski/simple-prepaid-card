@@ -1,0 +1,27 @@
+SimplePrepaidCard\CoffeeShop\Model\Customer:
+    type: entity
+    repositoryClass: SimplePrepaidCard\CoffeeShop\Infrastructure\DoctrineORMCustomerRepository
+    indexes:
+        customer_id_idx:
+            columns:
+                - customer_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        customerId:
+            type: string
+            nullable: false
+            length: 36
+            options:
+                fixed: true
+        lastPurchaseAt:
+            type: datetime
+            nullable: true
+    lifecycleCallbacks: {  }

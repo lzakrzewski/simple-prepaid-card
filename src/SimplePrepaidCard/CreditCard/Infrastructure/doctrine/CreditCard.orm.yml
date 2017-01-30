@@ -1,0 +1,43 @@
+SimplePrepaidCard\CreditCard\Model\CreditCard:
+    type: entity
+    repositoryClass: SimplePrepaidCard\CreditCard\Infrastructure\DoctrineORMCreditCardRepository
+    indexes:
+        holder_id_idx:
+            columns:
+                - holder_id
+        credit_card_id_idx:
+            columns:
+                - credit_card_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    embedded:
+        creditCardData:
+            class: SimplePrepaidCard\CreditCard\Model\CreditCardData
+        balance:
+            class: Money\Money
+        availableBalance:
+            class: Money\Money
+    fields:
+        creditCardId:
+            type: uuid
+            nullable: false
+            length: 36
+            options:
+                fixed: true
+        holderId:
+            type: uuid
+            nullable: false
+            length: 36
+            options:
+                fixed: true
+        createdAt:
+            type: datetime
+            nullable: false
+    lifecycleCallbacks: {  }

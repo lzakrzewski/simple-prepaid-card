@@ -1,0 +1,38 @@
+SimplePrepaidCard\CoffeeShop\Model\Merchant:
+    type: entity
+    repositoryClass: SimplePrepaidCard\CoffeeShop\Infrastructure\DoctrineORMMerchantRepository
+    indexes:
+        authorized_by_idx:
+            columns:
+                - authorized_by
+        merchant_id_idx:
+            columns:
+                - merchant_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    embedded:
+        authorized:
+            class: Money\Money
+        captured:
+            class: Money\Money
+    fields:
+        merchantId:
+            type: uuid
+            nullable: false
+            length: 36
+            options:
+                fixed: true
+        authorizedBy:
+            type: uuid
+            nullable: true
+            length: 36
+            options:
+                fixed: true
+    lifecycleCallbacks: {  }

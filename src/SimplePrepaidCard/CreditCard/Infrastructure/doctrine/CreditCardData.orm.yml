@@ -1,0 +1,24 @@
+SimplePrepaidCard\CreditCard\Model\CreditCardData:
+    type: embeddable
+    fields:
+        holder:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+        number:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+        cvv:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+        expiryDate:
+            type: date
+            nullable: false
