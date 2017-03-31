@@ -31,4 +31,4 @@ services:
     redis_client:
         class: Predis\Client
         arguments:
-            - '%redis_address%'
+            - { host: '%redis_host%', port: '%redis_port%' }
