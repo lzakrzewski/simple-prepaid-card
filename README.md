@@ -4,7 +4,7 @@
 This repository is Proof of concept (POC) to demonstrate a simplified model of a prepaid card. The card holds a balance in GBP and customers can make transactions in GBP.
 
 ## Sandbox
-Sandbox is available here: [http://138.68.141.70/](http://138.68.141.70/). At any time user can reset all sandbox data using a red button from navbar.
+Sandbox is available here: [http://178.62.42.204/](http://178.62.42.204/). At any time user can reset all sandbox data using a red button from navbar.
 
 ## Design and Architecture
 
@@ -68,7 +68,7 @@ It is helpful for test purposes as well. Here is another implementation od credi
 The application has framework agnostic model. The entry point for the application model is Symfony controller within the Bundle. The bundle contains only framework related stuff (views) and configuration of them.
 
 ## Provisioning and Deployment
-Here is a simple script to firstly provision http://138.68.141.70/ host with [Ansible](https://www.ansible.com/) and then deploy the application on it.
+Here is a simple script to firstly provision http://178.62.42.204/ host with [Ansible](https://www.ansible.com/) and then deploy the application on it.
 Each deployment is triggered in automated way after each successful build with **Travis CI**. I used encrypted ssh key to allow **Travis CI** deploy my host.
 
 ## Testing
